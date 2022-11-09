@@ -34,4 +34,3 @@ class Config(BaseConfig):
     MAX_RECORDS_RETURNED = 500
     VANCOUVER_TIMEZONE = 'America/Vancouver'
 
-

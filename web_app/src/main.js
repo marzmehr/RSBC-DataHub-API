@@ -38,30 +38,46 @@ Vue.use(VueKeyCloak, {
   },
   config: constants.API_ROOT_URL + '/api/v1/static/keycloak',
   onReady: () => {
-    rsiStore.commit("setKeycloak", Vue.prototype.$keycloak)
+      rsiStore.commit("setKeycloak", Vue.prototype.$keycloak)
+
+      new Vue({
+          router,
+          store: rsiStore,
+          async created() {
+            // get all forms from indexdb database and save it to state
+            await rsiStore.dispatch("getAllFormsFromDB")
+                .then( () => {
+                    // if the user has been working offline, and has used up some of ids, need to get more ids to top up to state
+                    rsiStore.dispatch("getMoreFormsFromApiIfNecessary")
+                });
+            // tables like lot operator, cities, vehicles make and model; get from api and save to state
+            await rsiStore.dispatch("downloadLookupTables");
+
+          },
+          render: h => h(App),
+        }).$mount('#app')
+  },
+
+  // if the user is offline, get the forms for the user from the indexeddb
+  onInitError: () => {
+      new Vue({
+          router,
+          store: rsiStore,
+          async created() {
+
+            await rsiStore.dispatch("getAllFormsFromDB");
+            // download lookup tables from service worker
+            await rsiStore.dispatch("downloadLookupTables")
+
+          },
+          render: h => h(App),
+        }).$mount('#app')
   }
 });
 
 
-new Vue({
-  router,
-  store: rsiStore,
-  async created() {
-
-    await rsiStore.dispatch("getAllFormsFromDB");
-
-    // download lookup tables while offline
-    await rsiStore.dispatch("downloadLookupTables")
-
-  },
-  render: h => h(App),
-}).$mount('#app')
-
-
 rsiStore.subscribe((mutation) => {
       if (mutation.type === 'setKeycloak') {
-        rsiStore.dispatch("getMoreFormsFromApiIfNecessary")
-        // TODO - store.dispatch("renewFormLeasesFromApiIfNecessary")
         rsiStore.dispatch("fetchStaticLookupTables", {"resource": "user_roles", "admin": false, "static": false})
             .then(data => {
                 rsiStore.dispatch("updateUserIsAuthenticated", data)
@@ -73,7 +89,8 @@ rsiStore.subscribe((mutation) => {
           mutation.type === 'updateCheckBox' ||
           mutation.type === 'populateDriverFromICBC' ||
           mutation.type === 'populateVehicleFromICBC' ||
-          mutation.type === 'typeAheadUpdate'
+          mutation.type === 'typeAheadUpdate' ||
+          mutation.type === 'deleteFormField'
       ) {
         rsiStore.dispatch("saveCurrentFormToDB", rsiStore.state.currently_editing_form_object)
       }

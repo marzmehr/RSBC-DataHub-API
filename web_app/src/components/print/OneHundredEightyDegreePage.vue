@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <svg v-if="formData" class="svg-wrapper" :viewBox="viewbox">
+  <div v-if="formData" class="svg-wrapper">
+    <svg width="100%" :viewBox="viewbox">
       <image :href="baseURL + page.image.filename" :height="page.image.height + 'px'" :width="page.image.width + 'px'"/>
       <component
         v-for="(field, index) in fieldsToShow"
@@ -16,7 +16,6 @@
      Sorry, your browser does not support inline SVG.
     </svg>
   </div>
-
 </template>
 
 <script>
@@ -24,43 +23,38 @@
 import PageCommon from "@/components/print/PageCommon";
 
 export default {
-  name: "LandscapePage",
+  name: "OneHundredEightyDegreePage",
   mixins: [PageCommon]
 }
 </script>
 
-<style scoped type="text/css">
+<style scoped>
 
-@media print {
+   .svg-wrapper {
+     border-bottom: darkblue solid 1px;
+   }
 
-  @page {
-    size: letter;
-    margin: 0;
-  }
+  @media print {
+     #roadsafety-header {
+       display: none;
+     }
+     #debug-component {
+       display: none;
+     }
+     #not-authenticated-banner {
+       display: none;
+     }
 
-  html {
-    margin: 0;
-  }
+    .svg-wrapper {
+      margin-top: 25mm;
+      border: none;
+      page-break-before:always;
+      transform: rotate(180deg);
+    }
 
-  body {
-    margin: 0;
+    @page {
+      margin: 0;
+    }
   }
-
-  #roadsafety-header {
-   display: none;
-  }
-  #debug-component {
-   display: none;
-  }
-  #not-authenticated-banner {
-   display: none;
-  }
-
-  .svg-wrapper {
-    page-break-before:always;
-    transform: rotate(-90deg) scale(1.2) translate(-200px);
-  }
-}
-
 
 </style>

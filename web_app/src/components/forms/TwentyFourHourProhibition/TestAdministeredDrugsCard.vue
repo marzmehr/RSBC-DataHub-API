@@ -11,6 +11,7 @@
                    id="positive_adse" :path="path + '/test_administered_adse'" fg_class="col-sm-6"
                    :options='[["thc", "THC"], ["cocaine", "Cocaine"]]'>Test result</check-field>
   </form-row>
+
 </form-card>
 </template>
 
