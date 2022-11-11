@@ -11,7 +11,7 @@ export const mutations = {
 
     updateFormField (state, event) {
         // DEPRECATED - use updateFormAttribute instead"
-        let pathArray = event.target.path.split("/")
+        const pathArray = event.target.path.split("/")
         pathArray.push(event.target.id)
         nestedFunctions.setProp(state, pathArray, event.target.value)
     },
@@ -23,28 +23,28 @@ export const mutations = {
     },
 
     deleteFormAttribute (state, [formPath, attribute_id]) {
-        let pathArray = formPath.split("/")
+        const pathArray = formPath.split("/")
         pathArray.push(attribute_id)
         nestedFunctions.deleteProp(state, pathArray)
     },
 
     deleteFormField (state, event) {
         // DEPRECATED - use deleteFormAttribute instead"
-        let pathArray = event.target.path.split("/")
+        const pathArray = event.target.path.split("/")
         pathArray.push(event.target.id)
         nestedFunctions.deleteProp(state, pathArray)
     },
 
     setFormAsImpounded (state) {
         console.log("setFormAsImpounded()", )
-        let form_object = state.currently_editing_form_object
+        const form_object = state.currently_editing_form_object
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "vehicle_impounded", "Yes");
     },
 
     addItemToCheckboxList (state, payload) {
         console.log("inside addItemToCheckboxList()", state, payload)
-        let root = state.forms[payload.form_object.form_type][payload.form_object.form_id].data
-        let tenant = {id: payload.event.id, value: payload.event.value}
+        const root = state.forms[payload.form_object.form_type][payload.form_object.form_id].data
+        const tenant = {id: payload.event.id, value: payload.event.value}
         if(payload.id in root) {
             root[payload.id].push(tenant);
         } else {
@@ -54,9 +54,9 @@ export const mutations = {
 
     removeItemFromCheckboxList (state, payload) {
         console.log("inside removeItemFromCheckboxList()", state, payload)
-        let root = state.forms[payload.form_object.form_type][payload.form_object.form_id].data
-        let tenant = {id: payload.event.id, value: payload.event.value}
-        let indexOfValue = root[payload.id].indexOf(tenant)
+        const root = state.forms[payload.form_object.form_type][payload.form_object.form_id].data
+        const tenant = {id: payload.event.id, value: payload.event.value}
+        const indexOfValue = root[payload.id].indexOf(tenant)
         root[payload.id].splice(indexOfValue, 1)
     },
 
@@ -71,17 +71,17 @@ export const mutations = {
     },
 
     markFormStatusAsServed(state, date) {
-        let form_object = state.currently_editing_form_object
+        const form_object = state.currently_editing_form_object
         Vue.set(state.forms[form_object.form_type][form_object.form_id], "printed_timestamp", date)
     },
 
     setNewFormDefaults(state, form_object) {
         console.log("inside setNewFormDefaults()", form_object)
-        let root = state.forms[form_object.form_type][form_object.form_id]
+        const root = state.forms[form_object.form_type][form_object.form_id]
         if(! ("data" in root)) {
             Vue.set( root, "data", Object())
             Vue.set( root.data, "submitted", false);
-            for (let form_property in state.form_schemas.forms[form_object.form_type]) {
+            for (const form_property in state.form_schemas.forms[form_object.form_type]) {
                 Vue.set(root, form_property, state.form_schemas.forms[form_object.form_type][form_property])
             }
         }
@@ -92,7 +92,7 @@ export const mutations = {
     },
 
     populateDriverFromICBC(state, data) {
-        let form_object = state.currently_editing_form_object
+        const form_object = state.currently_editing_form_object
         const address = data['party']['addresses'][0]
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "dob", data['birthDate'].replace("-",""));
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "drivers_number", data['dlNumber']);
@@ -106,8 +106,8 @@ export const mutations = {
     },
 
     populateVehicleFromICBC(state, payload) {
-        let data = payload[0]
-        let form_object = state.currently_editing_form_object
+        const data = payload[0]
+        const form_object = state.currently_editing_form_object
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "registration_number", data['registrationNumber']);
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "vehicle_year", data['vehicleModelYear']);
 
@@ -145,7 +145,7 @@ export const mutations = {
     },
 
     setFormAsPrinted(state, payload) {
-        let root = state.forms[payload.form_object.form_type][payload.form_object.form_id]
+        const root = state.forms[payload.form_object.form_type][payload.form_object.form_id]
         Vue.set(root, "printed_timestamp", payload.timestamp)
     },
 
@@ -173,7 +173,7 @@ export const mutations = {
 
     populateDriverFromBarCode(state, data) {
         console.log("inside populateDriverFromBarCode()", data)
-        let form_object = state.currently_editing_form_object
+        const form_object = state.currently_editing_form_object
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "drivers_number", data['number']);
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "address1", data['address']['street']);
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "city", data['address']['city']);

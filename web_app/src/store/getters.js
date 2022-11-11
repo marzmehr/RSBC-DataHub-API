@@ -10,8 +10,8 @@ export const getters = {
     },
 
     getArrayOfAllFormNames: state => {
-        let formNames = [];
-        for (let form in state.form_schemas.forms) {
+        const formNames = [];
+        for (const form in state.form_schemas.forms) {
             formNames.push(form)
         }
         return formNames
@@ -22,9 +22,9 @@ export const getters = {
     },
 
     getAllEditedFormsNotPrinted: state => {
-        let edited_forms = Array();
-        for (let form_type in state.forms) {
-            for (let form_id in state.forms[form_type]) {
+        const edited_forms = [];
+        for (const form_type in state.forms) {
+            for (const form_id in state.forms[form_type]) {
                 if ("data" in state.forms[form_type][form_id] && ! state.forms[form_type][form_id].printed_timestamp) {
                     edited_forms.push(state.forms[form_type][form_id])
                 }
@@ -50,31 +50,31 @@ export const getters = {
     },
 
     getCurrentlyEditedFormData: state => {
-        let form_object = state.currently_editing_form_object;
-        let root = state.forms[form_object.form_type][form_object.form_id]
+        const form_object = state.currently_editing_form_object;
+        const root = state.forms[form_object.form_type][form_object.form_id]
         return root.data;
     },
 
     getCurrentlyEditedForm: state => {
-        let form_object = state.currently_editing_form_object;
+        const form_object = state.currently_editing_form_object;
         return state.forms[form_object.form_type][form_object.form_id]
     },
 
     getAttributeValue: state => (path, id) => {
-        let pathArray = path.split("/")
+        const pathArray = path.split("/")
         pathArray.push(id)
         return nestedFunctions.getProp(state, pathArray)
     },
 
     doesAttributeExist: state => (path, id) => {
-        let pathArray = path.split("/")
+        const pathArray = path.split("/")
         pathArray.push(id)
         const value = nestedFunctions.getProp(state, pathArray)
         return value !== undefined
     },
 
     checkBoxStatus: state => (path, id, value) => {
-        let pathArray = path.split("/")
+        const pathArray = path.split("/")
         pathArray.push(id)
         const stateValue = nestedFunctions.getProp(state, pathArray)
         if (stateValue) {
@@ -94,7 +94,7 @@ export const getters = {
     getArrayOfVehicleYears: () => {
         const start = constants.MIN_VEHICLE_YEAR;
         const end = constants.MAX_VEHICLE_YEAR;
-        let years = []
+        const years = []
         for (let i = start; i <= end; i++) {
             years.push(String(i))
         }
@@ -114,9 +114,9 @@ export const getters = {
     },
 
     isRecentProhibitions: state => {
-        for (let form_type in state.forms) {
+        for (const form_type in state.forms) {
             // console.log('form_type', form_type)
-            for (let form_object in state.forms[form_type]) {
+            for (const form_object in state.forms[form_type]) {
                 if("data" in state.forms[form_type][form_object]) {
                     // the 'data' attribute is added when the form is first edited
                     return true
@@ -143,15 +143,15 @@ export const getters = {
     },
 
     getPdfFileNameString: state => (form_object, document_type) => {
-        let file_extension = ".pdf"
-        let root = state.forms[form_object.form_type][form_object.form_id]
-        let last_name = root.data.last_name;
-        let form_id = root.form_id;
+        const file_extension = ".pdf"
+        const root = state.forms[form_object.form_type][form_object.form_id]
+        const last_name = root.data.last_name;
+        const form_id = root.form_id;
         return last_name + "_" + form_id + "_" + document_type + file_extension;
     },
 
     getPDFTemplateFileName: state => document_type => {
-        let form_object = state.currently_editing_form_object;
+        const form_object = state.currently_editing_form_object;
         return state.form_schemas.forms[form_object.form_type].documents[document_type].pdf;
     },
 
@@ -212,8 +212,8 @@ export const getters = {
     },
 
     isDisplayIcbcPlateLookup: (state, getters) => {
-        let form_object = state.currently_editing_form_object;
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
+        const form_object = state.currently_editing_form_object;
+        const root = state.forms[form_object.form_type][form_object.form_id].data;
         if ('plate_province' in root) {
             if ('objectDsc' in root['plate_province']) {
                 return root['plate_province'].objectCd === "BC" && getters.isUserAuthorized
@@ -226,8 +226,8 @@ export const getters = {
     },
 
     isLicenceJurisdictionBC: (state) => {
-        let form_object = state.currently_editing_form_object;
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
+        const form_object = state.currently_editing_form_object;
+        const root = state.forms[form_object.form_type][form_object.form_id].data;
         if (root['drivers_licence_jurisdiction']) {
             if ("objectDsc" in root['drivers_licence_jurisdiction']) {
                 return root['drivers_licence_jurisdiction'].objectCd === "BC"
@@ -248,10 +248,10 @@ export const getters = {
     },
 
     getFormTypeCount: state => {
-        let FormTypeCount = {}
-        for (let form_type in state.forms) {
+        const FormTypeCount = {}
+        for (const form_type in state.forms) {
             FormTypeCount[form_type] = 0;
-            for (let form_id in state.forms[form_type]) {
+            for (const form_id in state.forms[form_type]) {
                 if ( ! ("data" in state.forms[form_type][form_id])) {
                     FormTypeCount[form_type]++
                 }
@@ -263,7 +263,7 @@ export const getters = {
 
     getNextAvailableUniqueIdByType: state => form_type => {
         console.log("inside getNextAvailableUniqueIdByType()", form_type)
-        for (let form_id in state.forms[form_type]) {
+        for (const form_id in state.forms[form_type]) {
             if( ! ("data" in state.forms[form_type][form_id])) {
                 return form_id
             }
@@ -271,11 +271,11 @@ export const getters = {
     },
 
     arrayOfFormsRequiringRenewal: state => {
-        let forms = Array();
-        for (let form_type in state.forms) {
-            for (let form_id in state.forms[form_type]) {
-                let form_object = state.forms[form_type][form_id]
-                let days_to_expiry = moment(form_object.lease_expiry).diff(moment(), 'days')
+        const forms = [];
+        for (const form_type in state.forms) {
+            for (const form_id in state.forms[form_type]) {
+                const form_object = state.forms[form_type][form_id]
+                const days_to_expiry = moment(form_object.lease_expiry).diff(moment(), 'days')
                 if (! form_object.printed_timestamp && days_to_expiry < constants.UNIQUE_ID_REFRESH_DAYS) {
                     forms.push(form_object)
                 }
@@ -312,7 +312,7 @@ export const getters = {
     },
 
     getFormPrintValue: state => (form_object, attribute) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
+        const root = state.forms[form_object.form_type][form_object.form_id].data;
         if (!(attribute in root)) {
             return '';
         }
@@ -320,7 +320,7 @@ export const getters = {
     },
 
     getFormPrintListValues: state => (form_object, attribute) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
+        const root = state.forms[form_object.form_type][form_object.form_id].data;
         if (!(attribute in root)) {
             return '';
         }
@@ -354,7 +354,7 @@ export const getters = {
         return moment.tz(root[dateString] + " " + root[timeString], 'YYYYMMDD HHmm', true, constants.TIMEZONE)
     },
     getFormPrintRadioValue: state => (form_object, attribute, checked_value) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
+        const root = state.forms[form_object.form_type][form_object.form_id].data;
         if (!(attribute in root)) {
             return false;
         }
@@ -362,7 +362,7 @@ export const getters = {
     },
 
     getFormPrintCheckedValue: state => (form_object, attribute, checked_value) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
+        const root = state.forms[form_object.form_type][form_object.form_id].data;
         if (!(attribute in root)) {
             return '';
         }
@@ -370,11 +370,11 @@ export const getters = {
     },
 
     getFormPrintJurisdiction: state => (form_object, attribute) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
+        const root = state.forms[form_object.form_type][form_object.form_id].data;
         if (!(attribute in root)) {
             return '';
         }
-        let filteredObject = state.jurisdictions.filter( j => j === root[attribute]);
+        const filteredObject = state.jurisdictions.filter( j => j === root[attribute]);
         return filteredObject[0]['objectCd'].toUpperCase()
     },
 
@@ -419,7 +419,7 @@ export const getters = {
 
     isUserHasAtLeastOneFormId: (state, getters) => {
         const form_types = getters.getFormTypeCount;
-        for (let row in form_types) {
+        for (const row in form_types) {
                 if (form_types[row] > 0) {
                     return true
                 }
@@ -489,7 +489,7 @@ export const getters = {
     },
 
     locationOfVehicle: state => (form_object) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
+        const root = state.forms[form_object.form_type][form_object.form_id].data;
         if (!("vehicle_impounded" in root)) {
             return '';
         }
