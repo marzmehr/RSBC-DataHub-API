@@ -29,6 +29,8 @@ class Config(BaseConfig):
 
     KEYCLOAK_CERTS_URL = "{}realms/{}/protocol/openid-connect/certs".format(KEYCLOAK_AUTH_URL, KEYCLOAK_REALM)
 
+    INGESTOR_URL                        = os.getenv('INGESTOR_URL','http://localhost:5000')
+
     URL_PREFIX                          = os.getenv('URL_PREFIX', '')  # no trailing slash!
 
     MAX_RECORDS_RETURNED = 500

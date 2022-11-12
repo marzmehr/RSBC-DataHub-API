@@ -64,3 +64,43 @@ def splunk_get_vehicle(**kwargs) -> tuple:
         "queried_plate": kwargs.get('plate_number')
     }
     return True, kwargs
+
+
+def get_icbc_payload(**kwargs) -> tuple:
+    base64_encode_pdf_string = 'abc'
+    kwargs['icbc_payload'] = create_icbc_payload(kwargs['payload']['data'],kwargs['payload']['form_id'], base64_encode_pdf_string)
+    return True, kwargs
+
+
+def create_icbc_payload(data, form_id, base64_encode_pdf_string) -> dict:
+
+    payload = {
+        "dlNumber":'',
+        "dlJurisdiction": data['drivers_licence_jurisdiction']['objectCd'],
+        "lastName": data['last_name'],
+        "firstName": '',
+        "birthdate": '',
+        "plateJurisdiction": '',
+        "plateNumber": '',
+        "pujCode": '',
+        "nscNumber": '',
+        "section": "215.2",
+        "violationLocation": data['offence_city']['objectCd'].upper(),
+        "noticeNumber": "VA" + form_id[2:8],
+        "violationDate": data['prohibition_start_date'],
+        "violationTime": data['prohibition_start_time'],
+        "officerDetachment": data['agency'],        
+        "officerNumber": data['province']['objectCd']+ data['badge_number'],
+        "officerName": data['officer_name'],
+        "pdf": base64_encode_pdf_string,        
+    }
+
+    if 'drivers_number' in data: payload["dlNumber"]=data['drivers_number']
+    if 'dob' in data: payload["birthdate"]=data['dob']    
+    if 'first_name' in data: payload["firstName"]=data['first_name']
+    if 'plate_province' in data: payload["plateJurisdiction"]=data['plate_province']['objectCd']    
+    if 'plate_number' in data: payload["plateNumber"]=data['plate_number']    
+    if 'puj_code' in data: payload["pujCode"]=data['puj_code']['objectCd']    
+    if 'nsc_number' in data: payload["nscNumber"]=data['nsc_number']
+    
+    return {"icbc_submission":payload, "event_type":"icbc_submission", "event_version":"1.5"}
