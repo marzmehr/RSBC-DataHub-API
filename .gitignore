@@ -11,4 +11,5 @@ node_modules/
 .nvm/
 env/
 local.sh
+local-rabbitmq-docker.yml
 

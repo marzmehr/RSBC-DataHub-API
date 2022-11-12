@@ -17,6 +17,12 @@ class Config:
     RABBITMQ_MESSAGE_ENCODE             = os.getenv('RABBITMQ_MESSAGE_ENCODE', 'utf-8')
     ENCRYPT_KEY                         = os.getenv('ENCRYPT_KEY')
 
+
+    # ICBC API
+    ICBC_API_ROOT                       = os.getenv('ICBC_API_ROOT', "http://localhost:8080/api")
+    ICBC_API_USERNAME                   = os.getenv('ICBC_API_USERNAME', 'user1')
+    ICBC_API_PASSWORD                   = os.getenv('ICBC_API_PASSWORD', 'secret')
+
     # Common Hosted Email Services API
     COMM_SERV_AUTH_URL                  = os.getenv('COMM_SERV_AUTH_URL', 'http://localhost')
     COMM_SERV_API_ROOT_URL              = os.getenv('COMM_SERV_API_ROOT_URL', 'http://localhost')

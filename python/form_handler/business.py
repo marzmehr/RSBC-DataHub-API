@@ -4,6 +4,8 @@ import python.common.rsi_email as rsi_email
 import python.common.splunk_application_for_review as splunk
 import python.common.splunk as common_splunk
 
+import python.common.icbc_service as icbc_service
+
 
 def process_incoming_form() -> dict:
     """
@@ -191,5 +193,8 @@ def process_incoming_form() -> dict:
             {"try": rsi_email.applicant_evidence_received, "fail": []},
             {"try": splunk.evidence_received, "fail": []},
             {"try": common_splunk.log_to_splunk, "fail": []},
+        ],
+        "icbc_submission": [
+            {"try": icbc_service.submit_to_icbc, "fail": []},            
         ]
     }
