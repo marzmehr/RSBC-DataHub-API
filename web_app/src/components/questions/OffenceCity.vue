@@ -48,7 +48,7 @@ export default {
       // "getArrayOfBCCityObjects"
     ]),
     getArrayOfBCCityObjects(){
-      return this.$store.state.cities
+      return this.$store.state.Common.cities
     },
     ruleObject() {
       return {

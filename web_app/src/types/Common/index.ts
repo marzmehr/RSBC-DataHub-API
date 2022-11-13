@@ -51,8 +51,8 @@ export interface configurationInfoType {
 }
 
 export interface currentlyEditingFormObjectInfoType {
-    formType: string;
-    formId: string;
+    form_type: string;
+    form_id: string;
 }
 
 export interface formsInfoType {

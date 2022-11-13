@@ -5,7 +5,7 @@ import {plugins} from "@/store/plugins";
 
 import {getters} from "@/store/getters";
 import {mutations} from "@/store/mutations";
-import {version} from "../../package.json";
+// import {version} from "../../package.json";
 
 
 
@@ -20,17 +20,17 @@ const rsiStore = new Vuex.Store({
 
     state: {
         admin_users: {},
-        agencies: [],
-        db_ready: false,
-        cities: [],
-        countries: [],
-        configuration: {
-          environment: 'prod'
-        },
-        currently_editing_form_object: {
-          "form_type": null,
-          "form_id": null
-        },
+        // agencies: [],
+        // db_ready: false,
+        // cities: [],
+        // countries: [],
+        // configuration: {
+        //   environment: 'prod'
+        // },
+        // currently_editing_form_object: {
+        //   "form_type": null,
+        //   "form_id": null
+        // },
         forms: {
           "IRP": {},
           "24Hour": {},
@@ -99,25 +99,25 @@ const rsiStore = new Vuex.Store({
             }
           }
         },
-        icbc_vehicle_lookup: [],
-        impound_lot_operators: [],
+        // icbc_vehicle_lookup: [],
+        // impound_lot_operators: [],
         isUserAuthorized: null,
-        isOnline: true,
-        jurisdictions: [],
+        // isOnline: true,
+        // jurisdictions: [],
         keycloak: {},
-        loaded: {
-          "agencies": false,
-          "impound_lot_operators": false,
-          "countries": false,
-          "jurisdictions": false,
-          "provinces": false,
-          "cities": false,
-          "vehicles": false,
-          "vehicle_styles": false,
-          "configuration": false,
-        },
-        pickup_locations: [],
-        provinces: [],
+        // loaded: {
+        //   "agencies": false,
+        //   "impound_lot_operators": false,
+        //   "countries": false,
+        //   "jurisdictions": false,
+        //   "provinces": false,
+        //   "cities": false,
+        //   "vehicles": false,
+        //   "vehicle_styles": false,
+        //   "configuration": false,
+        // },
+        // pickup_locations: [],
+        // provinces: [],
         user_roles: {},
         users: {
           agency: '',
@@ -127,9 +127,9 @@ const rsiStore = new Vuex.Store({
           user_guid: '',
           username: ''
         },
-        vehicles: [],
-        vehicle_styles: [],
-        version: version,
+        // vehicles: [],
+        // vehicle_styles: [],
+        // version: version,
     },
 
     getters: getters,

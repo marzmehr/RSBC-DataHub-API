@@ -51,7 +51,9 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["editExistingForm", "setNewFormDefaults"])
+    ...mapMutations([
+      // "editExistingForm", 
+      "setNewFormDefaults"])
   },
   components: {
     CheckField,

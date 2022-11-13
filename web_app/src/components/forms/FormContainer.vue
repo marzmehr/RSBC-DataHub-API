@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     getCurrentlyEditedFormId(){
-      return this.$store.state.currently_editing_form_object.form_id
+      return this.$store.state.Common.currently_editing_form_object.form_id
     },
     // ...mapGetters([
       // 'getCurrentlyEditedFormId', 

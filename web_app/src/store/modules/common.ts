@@ -15,12 +15,12 @@ class Common extends VuexModule {
     public adminUsers: adminUserInfoType[] = [];
     public cities: cityInfoType[] = [];
     public countries: countryInfoType[] = [];
-    public configuration = {} as configurationInfoType;
-    public currentlyEditingFormObject = {} as currentlyEditingFormObjectInfoType;
+    public configuration = {environment:"prod"} as configurationInfoType;
+    public currently_editing_form_object = {"form_type": null, "form_id": null} as currentlyEditingFormObjectInfoType;
     public formsInfo = {} as formsInfoType;
 
     public icbcVehicleLookup: any[] = [];
-    public impoundLotOperators: impoundLotOperatorsInfoType[] = [];
+    public impound_lot_operators: impoundLotOperatorsInfoType[] = [];
     public isUserAuthorized = null;
     public isOnline = true;
     public jurisdictions: jurisdictionInfoType[] = [];
@@ -31,12 +31,31 @@ class Common extends VuexModule {
     public userRoles: userRoleInfoType[] = [];
     public user = {} as userInfoType;
     public vehicles: vehicleInfoType[] = [];
-    public vehicleStyles: vehicleStyleInfoType[] = [];    
+    public vehicle_styles: vehicleStyleInfoType[] = [];    
     public movedToPrintPage = false;
 
 
     @Mutation
-    public  setAgencies(agencies: string[]): void {
+    public editExistingForm (payload) {
+        this.currently_editing_form_object = {"form_id": payload.form_id, "form_type": payload.form_type}
+    }
+    @Mutation
+    public stopEditingCurrentForm() {
+        this.currently_editing_form_object = {"form_id": null, "form_type": null}
+    }
+
+    @Mutation
+    public populateStaticLookupTables(payload) {
+        this[payload.type]=payload.data
+    }
+
+    @Mutation
+    public resourceLoaded(resource) {
+        this.loaded[resource]=true
+    }
+
+    @Mutation
+    public setAgencies(agencies: string[]): void {
         this.agencies = agencies;
     }
     @Action
@@ -91,7 +110,7 @@ class Common extends VuexModule {
 
     @Mutation
     public setCurrentlyEditingFormObject(currentlyEditingFormObject: currentlyEditingFormObjectInfoType): void {
-        this.currentlyEditingFormObject = currentlyEditingFormObject;
+        this.currently_editing_form_object = currentlyEditingFormObject;
     }
     @Action
     public UpdateCurrentlyEditingFormObject(newCurrentlyEditingFormObject: currentlyEditingFormObjectInfoType) {
@@ -118,7 +137,7 @@ class Common extends VuexModule {
 
     @Mutation
     public setImpoundLotOperators(impoundLotOperators: impoundLotOperatorsInfoType[]): void {   
-        this.impoundLotOperators = impoundLotOperators
+        this.impound_lot_operators = impoundLotOperators
     }
     @Action
     public UpdateImpoundLotOperators(newImpoundLotOperators: impoundLotOperatorsInfoType[]): void {
@@ -217,7 +236,7 @@ class Common extends VuexModule {
 
     @Mutation
     public setVehicleStyle(vehicleStyles: vehicleStyleInfoType[]): void {   
-        this.vehicleStyles = vehicleStyles
+        this.vehicle_styles = vehicleStyles
     }
     @Action
     public UpdateVehicleStyle(newVehicleStyle: vehicleStyleInfoType[]): void {

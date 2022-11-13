@@ -24,7 +24,7 @@ export async function  fetchStaticLookupTables(payload) {
         })
         .then( data => {
             const admin_prefix = payload.admin ? 'admin_' : ''
-            rsiStore.commit("populateStaticLookupTables", { "type": admin_prefix + payload.resource, "data": data })
+            rsiStore.commit("Common/populateStaticLookupTables", { "type": admin_prefix + payload.resource, "data": data })
             resolve(data)
         })
         .catch((error) => {
@@ -40,47 +40,47 @@ export async function  fetchStaticLookupTables(payload) {
 export function downloadLookupTables() {
     fetchStaticLookupTables({"resource": "agencies", "admin": false, "static": true})    
     .then(() => {
-        rsiStore.commit("resourceLoaded", "agencies")
+        rsiStore.commit("Common/resourceLoaded", "agencies")
     })
 
     fetchStaticLookupTables({"resource": "impound_lot_operators", "admin": false, "static": true})
     .then(() => {
-        rsiStore.commit("resourceLoaded", "impound_lot_operators")
+        rsiStore.commit("Common/resourceLoaded", "impound_lot_operators")
     })
 
     fetchStaticLookupTables({"resource": "countries", "admin": false, "static": true})
     .then(() => {
-        rsiStore.commit("resourceLoaded", "countries")
+        rsiStore.commit("Common/resourceLoaded", "countries")
     })
 
     fetchStaticLookupTables({"resource": "jurisdictions", "admin": false, "static": true})
     .then(() => {
-        rsiStore.commit("resourceLoaded", "jurisdictions")
+        rsiStore.commit("Common/resourceLoaded", "jurisdictions")
     })
 
     fetchStaticLookupTables({"resource": "provinces", "admin": false, "static": true})
     .then(() => {
-        rsiStore.commit("resourceLoaded", "provinces")
+        rsiStore.commit("Common/resourceLoaded", "provinces")
     })  
 
     fetchStaticLookupTables({"resource": "cities", "admin": false, "static": true})
     .then(() => {
-        rsiStore.commit("resourceLoaded", "cities")
+        rsiStore.commit("Common/resourceLoaded", "cities")
     })
 
     fetchStaticLookupTables({"resource": "vehicles", "admin": false, "static": true})
     .then(() => {
-        rsiStore.commit("resourceLoaded", "vehicles")
+        rsiStore.commit("Common/resourceLoaded", "vehicles")
     })
 
     fetchStaticLookupTables({"resource": "vehicle_styles", "admin": false, "static": true})
     .then(() => {
-        rsiStore.commit("resourceLoaded", "vehicle_styles")
+        rsiStore.commit("Common/resourceLoaded", "vehicle_styles")
     })
 
     fetchStaticLookupTables({"resource": "configuration", "admin": false, "static": true})
     .then(() => {
-        rsiStore.commit("resourceLoaded", "configuration")
+        rsiStore.commit("Common/resourceLoaded", "configuration")
     })
 
 }

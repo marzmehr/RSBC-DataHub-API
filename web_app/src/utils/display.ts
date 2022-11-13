@@ -4,8 +4,8 @@ import {getFormTypeCount} from "@/utils/forms"
 
 export function allResourcesLoaded(){
     let status = true;
-    for (const key in rsiStore.state.loaded) {
-        if ( ! rsiStore.state.loaded[key]) {
+    for (const key in rsiStore.state.Common.loaded) {
+        if ( ! rsiStore.state.Common.loaded[key]) {
             status = false
         }
     }

@@ -3,11 +3,11 @@ import nestedFunctions from "@/helpers/nestedFunctions";
 
 export const mutations = {
 
-    editExistingForm (state, payload) {
-        Vue.set(state.currently_editing_form_object, "form_id", payload.form_id)
-        Vue.set(state.currently_editing_form_object, "form_type", payload.form_type)
+    // editExistingForm (state, payload) {
+    //     Vue.set(state.currently_editing_form_object, "form_id", payload.form_id)
+    //     Vue.set(state.currently_editing_form_object, "form_type", payload.form_type)
 
-    },
+    // },
 
     updateFormField (state, event) {
         // DEPRECATED - use updateFormAttribute instead"
@@ -37,7 +37,7 @@ export const mutations = {
 
     setFormAsImpounded (state) {
         console.log("setFormAsImpounded()", )
-        const form_object = state.currently_editing_form_object
+        const form_object = state.Common.currently_editing_form_object
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "vehicle_impounded", "Yes");
     },
 
@@ -65,13 +65,13 @@ export const mutations = {
         Vue.delete(state.forms[payload.form_type][payload.form_id], "data")
     },
 
-    stopEditingCurrentForm(state) {
-        state.currently_editing_form_object.form_type = null;
-        state.currently_editing_form_object.form_id = null;
-    },
+    // stopEditingCurrentForm(state) {
+    //     state.currently_editing_form_object.form_type = null;
+    //     state.currently_editing_form_object.form_id = null;
+    // },
 
     markFormStatusAsServed(state, date) {
-        const form_object = state.currently_editing_form_object
+        const form_object = state.Common.currently_editing_form_object
         Vue.set(state.forms[form_object.form_type][form_object.form_id], "printed_timestamp", date)
     },
 
@@ -87,12 +87,12 @@ export const mutations = {
         }
     },
 
-    populateStaticLookupTables(state, payload) {
-        Vue.set(state, payload.type, payload.data)
-    },
+    // populateStaticLookupTables(state, payload) {
+    //     Vue.set(state, payload.type, payload.data)
+    // },
 
     populateDriverFromICBC(state, data) {
-        const form_object = state.currently_editing_form_object
+        const form_object = state.Common.currently_editing_form_object
         const address = data['party']['addresses'][0]
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "dob", data['birthDate'].replace("-",""));
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "drivers_number", data['dlNumber']);
@@ -107,7 +107,7 @@ export const mutations = {
 
     populateVehicleFromICBC(state, payload) {
         const data = payload[0]
-        const form_object = state.currently_editing_form_object
+        const form_object = state.Common.currently_editing_form_object
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "registration_number", data['registrationNumber']);
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "vehicle_year", data['vehicleModelYear']);
 
@@ -173,7 +173,7 @@ export const mutations = {
 
     populateDriverFromBarCode(state, data) {
         console.log("inside populateDriverFromBarCode()", data)
-        const form_object = state.currently_editing_form_object
+        const form_object = state.Common.currently_editing_form_object
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "drivers_number", data['number']);
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "address1", data['address']['street']);
         Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "city", data['address']['city']);
@@ -187,9 +187,9 @@ export const mutations = {
         Vue.set(state, "isUserAuthorized", boolean_payload)
     },
 
-    resourceLoaded(state, resource) {
-        Vue.set(state.loaded, resource, true)
-    }
+    // resourceLoaded(state, resource) {
+    //     Vue.set(state.loaded, resource, true)
+    // }
 }
 
 

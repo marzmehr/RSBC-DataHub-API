@@ -17,7 +17,7 @@ export const getters = {
     },
 
     hasFormBeenPrinted: state => {
-        const form_object = state.currently_editing_form_object;
+        const form_object = state.Common.currently_editing_form_object;
         return Boolean(state.forms[form_object.form_type][form_object.form_id].printed_timestamp)
     },
 

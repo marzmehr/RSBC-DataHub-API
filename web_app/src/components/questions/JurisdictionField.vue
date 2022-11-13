@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     getArrayOfJurisdictions(){
-        return this.$store.state.jurisdictions
+        return this.$store.state.Common.jurisdictions
     },
     ...mapGetters([
       "getAttributeValue", 

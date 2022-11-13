@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     getArrayOfProvinces(){
-        return this.$store.state.provinces;
+        return this.$store.state.Common.provinces;
     },
     ...mapGetters(["getAttributeValue", "hasFormBeenPrinted"])
   },

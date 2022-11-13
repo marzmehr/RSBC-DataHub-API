@@ -34,7 +34,7 @@ export default {
   computed: {
     // ...mapGetters(["getArrayOfVehicleMakeModel"])
     getArrayOfVehicleMakeModel(){
-      return this.$store.state.vehicles
+      return this.$store.state.Common.vehicles
     }
   },
   methods: {

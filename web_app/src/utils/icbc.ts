@@ -12,12 +12,12 @@ export async function findVehicleByFuzzySearch(payload) {
     console.log("findVehicleByFuzzySearch()", payload[0])
     const icbcData = payload[0]
 
-    const primeCorpVehicleList = rsiStore.state.vehicles.map(v => v.search);
+    const primeCorpVehicleList = rsiStore.state.Common.vehicles.map(v => v.search);
     const results = fuzzysort.go(icbcData['vehicleMake'] + " - " + icbcData['vehicleModel'], primeCorpVehicleList)
     return await new Promise((resolve, reject) => {
         console.log("findVehicleByFuzzySearch() - results", results, payload)
         if (results.length >= 1) {
-            const arrayOfVehicleMakeModel = rsiStore.state.vehicles
+            const arrayOfVehicleMakeModel = rsiStore.state.Common.vehicles
             const vehicleObject = arrayOfVehicleMakeModel.filter(v => v.search === results[0].target)
             resolve(vehicleObject[0])
         } else {

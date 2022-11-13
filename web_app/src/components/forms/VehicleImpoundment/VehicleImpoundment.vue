@@ -79,7 +79,7 @@ export default {
   },
   mounted() {
     const payload = {form_type: this.name, form_id: this.id}
-    this.editExistingForm(payload)
+    this.$store.commit("Common/editExistingForm",payload)
     this.setNewFormDefaults(payload)
     this.data = getCurrentlyEditedFormData()
     this.isMounted = true

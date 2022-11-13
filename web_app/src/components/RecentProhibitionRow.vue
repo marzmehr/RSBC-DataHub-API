@@ -55,7 +55,7 @@ export default {
       //"getDocumentsToPrint"])
   },
   methods: {
-    ...mapMutations(["editExistingForm"]),
+    // ...mapMutations(["editExistingForm"]),
     ...mapActions(["saveFormAndGeneratePDF"]),
     deleteSpecificFormFromTable(form){
       deleteSpecificForm(form)

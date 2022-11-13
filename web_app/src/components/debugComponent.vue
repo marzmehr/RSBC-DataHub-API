@@ -30,15 +30,15 @@ export default {
       this.showDetails = ! this.showDetails;
     },
     getAppVersion(){
-      return this.$store.state.version
+      return this.$store.state.Common.version
     },
     getArrayOfVehicleStyles(){
-      return this.$store.state.vehicle_styles
+      return this.$store.state.Common.vehicle_styles
     }
   },
   computed: {
       getEnvironment(){
-        return this.$store.state.configuration.environment
+        return this.$store.state.Common.configuration.environment
       },
       isUserAuthorized(){
         return this.$store.state.isUserAuthorized

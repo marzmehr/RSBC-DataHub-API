@@ -65,7 +65,7 @@ export default {
         // "isDisplayNotLoggedInBanner"
     ]),
     primaryContentClass() {
-      const env = this.$store.state.configuration.environment //this.getEnvironment;
+      const env = this.$store.state.Common.configuration.environment //this.getEnvironment;
       const contentClass = {
         "dev": 'dev-banner',
         "test": 'test-banner',
@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     getAppVersion(){
-      return this.$store.state.version
+      return this.$store.state.Common.version
     }
   } 
 

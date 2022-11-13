@@ -74,7 +74,7 @@ export default {
       // "getArrayOfVehicleStyles"
     ]),
     getArrayOfVehicleStyles(){
-      return this.$store.state.vehicle_styles
+      return this.$store.state.Common.vehicle_styles
     },
     rows() {
       const rows = []

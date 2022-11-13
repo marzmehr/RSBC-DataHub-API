@@ -39,7 +39,7 @@ export function getArrayOfVehicleYears(){
 }
 
 export function isLicenceJurisdictionBC(){
-    const form_object = rsiStore.state.currently_editing_form_object;
+    const form_object = rsiStore.state.Common.currently_editing_form_object;
     const root = rsiStore.state.forms[form_object.form_type][form_object.form_id].data;
     if (root['drivers_licence_jurisdiction']) {
         if ("objectDsc" in root['drivers_licence_jurisdiction']) {

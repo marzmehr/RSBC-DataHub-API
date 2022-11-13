@@ -80,7 +80,7 @@ rsiStore.subscribe((mutation) => {
           mutation.type === 'populateVehicleFromICBC' ||
           mutation.type === 'typeAheadUpdate'
       ) {
-        saveCurrentFormToDB(rsiStore.state.currently_editing_form_object)
+        saveCurrentFormToDB(rsiStore.state.Common.currently_editing_form_object)
       }
     });
 

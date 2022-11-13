@@ -67,7 +67,7 @@ export default {
     },
   computed: {
     getArrayOfImpoundLotOperators(){
-        return this.$store.state.impound_lot_operators.map( o => o.name + ", " + o.lot_address + ", " + o.city + ", " + o.phone);
+        return this.$store.state.Common.impound_lot_operators.map( o => o.name + ", " + o.lot_address + ", " + o.city + ", " + o.phone);
     },
     ...mapGetters(["getAttributeValue", "hasFormBeenPrinted"]),
     getPath() {
@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     getImpoundLotOperatorObject(ilo_string){
-        const results = this.$store.state.impound_lot_operators.filter( o =>
+        const results = this.$store.state.Common.impound_lot_operators.filter( o =>
             (o.name + ", " + o.lot_address + ", " + o.city + ", " + o.phone) === ilo_string
         );
         if (results.length > 0) {

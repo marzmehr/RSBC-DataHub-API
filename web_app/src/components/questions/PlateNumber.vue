@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     isDisplayIcbcPlateLookup(){
-        const form_object = this.$store.state.currently_editing_form_object;
+        const form_object = this.$store.state.Common.currently_editing_form_object;
         const root = this.$store.state.forms[form_object.form_type][form_object.form_id].data;
         if ('plate_province' in root) {
             if ('objectDsc' in root['plate_province']) {

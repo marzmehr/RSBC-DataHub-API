@@ -27,13 +27,13 @@ export async function saveCurrentFormToDB(form_object) {
 
 
 export function getCurrentlyEditedFormData(){
-    const form_object = rsiStore.state.currently_editing_form_object;
+    const form_object = rsiStore.state.Common.currently_editing_form_object;
     const root = rsiStore.state.forms[form_object.form_type][form_object.form_id]
     return root.data;
 }
 
 export function getCurrentlyEditedForm(){
-    const form_object = rsiStore.state.currently_editing_form_object;
+    const form_object = rsiStore.state.Common.currently_editing_form_object;
     return rsiStore.state.forms[form_object.form_type][form_object.form_id]
 }
 
@@ -67,7 +67,7 @@ export async function tellApiFormIsPrinted (payload) {
 export function deleteSpecificForm(form_object ) {
     deleteFormFromDB(form_object.form_id)
     rsiStore.commit('deleteForm', form_object)
-    rsiStore.commit('stopEditingCurrentForm');
+    rsiStore.commit('Common/stopEditingCurrentForm');
 }
 
 export async function renewFormFromApiById (form_type, form_id) {

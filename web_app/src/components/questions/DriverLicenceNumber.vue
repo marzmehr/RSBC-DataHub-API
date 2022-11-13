@@ -77,7 +77,7 @@ export default {
     icbcPayload() {
       return {
         "dlNumber": this.getAttributeValue(this.path, this.id),
-        "form_object": this.$store.state.currently_editing_form_object //this.getCurrentlyEditedFormObject
+        "form_object": this.$store.state.Common.currently_editing_form_object //this.getCurrentlyEditedFormObject
       }
     },
     isDisplayIcbcLicenceLookup(){
