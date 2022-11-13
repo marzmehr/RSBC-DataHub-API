@@ -25,7 +25,9 @@ export default {
     ...mapMutations(["updateCheckBox", "updateFormField", "deleteFormField"])
   },
   computed: {
-    ...mapGetters(["checkBoxStatus", "hasFormBeenPrinted"]),
+    ...mapGetters([
+      // "checkBoxStatus", 
+      "hasFormBeenPrinted"]),
     attribute: {
       get() {
         return this.doesAttributeExist(this.path, this.id + '_true')

@@ -7,7 +7,7 @@
       <p class="card-text text-dark">{{ form.description }}</p>
       <p class="card-text">
         <small class="text-muted">
-          IDs available: {{ getFormTypeCount[form.form_type] }}
+          IDs available: {{ getFormTypeCountInfo()[form.form_type] }}
         </small>
       </p>
 
@@ -29,6 +29,7 @@
 <script>
 
 import {mapGetters} from "vuex";
+import {getFormTypeCount} from "@/utils/forms"
 
 export default {
   name: "ProhibitionCard",
@@ -36,9 +37,22 @@ export default {
       form: {}
   },
   computed: {
-    ...mapGetters(["getFormTypeCount", "getNextAvailableUniqueIdByType"]),
+    // ...mapGetters(["getNextAvailableUniqueIdByType"]),
     isFormAvailable() {
-      return this.getFormTypeCount[this.form.form_type] > 0 && ! this.form.disabled
+      return getFormTypeCount()[this.form.form_type] > 0 && ! this.form.disabled
+    }
+  },
+  methods: {
+    getNextAvailableUniqueIdByType(form_type) {
+        console.log("inside getNextAvailableUniqueIdByType()", form_type)
+        for (const form_id in this.$store.state.forms[form_type]) {
+            if( ! ("data" in this.$store.state.forms[form_type][form_id])) {
+                return form_id
+            }
+        }
+    },
+    getFormTypeCountInfo(){
+      return getFormTypeCount()
     }
   }
 }

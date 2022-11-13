@@ -32,6 +32,7 @@
 import FieldCommon from "@/components/questions/FieldCommon";
 import {mapGetters, mapMutations, mapActions} from "vuex";
 import FadeText from "@/components/FadeText";
+import {lookupPlateFromICBC} from "@/utils/icbc"
 
 export default {
   name: "PlateNumber",
@@ -43,7 +44,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getAttributeValue", "isDisplayIcbcPlateLookup", "getCurrentlyEditedFormId", "hasFormBeenPrinted"]),
+    isDisplayIcbcPlateLookup(){
+        const form_object = this.$store.state.currently_editing_form_object;
+        const root = this.$store.state.forms[form_object.form_type][form_object.form_id].data;
+        if ('plate_province' in root) {
+            if ('objectDsc' in root['plate_province']) {
+                return root['plate_province'].objectCd === "BC" && this.$store.state.isUserAuthorized
+            }
+        }
+        return false
+    },
+    ...mapGetters([
+      "getAttributeValue", 
+      // "isDisplayIcbcPlateLookup", 
+      // "getCurrentlyEditedFormId", 
+      "hasFormBeenPrinted"]),
     icbcPayload() {
       return {
         "plateNumber": this.getAttributeValue(this.path, this.id)
@@ -52,12 +67,12 @@ export default {
   },
   methods: {
     ...mapMutations(["updateFormField"]),
-    ...mapActions(["lookupPlateFromICBC"]),
+    // ...mapActions(["lookupPlateFromICBC"]),
     triggerPlateLookup() {
       console.log("inside triggerPlateLookup()")
       this.fetch_error = ''
       this.display_spinner = true;
-      this.lookupPlateFromICBC([this.icbcPayload, this.path])
+      lookupPlateFromICBC([this.icbcPayload, this.path])
           .then( () => {
             this.display_spinner = false
           })

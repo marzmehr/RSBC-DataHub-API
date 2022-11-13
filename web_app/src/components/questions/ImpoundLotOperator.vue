@@ -66,12 +66,24 @@ export default {
       }
     },
   computed: {
-    ...mapGetters(["getAttributeValue", "hasFormBeenPrinted", "getArrayOfImpoundLotOperators", "getImpoundLotOperatorObject"]),
+    getArrayOfImpoundLotOperators(){
+        return this.$store.state.impound_lot_operators.map( o => o.name + ", " + o.lot_address + ", " + o.city + ", " + o.phone);
+    },
+    ...mapGetters(["getAttributeValue", "hasFormBeenPrinted"]),
     getPath() {
       return this.path + "/" + this.id
     }
   },
   methods: {
+    getImpoundLotOperatorObject(ilo_string){
+        const results = this.$store.state.impound_lot_operators.filter( o =>
+            (o.name + ", " + o.lot_address + ", " + o.city + ", " + o.phone) === ilo_string
+        );
+        if (results.length > 0) {
+            return results[0]
+        }
+        return {}
+    },
     typeAheadUpdate(e) {
       const ilo_object = this.getImpoundLotOperatorObject(e)
       const payload = {target: {value: ilo_object, path: this.path, id: this.id }}

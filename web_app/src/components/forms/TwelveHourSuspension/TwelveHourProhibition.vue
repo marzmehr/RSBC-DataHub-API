@@ -143,8 +143,8 @@ export default class TwelveTwentyFour extends Vue {
 //   computed: {
 //     ...mapGetters([
 //       "getCurrentlyEditedFormObject",
-//       "getDocumentsToPrint",
-//       "getPdfFileNameString",
+//       //"getDocumentsToPrint",
+//       //"getPdfFileNameString",
 //       "getCurrentlyEditedForm"]),
 //   },
 }

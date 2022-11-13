@@ -43,7 +43,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getArrayOfProvinces", "getAttributeValue", "hasFormBeenPrinted"])
+    getArrayOfProvinces(){
+        return this.$store.state.provinces;
+    },
+    ...mapGetters(["getAttributeValue", "hasFormBeenPrinted"])
   },
   methods: {
     ...mapMutations(["updateFormField"]),

@@ -42,7 +42,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getAttributeValue", "hasFormBeenPrinted", "getArrayOfBCCityObjects"]),
+    ...mapGetters([
+      "getAttributeValue", 
+      "hasFormBeenPrinted", 
+      // "getArrayOfBCCityObjects"
+    ]),
+    getArrayOfBCCityObjects(){
+      return this.$store.state.cities
+    },
     ruleObject() {
       return {
         required: true,

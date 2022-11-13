@@ -8,7 +8,7 @@
             <div class="custom-control custom-switch">
               <div type="button"
                    :disabled="hasFormBeenPrinted"
-                   @click="populateOwnerFromDriver(path)"
+                   @click="populateOwnerFromDriverInfo(path)"
                    class="btn btn-secondary btn-sm small">Fill from driver</div>
            </div>
           </div>
@@ -49,6 +49,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import CardsCommon from "@/components/forms/CardsCommon";
+import {populateOwnerFromDriver} from "@/utils/vehicle"
 
 export default {
   name: "VehicleOwnerCard",
@@ -63,10 +64,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["populateOwnerFromDriver"])
+    // ...mapActions(["populateOwnerFromDriver"])
+    populateOwnerFromDriverInfo(path){
+      populateOwnerFromDriver(path)
+    }
   },
   computed: {
-    ...mapGetters(["checkBoxStatus"])
+    // ...mapGetters(["checkBoxStatus"])
   }
 }
 </script>

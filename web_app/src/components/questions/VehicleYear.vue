@@ -6,7 +6,7 @@
                    @input="updateVehicle"
                    tag-placeholder="That year isn't found"
                    placeholder="Select a vehicle year"
-                   :options="getArrayOfVehicleYears">
+                   :options="getArrayOfVehicleYearsOptions">
     </multiselect>
   </div>
 </template>
@@ -15,6 +15,9 @@
 
 import FieldCommon from "@/components/questions/FieldCommon";
 import {mapGetters} from "vuex";
+
+import {getArrayOfVehicleYears} from "@/utils/vehicle"
+
 export default {
   name: "VehicleYear",
   mixins: [FieldCommon],
@@ -25,7 +28,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getArrayOfVehicleYears"])
+    // ...mapGetters(["getArrayOfVehicleYears"])
+    getArrayOfVehicleYearsOptions(){
+      return getArrayOfVehicleYears()
+    }
   },
   methods: {
     updateVehicle(event) {

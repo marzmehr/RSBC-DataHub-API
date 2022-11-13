@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     updateCheckBox (event) {
-        let key = event.target.id + "_" + event.target.value;
+        const key = event.target.id + "_" + event.target.value;
         const payload = {
           target: {
             path: this.path,
@@ -52,7 +52,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["checkBoxStatus", "hasFormBeenPrinted", "doesAttributeExist"]),
+    ...mapGetters([
+      // "checkBoxStatus", 
+      "hasFormBeenPrinted", 
+      "doesAttributeExist"]),
   }
 }
 </script>

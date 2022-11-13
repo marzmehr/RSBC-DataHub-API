@@ -50,7 +50,7 @@ export default {
   name: "ReasonableGroundsCard",
   mixins: [CardsCommon],
   computed: {
-    ...mapGetters(["checkBoxStatus"]),
+    // ...mapGetters(["checkBoxStatus"]),
   }
 }
 </script>

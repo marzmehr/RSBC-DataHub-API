@@ -25,7 +25,10 @@ export default {
   name: "ReturnOfLicenceCard",
   mixins: [CardsCommon],
   computed: {
-    ...mapGetters(["getArrayOfPickupLocations"]),
+    // getArrayOfPickupLocations(){
+    //     return this.$store.state.pickup_locations.map( o => o.address + ", " + o.city);
+    // },
+    // ...mapGetters(["getArrayOfPickupLocations"]),
     licencePickupInPerson() {
       return this.getAttributeValue('return_of_licence') === "Pickup in person";
     },

@@ -52,7 +52,7 @@
 import {mapGetters, mapActions} from "vuex";
 import ApplicationField from "@/components/ApplicationField";
 import Vue from 'vue'
-
+import {applyToUnlockApplication} from "@/utils/application"
 
 export default {
   name: "UserNotPermittedBanner",
@@ -68,7 +68,7 @@ export default {
         first_name: '',
         last_name: '',
         badge_number: '',
-        agency: this.$store.getters.getAgencyName
+        agency: this.getAgencyName
       },
       showApplication: false,
       showSpinner: false,
@@ -76,10 +76,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['applyToUnlockApplication']),
+    // ...mapActions(['applyToUnlockApplication']),
     async dispatchUnlock() {
       this.showSpinner = true
-      await this.applyToUnlockApplication(this.application)
+      await applyToUnlockApplication(this.application)
         .then(() => {
           this.showSpinner = false
           this.showApplication = false
@@ -100,7 +100,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getKeycloakUsername', 'hasUserApplied', 'getAgencyName'])
+    getAgencyName(){
+        if (this.$store.state.keycloak) {
+            if (this.$store.state.keycloak.idTokenParsed) {
+                if (this.$store.state.keycloak.idTokenParsed.bceid_business_name) {
+                    return this.$store.state.keycloak.idTokenParsed.bceid_business_name;
+                }
+            }
+        }
+        return ''
+    },
+    ...mapGetters([
+      // 'getKeycloakUsername', 
+      // 'hasUserApplied', 
+      // 'getAgencyName'
+      ])
   },
   components: {
     ApplicationField

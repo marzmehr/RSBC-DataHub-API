@@ -35,7 +35,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getArrayOfJurisdictions", "getAttributeValue", "hasFormBeenPrinted", "getJurisdictionByFullName"])
+    getArrayOfJurisdictions(){
+        return this.$store.state.jurisdictions
+    },
+    ...mapGetters([
+      "getAttributeValue", 
+      "hasFormBeenPrinted", 
+    // "getJurisdictionByFullName"
+    ])
   },
   methods: {
     ...mapMutations(["updateFormField"]),

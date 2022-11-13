@@ -27,7 +27,9 @@ export default {
       },
     },
     computed: {
-      ...mapGetters(['getFormData', "isVehicleImpounded"]),
+      // ...mapGetters([
+        // 'getFormData', 
+        // "isVehicleImpounded"]),
       document() {
         return print_layout[this.form_type]
       },
@@ -42,8 +44,13 @@ export default {
         return this.document.variants
       },
       getPath() {
-      return `forms/${this.form_type}/${this.id}/data`
-    }
+        return `forms/${this.form_type}/${this.id}/data`
+      }
+    },
+    methods: {
+      isVehicleImpounded(path){
+        return this.$store.getters.doesAttributeExist(path, "vehicle_impounded_yes")
+      },
     },
     components: {
       variant

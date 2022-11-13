@@ -16,7 +16,7 @@
                   class="btn-sm btn-secondary text-white font-weight-bold">ICBC Prefill
             <b-spinner v-if="display_spinner" small label="Loading..."></b-spinner>
           </button>
-          <button id="btn-dl-scan" type="button" :disabled="hasFormBeenPrinted || ! isLicenceJurisdictionBC"
+          <button id="btn-dl-scan" type="button" :disabled="hasFormBeenPrinted || ! isLicencePlateJurisdictionBC"
                   @click="launchDlScanner" class="btn-sm btn-secondary text-white ml-2 font-weight-bold">Scan DL</button>
         </div>
       </div>
@@ -53,6 +53,10 @@ import FieldCommon from "@/components/questions/FieldCommon";
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import FadeText from "@/components/FadeText";
 import dlScanner from "@/helpers/dlScanner";
+import {lookupDriverFromICBC} from "@/utils/icbc"
+import {lookupDriverProvince} from "@/utils/lookups"
+import {isLicenceJurisdictionBC} from "@/utils/vehicle"
+
 
 export default {
   name: "DriversLicenceNumber",
@@ -67,26 +71,33 @@ export default {
     }
   },
   computed: {
+    isLicencePlateJurisdictionBC(){
+      return isLicenceJurisdictionBC()
+    },
     icbcPayload() {
       return {
         "dlNumber": this.getAttributeValue(this.path, this.id),
-        "form_object": this.getCurrentlyEditedFormObject
+        "form_object": this.$store.state.currently_editing_form_object //this.getCurrentlyEditedFormObject
       }
     },
+    isDisplayIcbcLicenceLookup(){
+        return isLicenceJurisdictionBC() && this.$store.state.isUserAuthorized;
+    },
     ...mapGetters([
-        'getCurrentlyEditedFormObject',
+        // 'getCurrentlyEditedFormObject',
       "getAttributeValue",
-      "isDisplayIcbcLicenceLookup",
-      "isLicenceJurisdictionBC"]),
+      // "isDisplayIcbcLicenceLookup",
+      // "isLicenceJurisdictionBC"
+      ]),
   },
   methods: {
     ...mapMutations(["populateDriverFromBarCode"]),
-    ...mapActions(['lookupDriverFromICBC', "lookupDriverProvince"]),
+    // ...mapActions(["lookupDriverProvince"]),
     triggerDriversLookup() {
       console.log("inside triggerDriversLookup()")
       this.fetch_error = ''
       this.display_spinner = true;
-      this.lookupDriverFromICBC([this.path, this.icbcPayload])
+      lookupDriverFromICBC([this.path, this.icbcPayload])
         .then(() => {
           this.display_spinner = false;
         })
@@ -105,7 +116,7 @@ export default {
         return dl_data['address']['province']
       })
       .then( provinceCode => {
-        this.lookupDriverProvince([this.path, provinceCode])
+        lookupDriverProvince([this.path, provinceCode])
       })
       .then( () => {
         this.$bvModal.hide('dl-scanner')
@@ -117,7 +128,7 @@ export default {
       console.log('inside launchDlScanner')
       this.$bvModal.show('dl-scanner')
 
-      let scanner = await dlScanner.openScanner();
+      const scanner = await dlScanner.openScanner();
 
       scanner.addEventListener("inputreport", this.handledScannedBarCode);
 

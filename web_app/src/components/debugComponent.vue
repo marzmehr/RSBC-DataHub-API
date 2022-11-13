@@ -1,11 +1,11 @@
 <template>
     <div id="debug-component" class="card-footer bg-transparent border-0 text-muted small">
-      Version: {{ getAppVersion }}
+      Version: {{ getAppVersion() }}
       <span @click="toggleVisible" class="small text-muted">*</span>
       <div class="small text-muted" v-if="showDetails">
         <div>Environment: {{ getEnvironment.toUpperCase() }}</div>
         <div>isUserHasAtLeastOneFormId: {{ isUserHasAtLeastOneFormId }}</div>
-        <div>getArrayOfVehicleStyles.length: {{ getArrayOfVehicleStyles.length }}</div>
+        <div>getArrayOfVehicleStyles.length: {{ getArrayOfVehicleStyles().length }}</div>
         <div>isUserAuthenticated: {{ isUserAuthenticated }}</div>
         <div>isUserAuthorized: {{ isUserAuthorized }}</div>
         <div>state.isOnline: {{ $store.state.isOnline }}</div>
@@ -28,26 +28,38 @@ export default {
   methods: {
     toggleVisible() {
       this.showDetails = ! this.showDetails;
+    },
+    getAppVersion(){
+      return this.$store.state.version
+    },
+    getArrayOfVehicleStyles(){
+      return this.$store.state.vehicle_styles
     }
   },
   computed: {
+      getEnvironment(){
+        return this.$store.state.configuration.environment
+      },
+      isUserAuthorized(){
+        return this.$store.state.isUserAuthorized
+      },
       ...mapGetters([
-          "getAppVersion",
+          // "getAppVersion",
           "isUserAuthenticated",
-          "isUserAuthorized",
-          "getArrayOfVehicleStyles",
+          // "isUserAuthorized",
+          // "getArrayOfVehicleStyles",
           "isUserHasAtLeastOneFormId",
-          'getCurrentlyEditedFormObject',
-          'getFormData',
-          'isDisplayFeedbackBanner',
-          'isDisplayIssueProhibitions',
-          'isDisplaySearchRecentProhibition',
-          'isDisplayUserNotAuthorizedBanner',
-          'isDisplayWelcomeLoginCard',
-          'isRecentProhibitions',
-          'getEnvironment'
+          // 'getCurrentlyEditedFormObject',
+          // 'getFormData',
+          // 'isDisplayFeedbackBanner',
+          // 'isDisplayIssueProhibitions',
+          // 'isDisplaySearchRecentProhibition',
+          // 'isDisplayUserNotAuthorizedBanner',
+          // 'isDisplayWelcomeLoginCard',
+          // 'isRecentProhibitions',
+          // 'getEnvironment'
     ]),
-  }
+  },
 }
 </script>
 

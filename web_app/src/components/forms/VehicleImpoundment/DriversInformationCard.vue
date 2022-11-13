@@ -12,7 +12,7 @@
     <form-row>
       <gender-field id="driver_gender" :path=path fg_class="col-sm-4">Gender</gender-field>
       <text-field id="expiry_year" :path=path fg_class="col-sm-4" placeholder="YYYY" rules="bcdlExpiryYear">License Expiry Year</text-field>
-      <driver-licence-class v-if="isLicenceJurisdictionBC" id="dl_class" :path=path fg_class="col-sm-2">BCDL Class</driver-licence-class>
+      <driver-licence-class v-if="isLicencePlateJurisdictionBC" id="dl_class" :path=path fg_class="col-sm-2">BCDL Class</driver-licence-class>
     </form-row>
 </form-card>
 </template>
@@ -21,13 +21,17 @@
 import {mapGetters} from "vuex";
 import CardsCommon from "@/components/forms/CardsCommon";
 import DriverLicenceClass from "@/components/questions/DriverLicenceClass";
+import {isLicenceJurisdictionBC} from "@/utils/vehicle"
 
 export default {
   name: "DriversInformationCard",
   components: {DriverLicenceClass},
   mixins: [CardsCommon],
   computed: {
-    ...mapGetters(["isLicenceJurisdictionBC"])
+    isLicencePlateJurisdictionBC(){
+        return isLicenceJurisdictionBC()
+    }
+    // ...mapGetters(["isLicenceJurisdictionBC"])
   }
 }
 </script>

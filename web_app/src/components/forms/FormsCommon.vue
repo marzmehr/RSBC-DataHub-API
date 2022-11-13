@@ -37,7 +37,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getFormData", "getCurrentlyEditedForm"]),
+    // ...mapGetters([
+      // "getFormData", 
+      // "getCurrentlyEditedForm"]),
     getPath() {
       return `forms/${this.name}/${this.id}/data`
     },

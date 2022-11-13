@@ -25,7 +25,10 @@ export default {
   name: "OfficerDetailsCard",
   mixins: [CardsCommon],
   computed: {
-    ...mapGetters(["getCurrentUserObject"])
+    getCurrentUserObject(){
+        return this.$store.state.users
+    }
+    // ...mapGetters(["getCurrentUserObject"])
   }
 }
 </script>

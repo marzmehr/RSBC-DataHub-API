@@ -14,6 +14,9 @@ import {rsiStore} from "@/store/store.js"
 import './registerServiceWorker'
 import constants from "@/config/constants";
 
+import {downloadLookupTables, fetchStaticLookupTables} from "@/utils/calls"
+import {getMoreFormsFromApiIfNecessary, getAllFormsFromDB, saveCurrentFormToDB} from "@/utils/forms"
+import {updateUserIsAuthenticated} from "@/utils/userAuth"
 
 Vue.use(Vuex)
 
@@ -48,10 +51,11 @@ new Vue({
   store: rsiStore,
   async created() {
 
-    await rsiStore.dispatch("getAllFormsFromDB");
+    await getAllFormsFromDB();
 
     // download lookup tables while offline
-    await rsiStore.dispatch("downloadLookupTables")
+    // await rsiStore.dispatch("downloadLookupTables")
+    downloadLookupTables()
 
   },
   render: h => h(App),
@@ -60,13 +64,14 @@ new Vue({
 
 rsiStore.subscribe((mutation) => {
       if (mutation.type === 'setKeycloak') {
-        rsiStore.dispatch("getMoreFormsFromApiIfNecessary")
+        getMoreFormsFromApiIfNecessary()
         // TODO - store.dispatch("renewFormLeasesFromApiIfNecessary")
-        rsiStore.dispatch("fetchStaticLookupTables", {"resource": "user_roles", "admin": false, "static": false})
-            .then(data => {
-                rsiStore.dispatch("updateUserIsAuthenticated", data)
-            })
-        rsiStore.dispatch("fetchStaticLookupTables", {"resource": "users", "admin": false, "static": false})
+        fetchStaticLookupTables({"resource": "user_roles", "admin": false, "static": false})
+          .then(data => {
+              updateUserIsAuthenticated(data)
+          })
+
+        fetchStaticLookupTables({"resource": "users", "admin": false, "static": false})
       }
       if (mutation.type === 'updateFormField' ||
           mutation.type === 'updateFormAttribute' ||
@@ -75,7 +80,7 @@ rsiStore.subscribe((mutation) => {
           mutation.type === 'populateVehicleFromICBC' ||
           mutation.type === 'typeAheadUpdate'
       ) {
-        rsiStore.dispatch("saveCurrentFormToDB", rsiStore.state.currently_editing_form_object)
+        saveCurrentFormToDB(rsiStore.state.currently_editing_form_object)
       }
     });
 

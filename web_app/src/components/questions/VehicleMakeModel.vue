@@ -32,7 +32,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getArrayOfVehicleMakeModel"])
+    // ...mapGetters(["getArrayOfVehicleMakeModel"])
+    getArrayOfVehicleMakeModel(){
+      return this.$store.state.vehicles
+    }
   },
   methods: {
     updateVehicle(event) {

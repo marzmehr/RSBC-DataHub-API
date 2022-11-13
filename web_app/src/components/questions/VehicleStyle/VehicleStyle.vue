@@ -68,10 +68,17 @@ export default {
 
   },
   computed: {
-    ...mapGetters(["getAttributeValue", "hasFormBeenPrinted", "getArrayOfVehicleStyles"]),
+    ...mapGetters([
+      "getAttributeValue", 
+      "hasFormBeenPrinted", 
+      // "getArrayOfVehicleStyles"
+    ]),
+    getArrayOfVehicleStyles(){
+      return this.$store.state.vehicle_styles
+    },
     rows() {
-      let rows = []
-      let rowCount = Math.ceil(this.getArrayOfVehicleStyles.length / this.maxColumns)
+      const rows = []
+      const rowCount = Math.ceil(this.getArrayOfVehicleStyles.length / this.maxColumns)
       for (let row = 0; row < rowCount; row++) {
         rows.push(this.getArrayOfVehicleStyles.slice(row * this.maxColumns, row * this.maxColumns + this.maxColumns ))
       }

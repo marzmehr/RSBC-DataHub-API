@@ -23,7 +23,7 @@
           <div class="d-flex">
             <print-documents
               v-for="(document, index) in getDocumentsToPrint(name)" v-bind:key="index"
-              :form_object="getCurrentlyEditedForm"
+              :form_object="getCurrentlyEditedFormInfo"
               :validate="validate"
               :variants="document.variants">
               {{ document.name }}
@@ -51,6 +51,7 @@ import VehicleImpoundmentCard from "@/components/forms/TwentyFourHourProhibition
 import VehicleInformationCard from "@/components/forms/TwentyFourHourProhibition/VehicleInformationCard";
 import VehicleOwnerCard from "@/components/forms/TwentyFourHourProhibition/VehicleOwnerCard";
 
+import {getCurrentlyEditedFormData, getCurrentlyEditedForm} from "@/utils/forms"
 
 export default {
   name: "TwentyFourHourProhibition",
@@ -69,16 +70,24 @@ export default {
   },
   mixins: [FormsCommon],
   computed: {
+    getCurrentlyEditedFormInfo(){
+      return getCurrentlyEditedForm()
+    },
     ...mapGetters([
-        "getDocumentsToPrint",
+        // "getDocumentsToPrint",
         "getAttributeValue",
-        "getCurrentlyEditedFormData",
-        "getCurrentlyEditedFormObject",
-        "getCurrentlyEditedForm",
+        //"getCurrentlyEditedFormData",
+        // "getCurrentlyEditedFormObject",
+        // "getCurrentlyEditedForm",
         "doesAttributeExist"]),
 
     isPrescribedTestUsed() {
       return this.getAttributeValue(this.getPath, 'prescribed_device') === "Yes";
+    }
+  },
+  methods: {
+    getDocumentsToPrint(form_type){
+        return this.$store.state.form_schemas.forms[form_type].documents;
     }
   },
   props: {
@@ -88,10 +97,10 @@ export default {
     }
   },
   mounted() {
-    let payload = {form_type: this.name, form_id: this.id}
+    const payload = {form_type: this.name, form_id: this.id}
     this.editExistingForm(payload)
     this.setNewFormDefaults(payload)
-    this.data = this.getCurrentlyEditedFormData
+    this.data = getCurrentlyEditedFormData()
     this.isMounted = true
   }
 }

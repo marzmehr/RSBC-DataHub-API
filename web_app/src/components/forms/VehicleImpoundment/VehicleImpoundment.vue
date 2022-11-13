@@ -19,7 +19,7 @@
           <div class="d-flex">
             <print-documents
               v-for="(document, index) in getDocumentsToPrint(name)" v-bind:key="index"
-              :form_object="getCurrentlyEditedForm"
+              :form_object="getCurrentlyEditedFormInfo"
               :validate="validate"
               :variants="document.variants">
               {{ document.name }}
@@ -46,6 +46,8 @@ import ExcessiveSpeedCard from "@/components/forms/VehicleImpoundment/ExcessiveS
 import LinkageCard from "@/components/forms/VehicleImpoundment/LinkageCard";
 import IncidentDetailsCard from "@/components/forms/VehicleImpoundment/IncidentDetailsCard";
 import ImmediateRoadsideProhibition from "@/components/forms/VehicleImpoundment/ImmediateRoadsideProhibition";
+
+import {getCurrentlyEditedFormData, getCurrentlyEditedForm} from "@/utils/forms"
 
 export default {
   name: "VehicleImpoundment",
@@ -76,21 +78,29 @@ export default {
     }
   },
   mounted() {
-    let payload = {form_type: this.name, form_id: this.id}
+    const payload = {form_type: this.name, form_id: this.id}
     this.editExistingForm(payload)
     this.setNewFormDefaults(payload)
-    this.data = this.getCurrentlyEditedFormData
+    this.data = getCurrentlyEditedFormData()
     this.isMounted = true
   },
   computed: {
+    getCurrentlyEditedFormInfo(){
+      return getCurrentlyEditedForm()
+    },
     ...mapGetters([
-        "getDocumentsToPrint",
+        // "getDocumentsToPrint",
         "getAttributeValue",
-        "getCurrentlyEditedForm",
-        "getCurrentlyEditedFormData",
-        "getCurrentlyEditedFormObject",
-        "getPdfFileNameString",
+        // "getCurrentlyEditedForm",
+        // "getCurrentlyEditedFormData",
+        // "getCurrentlyEditedFormObject",
+        // "getPdfFileNameString",
     ]),
+  },
+  methods:{
+    getDocumentsToPrint(form_type){
+        return this.$store.state.form_schemas.forms[form_type].documents;
+    }
   }
 }
 </script>

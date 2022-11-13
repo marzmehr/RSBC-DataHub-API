@@ -25,7 +25,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getForm"]),
+    // ...mapGetters(["getForm"]),
     image() {
       return this.page.image;
     },
@@ -33,7 +33,7 @@ export default {
       return this.page.show_fields;
     },
     formData() {
-        return this.getForm(this.form_type, this.form_id)
+        return this.$store.state.forms[this.form_type][this.form_id] //getForm(this.form_type, this.form_id)
     },
     viewBox() {
       return this.page.viewBox;

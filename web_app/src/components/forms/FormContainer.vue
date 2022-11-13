@@ -26,7 +26,12 @@ export default {
     form_object: Object
   },
   computed: {
-    ...mapGetters(['getCurrentlyEditedFormId', 'getFormIdCheckDigit'])
+    getCurrentlyEditedFormId(){
+      return this.$store.state.currently_editing_form_object.form_id
+    },
+    // ...mapGetters([
+      // 'getCurrentlyEditedFormId', 
+      // 'getFormIdCheckDigit'])
   }
 }
 </script>
