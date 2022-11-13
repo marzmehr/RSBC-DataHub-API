@@ -9,7 +9,7 @@ import VueMask from 'v-mask'
 
 
 import "@/config/custom_stylesheet.scss";
-import {rsiStore} from "@/store/store.js"
+import rsiStore from "@/store"
 
 import './registerServiceWorker'
 import constants from "@/config/constants";

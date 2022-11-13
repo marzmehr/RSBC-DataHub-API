@@ -1,5 +1,5 @@
 import constants from "../config/constants";
-import {rsiStore} from "@/store/store.js"
+import rsiStore from "@/store"
 import {apiHeader} from "@/utils/auth"
 
 export async function  fetchStaticLookupTables(payload) {

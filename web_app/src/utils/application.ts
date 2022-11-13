@@ -1,5 +1,4 @@
 import constants from "../config/constants";
-// import {rsiStore} from "@/store/store.js"
 import {apiHeader} from "@/utils/auth"
 
 export async function applyToUnlockApplication(application) {

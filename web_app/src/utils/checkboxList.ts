@@ -1,4 +1,4 @@
-import {rsiStore} from "@/store/store.js"
+import rsiStore from "@/store"
 
 export function updateRichCheckBox (payload) {
     console.log("inside updateRichCheckBox()", payload)

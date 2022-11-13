@@ -8,7 +8,7 @@
         <div>getArrayOfVehicleStyles.length: {{ getArrayOfVehicleStyles().length }}</div>
         <div>isUserAuthenticated: {{ isUserAuthenticated }}</div>
         <div>isUserAuthorized: {{ isUserAuthorized }}</div>
-        <div>state.isOnline: {{ $store.state.isOnline }}</div>
+        <div>state.isOnline: {{ $store.state.Common.isOnline }}</div>
         <div>state.keycloak.ready: {{ $store.state.keycloak.ready }}</div>
         <div>state.keycloak.authenticated: {{ $store.state.keycloak.authenticated}}</div>
       </div>

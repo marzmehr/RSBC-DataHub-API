@@ -1,4 +1,4 @@
-import {rsiStore} from "@/store/store.js"
+import rsiStore from "@/store"
 import constants from "../config/constants";
 
 

@@ -1,5 +1,4 @@
-import constants from "../config/constants";
-import {rsiStore} from "@/store/store.js"
+import rsiStore from "@/store"
 
 export async function lookupDriverProvince([pathString, provinceCode]) {
     console.log("inside actions.js lookupDriverProvince(): ", pathString, provinceCode)

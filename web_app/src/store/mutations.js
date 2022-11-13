@@ -163,13 +163,13 @@ export const mutations = {
         state.admin_users.push(payload)
     },
 
-    networkIsOnline(state) {
-        Vue.set(state, "isOnline", true)
-    },
+    // networkIsOnline(state) {
+    //     Vue.set(state, "isOnline", true)
+    // },
 
-    networkIsOffline(state) {
-        Vue.set(state, "isOnline", false)
-    },
+    // networkIsOffline(state) {
+    //     Vue.set(state, "isOnline", false)
+    // },
 
     populateDriverFromBarCode(state, data) {
         console.log("inside populateDriverFromBarCode()", data)

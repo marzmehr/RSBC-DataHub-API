@@ -1,5 +1,5 @@
 import constants from "../config/constants";
-import {rsiStore} from "@/store/store.js"
+import rsiStore from "@/store"
 import persistence from "../helpers/persistence";
 import moment from "moment";
 import {apiHeader} from "@/utils/auth"

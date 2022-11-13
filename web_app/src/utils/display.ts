@@ -1,4 +1,4 @@
-import {rsiStore} from "@/store/store.js"
+import rsiStore from "@/store"
 import {getFormTypeCount} from "@/utils/forms"
 
 
@@ -38,7 +38,7 @@ export function isDisplayFeedbackBanner(){
 }
 
 export function isDisplayNotLoggedInBanner(){
-    return ! rsiStore.getters.isUserAuthenticated && rsiStore.state.isOnline && isUserHasAtLeastOneFormId();
+    return ! rsiStore.getters.isUserAuthenticated && rsiStore.state.Common.isOnline && isUserHasAtLeastOneFormId();
 }
 
 // export function isDisplaySearchRecentProhibition(){

@@ -1,5 +1,5 @@
 import constants from "../config/constants";
-import {rsiStore} from "@/store/store.js"
+import rsiStore from "@/store"
 import {lookupDriverProvince} from "@/utils/lookups"
 import fuzzysort from 'fuzzysort'
 import {apiHeader} from "@/utils/auth"
