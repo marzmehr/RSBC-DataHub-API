@@ -87,9 +87,9 @@ export const mutations = {
         }
     },
 
-    // populateStaticLookupTables(state, payload) {
-    //     Vue.set(state, payload.type, payload.data)
-    // },
+    populateStaticLookupTables(state, payload) {
+        Vue.set(state, payload.type, payload.data)
+    },
 
     populateDriverFromICBC(state, data) {
         const form_object = state.Common.currently_editing_form_object
@@ -170,6 +170,11 @@ export const mutations = {
     // networkIsOffline(state) {
     //     Vue.set(state, "isOnline", false)
     // },
+
+    addHtmlToForm(state, htmlInfo){
+        const form_object = htmlInfo.payload
+        Vue.set(state.forms[form_object.form_type][form_object.form_id], "html", htmlInfo.html);
+    },
 
     populateDriverFromBarCode(state, data) {
         console.log("inside populateDriverFromBarCode()", data)

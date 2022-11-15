@@ -16,9 +16,9 @@ export default {
   name: "TextComponent",
   methods: {
     getValuesConcatenatedWithCommas(form_path, attributes_array) {
-      let attributeValues = []
+      const attributeValues = []
       attributes_array.forEach( (attribute) => {
-          let value = this.getStringValue(form_path, attribute)
+          const value = this.getStringValue(form_path, attribute)
           if (value) {
               attributeValues.push(value)
           }
@@ -27,7 +27,7 @@ export default {
     },
 
     getFormattedDate(form_path, [attribute, format_string]) {
-      let value = this.getStringValue(form_path, attribute)
+      const value = this.getStringValue(form_path, attribute)
       if (value) {
         const date_time = moment(value, 'YYYYMMDD', true)
         return date_time.format(format_string)
@@ -36,7 +36,7 @@ export default {
     },
 
     getFormattedTime(form_path, [attribute, format_string]) {
-      let value = this.getStringValue(form_path, attribute)
+      const value = this.getStringValue(form_path, attribute)
       if (value) {
         const date_time = moment(value, 'HHmm', true)
         return date_time.format(format_string)
@@ -45,7 +45,7 @@ export default {
     },
 
     getAreaCode(form_path, attribute) {
-      let value = this.getStringValue(form_path, attribute)
+      const value = this.getStringValue(form_path, attribute)
       if (value) {
         return value.substr(0,3)
       }
@@ -53,7 +53,7 @@ export default {
     },
 
     getPhone(form_path, attribute) {
-      let value = this.getStringValue(form_path, attribute)
+      const value = this.getStringValue(form_path, attribute)
       if (value) {
         return value.substring(4)
       }
@@ -68,7 +68,7 @@ export default {
     },
 
     conditionalMultiLabel(form_path, attribute_pairs) {
-      let strings = []
+      const strings = []
       attribute_pairs.forEach( (pair) => {
         if(this.isExists(form_path, pair[0])) {
           strings.push(pair[1])
@@ -82,10 +82,10 @@ export default {
     },
 
     concatenateDateAndTime(form_path, attributes_pairs) {
-      let results = []
+      const results = []
       attributes_pairs.forEach( (attributes_array) => {
-        let dateValue = this.getStringValue(form_path, attributes_array[0])
-        let timeValue = this.getStringValue(form_path, attributes_array[1])
+        const dateValue = this.getStringValue(form_path, attributes_array[0])
+        const timeValue = this.getStringValue(form_path, attributes_array[1])
         if (dateValue && timeValue) {
             const date_time = moment(dateValue + ' ' + timeValue, 'YYYYMMDD HHmm', true)
             results.push(date_time.format("YYYY-MM-DD HH:mm"))
@@ -96,7 +96,7 @@ export default {
     },
 
     getStringValueWithSuffix(form_path, attribute_array) {
-      let value = this.getStringValue(form_path, attribute_array[0])
+      const value = this.getStringValue(form_path, attribute_array[0])
       if (value) {
         return value + ' ' + attribute_array[1]
       }

@@ -6,7 +6,8 @@ import { ValidationProvider } from 'vee-validate';
 import VueKeyCloak from '@dsb-norge/vue-keycloak-js'
 import router from '@/router'
 import VueMask from 'v-mask'
-
+import "./filters";
+import "@/styles/index.scss";
 
 import "@/config/custom_stylesheet.scss";
 import rsiStore from "@/store"

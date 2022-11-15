@@ -37,7 +37,7 @@ export default {
       get() {
         // loop through the options keys and check the existence of an attribute
         // with the pattern {id}_{key}
-        var result = undefined
+        let result = undefined
         this.options.forEach((option) => {
           if (this.doesAttributeExist(this.path, this.id + "_" + option[0] )) {
             result = option[0]

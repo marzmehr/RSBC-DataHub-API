@@ -15,6 +15,8 @@ export async function  fetchStaticLookupTables(payload) {
 
     console.log("fetchStaticLookupTables()", url)
 
+    const commitPoint = (payload.resource=="users"|| payload.resource=="user_roles")? "populateStaticLookupTables":"Common/populateStaticLookupTables"
+
     return await new Promise((resolve, reject) => {
         fetch(url, {
         "method": 'GET',
@@ -24,7 +26,7 @@ export async function  fetchStaticLookupTables(payload) {
         })
         .then( data => {
             const admin_prefix = payload.admin ? 'admin_' : ''
-            rsiStore.commit("Common/populateStaticLookupTables", { "type": admin_prefix + payload.resource, "data": data })
+            rsiStore.commit(commitPoint, { "type": admin_prefix + payload.resource, "data": data })
             resolve(data)
         })
         .catch((error) => {

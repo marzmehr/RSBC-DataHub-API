@@ -20,8 +20,8 @@ export default {
   methods: {
     officerReport(form_path, attribute) {
       let result_string = ''
-      let value = this.getStringValue(form_path, attribute)
-      let video = this.isExists(form_path, "operating_grounds_video") ? ' VIDEO SURVEILLANCE. ' : undefined
+      const value = this.getStringValue(form_path, attribute)
+      const video = this.isExists(form_path, "operating_grounds_video") ? ' VIDEO SURVEILLANCE. ' : undefined
       if (video) {
         result_string = video;
       }
