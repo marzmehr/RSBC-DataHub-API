@@ -1,0 +1,137 @@
+[
+    {
+      "code": "BGE",
+      "displayName": "BEIGE",
+      "colourClass": "beige"
+    },
+    {
+      "code": "BLK",
+      "displayName": "BLACK",
+      "colourClass": "black"
+    },
+    {
+      "code": "BLU",
+      "displayName": "BLUE",
+      "colourClass": "blue"
+    },
+    {
+      "code": "BRN",
+      "displayName": "BROWN",
+      "colourClass": "brown"
+    },
+    {
+      "code": "BRZ",
+      "displayName": "BRONZE",
+      "colourClass": "bronze"
+    },
+    {
+      "code": "BUR",
+      "displayName": "BURGUNDY",
+      "colourClass": "burgundy"
+    },
+    {
+      "code": "CPR",
+      "displayName": "COPPER",
+      "colourClass": "copper"
+    },
+    {
+      "code": "CRM",
+      "displayName": "CREAM/IVORY",
+      "colourClass": "ivory"
+    },
+    {
+      "code": "DBL",
+      "displayName": "DARK BLUE",
+      "colourClass": "darkblue"
+    },
+    {
+      "code": "DGR",
+      "displayName": "DARK GREEN",
+      "colourClass": "darkgreen"
+    },
+    {
+      "code": "GLD",
+      "displayName": "GOLD",
+      "colourClass": "gold"
+    },
+    {
+      "code": "GRN",
+      "displayName": "GREEN",
+      "colourClass": "green"
+    },
+    {
+      "code": "GRY",
+      "displayName": "GREY",
+      "colourClass": "grey"
+    },
+    {
+      "code": "LBL",
+      "displayName": "LIGHT BLUE",
+      "colourClass": "lightblue"
+    },
+    {
+      "code": "LGR",
+      "displayName": "LIGHT GREEN",
+      "colourClass": "lightgreen"
+    },
+    {
+      "code": "MRN",
+      "displayName": "MAROON",
+      "colourClass": "maroon"
+    },
+    {
+      "code": "ONG",
+      "displayName": "ORANGE",
+      "colourClass": "orange"
+    },
+    {
+      "code": "OTH",
+      "displayName": "OTHER",
+      "colourClass": "other"
+    },
+    {
+      "code": "PLE",
+      "displayName": "PURPLE",
+      "colourClass": "purple"
+    },
+    {
+      "code": "PNK",
+      "displayName": "PINK",
+      "colourClass": "pink"
+    },
+    {
+      "code": "PRI",
+      "displayName": "PRIMER",
+      "colourClass": "primer"
+    },
+    {
+      "code": "RED",
+      "displayName": "RED",
+      "colourClass": "red"
+    },
+    {
+      "code": "SIL",
+      "displayName": "SILVER",
+      "colourClass": "silver"
+    },
+    {
+      "code": "TAN",
+      "displayName": "TAN",
+      "colourClass": "tan"
+    },
+    {
+      "code": "TRQ",
+      "displayName": "TURQUOISE",
+      "colourClass": "turquoise"
+    },
+    {
+      "code": "WHI",
+      "displayName": "WHITE",
+      "colourClass": "white"
+    },
+    {
+      "code": "YEL",
+      "displayName": "YELLOW",
+      "colourClass": "yellow"
+    }
+  ]

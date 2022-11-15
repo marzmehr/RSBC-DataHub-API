@@ -7,7 +7,7 @@ import { VuexModule, Module, Mutation, Action } from 'vuex-module-decorators';
 class MV2906 extends VuexModule {
 
     public mv2906FormsJson: twelveHourFormJsonInfoType[] = [];
-    public mv2906Info = {} as twelveHourFormDataInfoType;  
+    public mv2906Info = {} as twelveHourFormJsonInfoType;  
     public mv2906InfoStates = {} as twelveHourFormStatesInfoType;  
       
     @Mutation
@@ -20,11 +20,11 @@ class MV2906 extends VuexModule {
     }
   
     @Mutation
-    public setMV2906Info(mv2906Info: twelveHourFormDataInfoType): void {   
+    public setMV2906Info(mv2906Info: twelveHourFormJsonInfoType): void {   
         this.mv2906Info = mv2906Info;
     }    
     @Action
-    public UpdateMV2906Info(newMV2906Info: twelveHourFormDataInfoType): void {
+    public UpdateMV2906Info(newMV2906Info: twelveHourFormJsonInfoType): void {
         this.context.commit('setMV2906Info', newMV2906Info);
     }  
 

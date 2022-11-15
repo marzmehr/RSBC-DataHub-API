@@ -97,7 +97,7 @@ export default {
       console.log("inside triggerDriversLookup()")
       this.fetch_error = ''
       this.display_spinner = true;
-      lookupDriverFromICBC([this.path, this.icbcPayload])
+      lookupDriverFromICBC([this.path, this.icbcPayload["dlNumber"]])
         .then(() => {
           this.display_spinner = false;
         })

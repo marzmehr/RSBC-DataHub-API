@@ -72,7 +72,7 @@ export default {
       console.log("inside triggerPlateLookup()")
       this.fetch_error = ''
       this.display_spinner = true;
-      lookupPlateFromICBC([this.icbcPayload, this.path])
+      lookupPlateFromICBC([this.icbcPayload["plateNumber"], this.path])
           .then( () => {
             this.display_spinner = false
           })

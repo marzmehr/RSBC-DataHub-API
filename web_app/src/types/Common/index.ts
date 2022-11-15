@@ -93,3 +93,9 @@ export interface vehicleStyleInfoType {
     code: string;
     name: string;   
 }
+
+export interface vehicleColourInfoType {
+    code: string;
+    displayName: string;
+    colourClass: string;
+}

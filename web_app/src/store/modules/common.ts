@@ -1,6 +1,7 @@
 
-import { adminUserInfoType, cityInfoType, configurationInfoType, countryInfoType, currentlyEditingFormObjectInfoType, formsInfoType, impoundLotOperatorsInfoType, jurisdictionInfoType, loadedInfoType, pickupLocationInfoType, provinceInfoType, userInfoType, userRoleInfoType, vehicleInfoType, vehicleStyleInfoType } from '@/types/Common';
+import { adminUserInfoType, cityInfoType, configurationInfoType, countryInfoType, currentlyEditingFormObjectInfoType, formsInfoType, impoundLotOperatorsInfoType, jurisdictionInfoType, loadedInfoType, pickupLocationInfoType, provinceInfoType, userInfoType, userRoleInfoType, vehicleColourInfoType, vehicleInfoType, vehicleStyleInfoType } from '@/types/Common';
 import { VuexModule, Module, Mutation, Action } from 'vuex-module-decorators';
+import vehicleColours from '@/utils/vehicleColours.json';
 
 @Module({
   namespaced: true
@@ -18,7 +19,7 @@ class Common extends VuexModule {
     public configuration = {environment:"prod"} as configurationInfoType;
     public currently_editing_form_object = {"form_type": null, "form_id": null} as currentlyEditingFormObjectInfoType;
     public formsInfo = {} as formsInfoType;
-
+    public vehicleColours: vehicleColourInfoType[] = vehicleColours;
     public icbcVehicleLookup: any[] = [];
     public impound_lot_operators: impoundLotOperatorsInfoType[] = [];
     public isUserAuthorized = null;

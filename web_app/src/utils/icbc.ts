@@ -29,11 +29,9 @@ export async function findVehicleByFuzzySearch(payload) {
     })
 }
 
-
-
-export async function lookupDriverFromICBC([pathString, icbcPayload]) {
-    console.log("inside actions.js lookupDriverFromICBC():", pathString, icbcPayload)
-    const dlNumber = icbcPayload['dlNumber']
+export async function lookupDriverFromICBC([pathString, dlNumber]) {
+    console.log("inside actions.js lookupDriverFromICBC():", pathString, dlNumber)
+    // const dlNumber = icbcPayload['dlNumber']
     const url = constants.API_ROOT_URL + "/api/v1/icbc/drivers/" + dlNumber
     return await new Promise((resolve, reject) => {
          fetch(url, {
@@ -62,12 +60,11 @@ export async function lookupDriverFromICBC([pathString, icbcPayload]) {
 
 
 
-export async function lookupPlateFromICBC([icbcPayload, path]) {
+export async function lookupPlateFromICBC([plateNumber, path]) {
 
     console.log("inside actions.js lookupPlateFromICBC(): ")
-    console.log("icbcPayload", icbcPayload)
-    const plate_number = icbcPayload['plateNumber']
-    const url = constants.API_ROOT_URL + "/api/v1/icbc/vehicles/" + plate_number
+    console.log("plateNumber", plateNumber)
+    const url = constants.API_ROOT_URL + "/api/v1/icbc/vehicles/" + plateNumber
     return await new Promise((resolve, reject) => {
         fetch(url, {
         "method": 'GET',
