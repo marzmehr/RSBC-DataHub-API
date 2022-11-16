@@ -9,9 +9,9 @@
         </b-row>
         
 		<drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
-		<!-- <vehicle-information-card :vehicleInfo="twelveHourFormData" :vehicleState="fieldStates" @recheckStates="recheckStates()"></vehicle-information-card>
-		<vehicle-impoundment-card :viInfo="twelveHourFormData" :viState="fieldStates" @recheckStates="recheckStates()"></vehicle-impoundment-card>
-		<prohibition-information-card :prohibitionInfo="twelveHourFormData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"></prohibition-information-card>
+		<vehicle-information-card :vehicleInfo="twelveHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
+		<vehicle-disposition-card :vdInfo="twelveHourData" :vdState="fieldStates" @recheckStates="recheckStates()"/>
+		<!-- <prohibition-information-card :prohibitionInfo="twelveHourFormData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"></prohibition-information-card>
 		<officer-details-card :officerInfo="twelveHourFormData" :officerState="fieldStates" @recheckStates="recheckStates()"></officer-details-card>
          -->
 
@@ -46,7 +46,7 @@ import OfficerDetailsCard from "@/components/forms/OfficerDetailsCard.vue";
 import VehicleInformationCard from "@/components/forms/TwelveHourSuspension/VehicleInformationCard.vue";
 import PrintDocuments from "../PrintDocuments.vue";
 import ProhibitionInformationCard from "@/components/forms/TwelveHourSuspension/ProhibitionInformationCard.vue";
-import VehicleImpoundmentCard from "@/components/forms/TwelveHourSuspension/VehicleImpoundmentCard.vue";
+import VehicleDispositionCard from "@/components/forms/TwelveHourSuspension/VehicleDispositionCard.vue";
 
 
 import { twelveHourFormDataInfoType, twelveHourFormJsonInfoType, twelveHourFormStatesInfoType } from '@/types/Forms/MV2906';
@@ -66,7 +66,7 @@ const mv2906State = namespace("MV2906");
 		DriversInformationCard,
 		OfficerDetailsCard,
 		VehicleInformationCard,
-		VehicleImpoundmentCard
+		VehicleDispositionCard
     }
 })
 export default class TwelveHourProhibition extends Vue {  
@@ -138,7 +138,7 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourData.plateNumber='';
         // plateValTag='';
         // plateYear='';
-        twelveHourData.nscProvince='';
+        twelveHourData.nscProvince= {"objectCd":null,"objectDsc":null};
         twelveHourData.nscNumber='';
         twelveHourData.registrationNumber='';
         // vehicleStyle: vehicleStyleInfoType;

@@ -1,23 +1,22 @@
 <template>
-
-	<b-card header-tag="header" bg-variant="gov-accent-grey" border-variant="light">
+	<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light">
 		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Vehicle information</b>      
 		</b-card-header>
-		<b-card border-variant="bright" bg-variant="bright" text-variant="dark" class="my-2">
+		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
 			<b-row>
-				<b-col cols="3">
-					<label class="ml-1 m-0 p-0"> Jurisdiction </label>
+				<b-col cols="3" class="pl-1">
+					<label class="ml-0 m-0 p-0"> Jurisdiction </label>
 					<b-form-select		
-						v-model="driverInfo.plateProvince"
+						v-model="vehicleInfo.plateProvince"
 						@change="update"
 						:disabled="formPrinted"
-						:state="mv2906InfoStates.plateProvince"
+						:state="vehicleState.plateProvince"
 						placeholder="Search for a Jurisdiction"
 						style="display: block;">
 							<b-form-select-option
 								v-for="jurisdiction,inx in jurisdictions" 
-								:key="'jurisdiction-'+jurisdiction.objectCd+inx"
+								:key="'plt-jurisdiction-'+jurisdiction.objectCd+inx"
 								:value="jurisdiction">
 									{{jurisdiction.objectDsc}}
 							</b-form-select-option>    
@@ -26,9 +25,9 @@
 				<b-col class="pr-2" cols="4">
 					<label class="ml-1 m-0 p-0"> Plate Number</label>
 					<b-form-input
-						v-model="driverInfo.plateNumber"
+						v-model="vehicleInfo.plateNumber"
 						:disabled="formPrinted"
-                        :state="mv2906InfoStates.plateNumber"
+                        :state="vehicleState.plateNumber"
 						@change="update"
 						placeholder="Plate">
 					</b-form-input>                                
@@ -50,24 +49,49 @@
 			<b-row>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Vehicle Year </label>
-					<b-form-input>
-					</b-form-input>                                
+					
+					<b-form-select	
+						v-model="vehicleInfo.vehicleYear"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.vehicleYear"							
+						placeholder="Select a vehicle year"
+						style="display: block;">
+							<b-form-select-option
+								v-for="year in vehicleYears" 
+								:key="year"
+								:value="year">
+									{{year}}
+							</b-form-select-option>    
+					</b-form-select>                                
 				</b-col>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Vehicle Make and Model </label>
-					<b-form-input
-					type="number">
-					</b-form-input>  
+					<b-form-select	
+						v-model="vehicleInfo.vehicleMake"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.vehicleMake"							
+						placeholder="Search for a vehicle make and model"
+						style="display: block;">
+							<b-form-select-option
+								v-for="vehicle,inx in vehicles" 
+								:key="vehicle.md+inx"
+								:value="vehicle">
+									{{vehicle.search}}
+							</b-form-select-option>    
+					</b-form-select>  
 				</b-col>
 				
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Vehicle Colour(s)</label>
 					<b-form-select	
-						v-model="driverInfo.vehicleColor"
+						multiple
+						v-model="vehicleInfo.vehicleColor"
 						:disabled="formPrinted"
 						@change="update"
-						:state="mv2906InfoStates.vehicleColor"							
-						placeholder="Search for a Province or State"
+						:state="vehicleState.vehicleColor"							
+						placeholder="Search for a car colour"
 						style="display: block;">
 							<b-form-select-option
 								v-for="colour,inx in vehicleColours" 
@@ -80,8 +104,12 @@
 			</b-row>
 			<b-row>				
 				<b-col cols="3">
-					<label class="ml-1 m-0 p-0"> Prov / State <span class="text-danger">*</span></label>
-					<b-form-select							
+					<label class="ml-1 m-0 p-0"> NSC Prov / State </label>
+					<b-form-select	
+						v-model="vehicleInfo.nscProvince"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.nscProvince"						
 						placeholder="Search for a Province or State"
 						style="display: block;">
 							<b-form-select-option
@@ -93,14 +121,24 @@
 					</b-form-select>   
 				</b-col>
 				<b-col cols="7">
-					<label class="ml-1 m-0 p-0"> Postal / Zip</label>
-					<b-form-input>
-					</b-form-input>                                 
+					<label class="ml-1 m-0 p-0"> NSC Number</label>
+					<b-form-input
+						:class="vehicleInfo.nscNumber.length > 14?'is-invalid':''"
+						v-model="vehicleInfo.nscNumber"						
+						:disabled="formPrinted"
+                        :state="vehicleState.nscNumber"
+						@change="update">
+					</b-form-input>
+					<div 
+						v-if="vehicleInfo.nscNumber.length > 14" 
+						style="font-size:10pt;" 
+						class="text-danger text-left m-0 mt-n p-0">
+						The NSC number cannot exceed 14 characters.
+					</div>					                             
 				</b-col>
 			</b-row>	
 			<div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
 		</b-card>
-		
 
 	</b-card>
 </template>
@@ -108,7 +146,7 @@
 
 <script lang="ts">
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import { namespace } from "vuex-class";
 import moment from 'moment-timezone';
 
@@ -123,9 +161,8 @@ import rsiStore from "@/store";
 import { jurisdictionInfoType, provinceInfoType, vehicleColourInfoType, vehicleInfoType, vehicleStyleInfoType } from '@/types/Common';
 import { twelveHourFormStatesInfoType, twelveHourFormDataInfoType, twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 import Spinner from "@/components/utils/Spinner.vue";
-import {lookupDriverProvince} from "@/utils/lookups";
-import dlScanner from "@/helpers/dlScanner";
 import { lookupPlateFromICBC } from '@/utils/icbc';
+import {getArrayOfVehicleYears} from "@/utils/vehicle";
 
 @Component({
     components: {           
@@ -147,20 +184,19 @@ export default class VehicleInformationCard extends Vue {
     public vehicle_styles: vehicleStyleInfoType[];
 
 	@commonState.State
-    public vehicleColours: vehicleColourInfoType[];
-	
-	@mv2906State.State
-    public mv2906InfoStates: twelveHourFormStatesInfoType;
+    public vehicleColours: vehicleColourInfoType[];	
 
 	@mv2906State.State
     public mv2906Info: twelveHourFormJsonInfoType;
 
-	@mv2906State.Action
-    public UpdateMV2906Info!: (newMV2906Info: twelveHourFormJsonInfoType) => void
+	@Prop({required: true})
+    vehicleInfo!: twelveHourFormDataInfoType;
+	
+	@Prop({required: true})
+	vehicleState!: twelveHourFormStatesInfoType;
 
-	dataReady = false;
-    driverInfo = {} as twelveHourFormDataInfoType;
-	age = 0;
+	dataReady = false;  
+	
 	error = '';
 	path = '';
 	showScannerMessage = false;
@@ -169,21 +205,19 @@ export default class VehicleInformationCard extends Vue {
 	searchingLookup = false;
 	searchingDl = false;
 	formPrinted = false;
+	vehicleYears = [];
 
 
 	mounted() { 
         this.dataReady = false;
-        this.driverInfo = this.mv2906Info.data;
 		this.formPrinted = Boolean(this.mv2906Info.printedTimestamp);
         this.extractFields();
         this.dataReady = true;
     }
 
-	public extractFields(){
-		this.age = 0;
-		this.path = 'forms/' + this.mv2906Info.form_type + '/' + this.mv2906Info.form_id + '/data'
-		
-
+	public extractFields(){		
+		this.path = 'forms/' + this.mv2906Info.form_type + '/' + this.mv2906Info.form_id + '/data';
+		this.vehicleYears = getArrayOfVehicleYears();
 	}
 
 	public triggerPlateLookup(){		
@@ -203,52 +237,16 @@ export default class VehicleInformationCard extends Vue {
 	}
 
 	public updateFormFields(data: any){
-		this.driverInfo.driversNumber = data.number;		
-        this.driverInfo.address = data['address']['street'];
-        this.driverInfo.driverCity = data['address']['city'];
-        this.driverInfo.driverPostalCode = data['address']['postalCode'];
-        this.driverInfo.dob = data['dob'];
-        this.driverInfo.givenName = data['name']['given'];
-        this.driverInfo.lastName = data['name']['surname'];		
-	}
-
-	public handledScannedBarCode(event) {
-		const { data, device, reportId } = event;
-		dlScanner.readFromScanner(device, reportId, data)
-		.then( dlData => {
-			rsiStore.commit("populateDriverFromBarCode", dlData)
-			this.updateFormFields(dlData)
-			return dlData['address']['province']
-		})
-		.then( provinceCode => {
-			lookupDriverProvince([this.path, provinceCode])
-		})
-		.then( () => {
-			this.$bvModal.hide('dl-scanner')
-		})
-	}
-
-	async launchDlScanner() {
-      console.log('inside launchDlScanner')
-      this.$bvModal.show('dl-scanner')
-
-      const scanner = await dlScanner.openScanner();
-
-      scanner.addEventListener("inputreport", this.handledScannedBarCode);
-
-      this.scannerOpened = !!scanner.opened;
-
-    }	
-
-	public closeScannner(){
-		this.showScannerMessage = false;
+		this.vehicleInfo.driversNumber = data.number;		
+        this.vehicleInfo.address = data['address']['street'];
+        this.vehicleInfo.driverCity = data['address']['city'];
+        this.vehicleInfo.driverPostalCode = data['address']['postalCode'];
+        this.vehicleInfo.dob = data['dob'];
+        this.vehicleInfo.givenName = data['name']['given'];
+        this.vehicleInfo.lastName = data['name']['surname'];		
 	}
 
 	public update(){     
-		// console.log(this.driverInfo) 
-		const mv2906 = this.mv2906Info
-		mv2906.data = this.driverInfo
-        this.UpdateMV2906Info(mv2906);
         this.recheckStates()
     }
 
@@ -256,32 +254,25 @@ export default class VehicleInformationCard extends Vue {
         this.$emit('recheckStates')
     }
 
-	get displayIcbcLicenceLookup(){
-
-        return this.mv2906Info.data.driversLicenceJurisdiction.objectCd == "BC" && this.$store.state.isUserAuthorized;
-    }
-
 	get displayIcbcPlateLookup(){
-
-        return this.mv2906Info.data.plateProvince.objectCd == "BC" && this.$store.state.isUserAuthorized;
+        return this.vehicleInfo.plateProvince.objectCd == "BC" && this.$store.state.isUserAuthorized;
     }
 
-	public validateDate(){
-		const validDate = true;
-		if (validDate){
-			this.age = moment().diff(moment(this.driverInfo.dob), 'years');			
-		}
-	}
-
-	public allowedDates(date){
-        const day = moment().startOf('day').format('YYYY-MM-DD');           
-        return (date < day);           
-    }
  
 }
 </script>
 
 <style scoped lang="scss">
+
+	input.is-invalid {
+		background: #ebc417;
+	}
+	select.is-invalid {
+		background: #ebc417;
+		option {
+			background: #FFF;
+		}
+	}
 
 	.fade-out {
 		animation: fadeOut ease 8s;
