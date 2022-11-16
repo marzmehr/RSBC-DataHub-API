@@ -14,23 +14,34 @@ export interface twelveHourFormDataInfoType {
     driverProvince?: provinceInfoType;
     driverPostalCode: string;
     plateProvince: provinceInfoType;
-    plateNumber: string;
-    // plateValTag: string;
-    // plateYear: string;
-    nscProvince: string;
+    plateNumber: string;    
+    nscProvince: provinceInfoType;
     nscNumber: string;
-    registrationNumber: string;
-    // vehicleStyle: vehicleStyleInfoType;
+    registrationNumber: string;   
     vehicleYear: string;
     vehicleMake: vehicleInfoType;
     vehicleColor: string[];
-    // vinNumber: string;
+    vehicleTowed: boolean;    
+    keysOnVehicle?: boolean;
+    impountLotName?: string;
+    impoundLotAddress?: string;
+    impoundLotCity?: string;
+    impoundLotPhone?: string;
+    notTowingReasonOtherDriver?: boolean;
+    otherDriverName?: string;
+    releasedDate?: string;
+    releasedTime?: string;
+    prohibitionAlcohol: boolean;
+    offenceAddress: string;
+    offenceCity: string;
+    agencyFileNumber: string;
+    offenceDate: string;
+    offenceTime: string;
     agency: string;
     badgeNumber: string;
     officerName: string;
     province: provinceInfoType;
-    submitted: boolean;
-    
+    submitted: boolean;    
 }
 
 export interface twelveHourFormJsonInfoType {
@@ -75,17 +86,29 @@ export interface twelveHourFormStatesInfoType {
     driversLicenceJurisdiction: null | boolean;
     officerName: null | boolean;
     plateProvince: null | boolean;    
-    plateNumber: null | boolean; 
-    // plateValTag: null | boolean; 
-    // plateYear: null | boolean; 
+    plateNumber: null | boolean;
     nscProvince: null | boolean; 
     nscNumber: null | boolean; 
     registrationNumber: null | boolean; 
     vehicleYear: null | boolean;
-    // vehicleStyle: null | boolean; 
     vehicleMake: null | boolean; 
     vehicleColor: null | boolean;
-    // vinNumber: null | boolean; 
+    vehicleTowed: null | boolean;    
+    keysOnVehicle: null | boolean;
+    impountLotName: null | boolean;
+    impoundLotAddress: null | boolean;
+    impoundLotCity: null | boolean;
+    impoundLotPhone: null | boolean;
+    notTowingReasonOtherDriver: null | boolean;
+    otherDriverName: null | boolean;
+    releasedDate: null | boolean;
+    releasedTime: null | boolean;
+    prohibitionAlcohol: null | boolean;
+    offenceAddress: null | boolean;
+    offenceCity: null | boolean;
+    agencyFileNumber: null | boolean;
+    offenceDate: null | boolean;
+    offenceTime: null | boolean;    
     province: null | boolean;
     submitted: null | boolean;    
 }
