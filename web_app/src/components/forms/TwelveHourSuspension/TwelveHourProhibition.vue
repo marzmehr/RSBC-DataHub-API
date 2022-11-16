@@ -3,17 +3,17 @@
 	<b-card-header header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
 		<h4>Notice of 12 Hour Licence Suspension</h4>      
 	</b-card-header>
-	<b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="updatedInfo">
+	<b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
         <b-row class="pt-2 pb-0 text-danger border-light">            
             <h4 style="float: right;">{{id}}</h4>      
         </b-row>
         
-		<drivers-information-card @recheckStates="recheckStates()"></drivers-information-card>
-		<vehicle-information-card @recheckStates="recheckStates()"></vehicle-information-card>
-		<vehicle-impoundment-card @recheckStates="recheckStates()"></vehicle-impoundment-card>
-		<prohibition-information-card @recheckStates="recheckStates()"></prohibition-information-card>
-		<officer-details-card @recheckStates="recheckStates()"></officer-details-card>
-        
+		<drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
+		<!-- <vehicle-information-card :vehicleInfo="twelveHourFormData" :vehicleState="fieldStates" @recheckStates="recheckStates()"></vehicle-information-card>
+		<vehicle-impoundment-card :viInfo="twelveHourFormData" :viState="fieldStates" @recheckStates="recheckStates()"></vehicle-impoundment-card>
+		<prohibition-information-card :prohibitionInfo="twelveHourFormData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"></prohibition-information-card>
+		<officer-details-card :officerInfo="twelveHourFormData" :officerState="fieldStates" @recheckStates="recheckStates()"></officer-details-card>
+         -->
 
 	</b-card>
 	<!-- <form-container title="Notice of 12 Hour Licence Suspension" :form_object="formObject" >
@@ -47,7 +47,7 @@ import VehicleInformationCard from "@/components/forms/TwelveHourSuspension/Vehi
 import PrintDocuments from "../PrintDocuments.vue";
 import ProhibitionInformationCard from "@/components/forms/TwelveHourSuspension/ProhibitionInformationCard.vue";
 import VehicleImpoundmentCard from "@/components/forms/TwelveHourSuspension/VehicleImpoundmentCard.vue";
-import {mapGetters} from "vuex";
+
 
 import { twelveHourFormDataInfoType, twelveHourFormJsonInfoType, twelveHourFormStatesInfoType } from '@/types/Forms/MV2906';
 import { currentlyEditingFormObjectInfoType, formsInfoType } from '@/types/Common';
@@ -74,9 +74,6 @@ export default class TwelveHourProhibition extends Vue {
 	@mv2906State.State
     public mv2906Info: twelveHourFormJsonInfoType;
 	
-	@mv2906State.State
-    public mv2906InfoStates: twelveHourFormStatesInfoType;
-
 	@commonState.State
     public formsInfo: formsInfoType;
 
@@ -86,8 +83,6 @@ export default class TwelveHourProhibition extends Vue {
 	@mv2906State.Action
     public UpdateMV2906Info!: (newMV2906Info: twelveHourFormJsonInfoType) => void
 
-    @mv2906State.Action
-    public UpdateMV2906InfoStates!: (newMV2906StatesInfo: twelveHourFormStatesInfoType) => void
 
 	
 	name = '12Hour'; 
@@ -98,47 +93,108 @@ export default class TwelveHourProhibition extends Vue {
 	id = '';
 	movedToPrintPage = false;
 	twelveHourFormData = {} as twelveHourFormJsonInfoType;
+    twelveHourData = {} as twelveHourFormDataInfoType;
 
 	variants = ["icbc", "driver", "police"];
 
 	mounted() {		
 		this.id = this.$route.params?.id;
 		const payload = {form_type: this.name, form_id: this.id}
-		
+		this.clearStates()
 		this.UpdateCurrentlyEditingFormObject(payload);
-		this.extractCurrentlyEditedFormData();		
+        const formData = this.$store.state.forms[this.name][this.id]
+        this.UpdateMV2906Info(formData)
+
+		this.extractCurrentlyEditedFormData();        		
 		
 	}
 
 	public extractCurrentlyEditedFormData() {
-		console.log(this.id)
-		this.twelveHourFormData = this.$store.state.forms['12Hour'][this.id];//this.formsInfo.TwelveHour[this.id];
-        if (!this.twelveHourFormData.data){
-            this.twelveHourFormData.data = {} as twelveHourFormDataInfoType;
-        }
-		if (!this.twelveHourFormData.data?.driversLicenceJurisdiction){
-            this.twelveHourFormData.data.driversLicenceJurisdiction = {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
-		}	
-        if (!this.twelveHourFormData.data?.plateProvince){
-            this.twelveHourFormData.data.plateProvince = {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
-		}	
-		
-		this.UpdateMV2906Info(this.twelveHourFormData);
-		this.dataReady = true;			
 
+        if(this.mv2906Info.data?.driversLicenceJurisdiction?.objectCd){
+            this.twelveHourFormData = this.mv2906Info            
+        }else{
+            this.prepopulateDefaultValues()
+            this.twelveHourData = this.twelveHourFormData.data
+            this.recheckStates()
+            console.log(this.id)
+        }        
+		this.dataReady = true;
 	}
 
+    public prepopulateDefaultValues(){
+        const twelveHourData = {} as twelveHourFormDataInfoType
+        twelveHourData.driversNumber=null;
+        twelveHourData.givenName='';
+        twelveHourData.lastName='';
+        twelveHourData.dob='';
+        twelveHourData.driversLicenceJurisdiction= {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
+        twelveHourData.address='';
+        twelveHourData.driverPhoneNumber='';
+        twelveHourData.driverCity='';
+        twelveHourData.driverProvince= {"objectCd":null,"objectDsc":null};
+        twelveHourData.driverPostalCode='';
+        twelveHourData.plateProvince= {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
+        twelveHourData.plateNumber='';
+        // plateValTag='';
+        // plateYear='';
+        twelveHourData.nscProvince='';
+        twelveHourData.nscNumber='';
+        twelveHourData.registrationNumber='';
+        // vehicleStyle: vehicleStyleInfoType;
+        twelveHourData.vehicleYear='';
+        twelveHourData.vehicleMake={md:'', mk:'', search:''};
+        twelveHourData.vehicleColor=[];
+        // vinNumber='';
+        twelveHourData.agency='';
+        twelveHourData.badgeNumber='';
+        twelveHourData.officerName='';
+        twelveHourData.province= {"objectCd":null,"objectDsc":null};
+        twelveHourData.submitted=false;
+
+        this.twelveHourFormData.data=twelveHourData
+    }
+
 	public clearStates(){
-        const twelveHourFormStates = {} as twelveHourFormStatesInfoType;
-        this.UpdateMV2906InfoStates(twelveHourFormStates); 
-        this.fieldStates = {} as twelveHourFormStatesInfoType;
-        this.dataReady = true; 
+        const twelveHourFormStates = {} as twelveHourFormStatesInfoType;        
+        twelveHourFormStates.driversNumber=null
+        twelveHourFormStates.givenName=null
+        twelveHourFormStates.lastName=null
+        twelveHourFormStates.dob=null   
+        twelveHourFormStates.address=null
+        twelveHourFormStates.driverPhoneNumber=null
+        twelveHourFormStates.driverCity=null
+        twelveHourFormStates.driverProvince=null
+        twelveHourFormStates.driverPostalCode=null
+        twelveHourFormStates.agency=null
+        twelveHourFormStates.badgeNumber=null
+        twelveHourFormStates.driversLicenceJurisdiction=null
+        twelveHourFormStates.officerName=null
+        twelveHourFormStates.plateProvince=null    
+        twelveHourFormStates.plateNumber=null 
+        // plateValTag=null 
+        // plateYear=null 
+        twelveHourFormStates.nscProvince=null 
+        twelveHourFormStates.nscNumber=null 
+        twelveHourFormStates.registrationNumber=null 
+        twelveHourFormStates.vehicleYear=null
+        // vehicleStyle=null 
+        twelveHourFormStates.vehicleMake=null 
+        twelveHourFormStates.vehicleColor=null
+        // vinNumber=null 
+        twelveHourFormStates.province=null
+        twelveHourFormStates.submitted=null    
+
+        this.fieldStates = twelveHourFormStates;
+        this.dataReady = true
     }
 
 	public recheckStates(){
-        //console.log('check')
+        this.UpdateMV2906Info(this.twelveHourFormData)
+        console.log('check')
+        const specialFields = ['dob']
         for(const field of Object.keys(this.fieldStates)){
-            if(this.fieldStates[field]==false){
+            if(this.fieldStates[field]==false && !specialFields.includes(field)){
                 this.checkStates()
                 return 
             }
@@ -146,61 +202,15 @@ export default class TwelveHourProhibition extends Vue {
     }
 
 	public checkStates(){
-        
-        this.fieldStates = this.mv2906InfoStates; 
-        
-        // this.fieldStates.tribunalType = null;
-           
-                        
-		// this.fieldStates.tribunalDateOfOrder = null;
-		// this.fieldStates.tribunalOriginalDecisionMaker = null;
-        
-        
-        // this.fieldStates.cityOfOrder = !this.form1Info.cityOfOrder? false : null;
-
-      
-        // this.fieldStates.lowerCourtFileNo = !this.form1Info.lowerCourtFileNo? false : null;            
-        
-        
-       
-        // this.fieldStates.lowerCourtRegistryId = null;
-
-        // const durationValue = this.form1Info.trialDurationDays?.trim().toLowerCase();
-        // const includesIdentifier = durationValue?.includes('day') || durationValue?.includes('hour')
-        // this.fieldStates.appearanceDays = !(this.form1Info.trialDurationDays && includesIdentifier)? false : null;
-        // this.fieldStates.applyLeave = !(this.form1Info.applyLeave != null)? false : null;
-        // this.fieldStates.amending = !(this.form1Info.amending != null)? false : null; 
-        // this.fieldStates.appealInvolvesChild = !(this.form1Info.appealInvolvesChild != null)? false : null;        
-        // this.fieldStates.respondents = !(this.form1Info.respondents && this.form1Info.respondents.length > 0 )? false : null;
-        // this.fieldStates.appellants = !(this.form1Info.appellants && this.form1Info.appellants.length > 0 )? false : null;
-        // this.fieldStates.appealFrom = !this.form1Info.appealFrom? false : null;
-        // this.fieldStates.wasSupremeAppeal = !(this.form1Info.wasSupremeAppeal != null)? false : null;
-        // this.fieldStates.decisionMaker = (this.form1Info.wasSupremeAppeal && !this.form1Info.decisionMaker)? false : null;        
-        // this.fieldStates.involves = !(this.form1Info.involves && this.form1Info.involves.length > 0)? false : null;
-        // this.fieldStates.orderSought = !this.form1Info.orderSought? false : null;
-
-        // this.fieldStates.orderSealed = !(this.form1Info.orderSealed != null)? false : null;
-        // this.fieldStates.dateSealed = (this.form1Info.orderSealed && !this.form1Info.dateSealed)? false : null;
-        // this.fieldStates.orderBan = !(this.form1Info.orderBan != null)? false : null;
-        // this.fieldStates.dateBan = (this.form1Info.orderBan && !this.form1Info.dateBan)? false : null;
-      
-        // this.fieldStates.mainAppellant = !this.form1Info.appealingFirm? false : null;
-        
-        // this.fieldStates.driverPhoneNumber = !(this. && this.verifyPhoneNumbers()
-        //                             && this.form1Info.phoneNumbers.length == this.form1Info.appellants.length)? false : null;
-        
-        // const verifiedAddresses = this.verifyAddresses()
-        // this.fieldStates.addresses = verifiedAddresses.valid;
-        // this.fieldStates.nonBcAddress = verifiedAddresses.nonBC;       
-      
-        // this.fieldStates.emails = this.verifyEmails()? null: false;
-
-        this.UpdateMV2906InfoStates(this.fieldStates);
-        this.updatedInfo ++;
+        const data = this.twelveHourFormData.data
+                
+        this.fieldStates.driverPhoneNumber = Vue.filter('verifyPhone')( data.driverPhoneNumber)? null:false;
+        this.fieldStates.driverProvince = data.driverProvince?.objectCd? null:false;
+        this.fieldStates.driverPostalCode = Vue.filter('verifyPostCode')(data.driverPostalCode, data.driverProvince?.objectCd)? null:false;      
 
         for(const field of Object.keys(this.fieldStates)){
             if(this.fieldStates[field]==false){
-                Vue.filter('findInvalidFields')()
+                // Vue.filter('findInvalidFields')()
                 return false
             }                
         }       
@@ -208,15 +218,6 @@ export default class TwelveHourProhibition extends Vue {
         return true;            
     }
 
-	public verifyPhoneNumber(phoneNumber: string){
-            
-		if(!Vue.filter('verifyPhone')(phoneNumber))
-			return false;
-      
-        return true;
-    }
-
-	
 
 }
 </script>

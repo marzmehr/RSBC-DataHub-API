@@ -87,6 +87,7 @@ $time:    #607894 !default;
 $inactive:  #cccccc !default;
 $approved: #28d8a3 !default; 
 $card_detail: rgb(221, 239, 246);
+$time:  #cccccc;
 
 
 
@@ -106,7 +107,8 @@ $colors: map-merge(
     "cyan":       $cyan,
     "white":      $white,
     "gray":       $gray-600,
-    "gray-dark":  $gray-800
+    "gray-dark":  $gray-800,
+    "time":       $time
   ),
   $colors
 );

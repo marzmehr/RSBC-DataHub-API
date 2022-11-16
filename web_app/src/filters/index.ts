@@ -1,8 +1,23 @@
 import Vue from 'vue'
 
 Vue.filter('verifyPhone', function(phone){	
-	const phoneFormat = /^[0-9]{3}[-. ][0-9]{3}[-. ][0-9]{4}((\s\x[0-9]{4})|)?$/;
-	return phoneFormat.test(phone?.trim())
+    const phoneFormat = /^[0-9]{3}[-. ][0-9]{3}[-. ][0-9]{4}((\s\x[0-9]{4})|)?$/;
+    return phoneFormat.test(phone?.trim())
+})
+
+Vue.filter('verifyPostCode', function(postcode, stateCd){
+
+    const statesCAN=["ALTA","BC","MAN","NB","NFLD","NS","NVT","NWT","ONT","PEI","QUE","SASK","YT"]
+    const statesOTH=["UK","OTH","MX","INTL","EUR"]
+    const postcodeFormatUSA = /(^\d{5}?$)|(^\d{5}-\d{4}?$)/;	
+    const postcodeFormatCAN = /^(([A-Z][0-9][A-Z] [0-9][A-Z][0-9])|([a-z][0-9][a-z] [0-9][a-z][0-9]))?$/;
+
+    if(statesCAN.includes(stateCd))
+        return postcodeFormatCAN.test(postcode?.trim())
+    if(statesOTH.includes(stateCd))
+        return true
+    else
+        return postcodeFormatUSA.test(postcode?.trim())
 })
 
 Vue.filter('printPdf', function(html){

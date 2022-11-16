@@ -1,25 +1,27 @@
 <template>	
-	<b-card header-tag="header" bg-variant="gov-accent-grey" border-variant="light">
+	<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
 		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Driver's Information</b>      
 		</b-card-header>
-		<b-card border-variant="bright" bg-variant="bright" text-variant="dark" class="my-2">
+		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
 
 			<b-row>
-				<b-col class="pr-2" cols="2">
+				<b-col class="pr-1" cols="3">
+					<b-form-group>
 					<label class="m-0 p-0"> Driver's Licence Number</label>
 					<b-form-input
 						v-model="driverInfo.driversNumber"
 						:disabled="formPrinted"
-                        :state="mv2906InfoStates.driversNumber"
-						@change="update"
+                        :state="driverState.driversNumber"
+						@input="update"
 						placeholder="Driver's Licence Number">
-					</b-form-input>                                
+					</b-form-input> 
+					</b-form-group>                             
 				</b-col>
 				<b-col class="p-0 pt-1" cols="1">
 					<b-button 
-						class="bg-primary text-white mt-4"
-						style="opacity:1;"
+						class="bg-primary text-white"
+						style="opacity:1; float:left; margin-top:1.42rem;"
 						:disabled="formPrinted || !displayIcbcLicenceLookup"
 						@click="triggerDriversLookup">
 						<spinner color="#FFF" v-if="searchingLookup" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
@@ -28,25 +30,25 @@
 				</b-col>
 				<b-col class="p-0 pt-1" cols="1">
 					<b-button 
-						class="bg-primary text-white mt-4"
-						style="opacity:1;"
+						class="bg-primary text-white"
+						style="opacity:1; float:right; margin-top:1.42rem;"
 						@click="launchDlScanner">
 						<spinner color="#FFF" v-if="searchingDl" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
 						<span style="font-size: 0.875rem;" v-else>Scan DL</span>
 					</b-button>  
 				</b-col>
-				<b-col cols="2">
-					<label class="ml-1 m-0 p-0"> Prov / State / International </label>
+				<b-col cols="3" class=" pl-1">
+					<label class="ml-0 m-0 p-0"> Prov / State / International </label>
 					<b-form-select	
 						v-model="driverInfo.driversLicenceJurisdiction"
 						@change="update"
 						:disabled="formPrinted"
-						:state="mv2906InfoStates.driversLicenceJurisdiction"						
+						:state="driverState.driversLicenceJurisdiction"						
 						placeholder="Search for a Jurisdiction"
-						style="display: block;">
+						style=" ">
 							<b-form-select-option
-								v-for="jurisdiction in jurisdictions" 
-								:key="jurisdiction.objectCd"
+								v-for="jurisdiction,inx in jurisdictions" 
+								:key="'dr-jurisdiction-'+jurisdiction.objectCd+inx"
 								:value="jurisdiction">
 									{{jurisdiction.objectDsc}}
 							</b-form-select-option>    
@@ -60,8 +62,8 @@
 						placeholder="Last Name"
 						v-model="driverInfo.lastName"
 						:disabled="formPrinted"
-						@change="update"
-						:state="mv2906InfoStates.lastName">
+						@input="update"
+						:state="driverState.lastName">
 					</b-form-input>                                
 				</b-col>
 				<b-col >
@@ -70,8 +72,8 @@
 						placeholder="Given Names"
 						v-model="driverInfo.givenName"
 						:disabled="formPrinted"
-						@change="update"
-						:state="mv2906InfoStates.givenName">
+						@input="update"
+						:state="driverState.givenName">
 					</b-form-input>  
 				</b-col>
 				<b-col >
@@ -79,26 +81,30 @@
 					
 					<b-input-group class="mb-3">
 						<b-form-input
+							:key="updateDate"
 							id="dob"
 							v-model="driverInfo.dob"
 							type="text"
+							@input="validateDate(false)"
 							:disabled="formPrinted"
+							:state="driverState.dob"
 							placeholder="YYYYMMDD"
 							autocomplete="off"
 						></b-form-input>
 						<b-input-group-append>
 							<b-form-datepicker
-								v-model="driverInfo.dob"
+								v-model="dob"
 								:disabled="formPrinted"
 								button-only
 								right
 								:allowed-dates="allowedDates"
 								locale="en-US"
 								aria-controls="dob"
-								@change="update"
+								@context="validateDate(true)"
 							></b-form-datepicker>
 						</b-input-group-append>
-					</b-input-group>                              
+					</b-input-group> 
+					<div v-if="dateError" style="font-size:10pt;" class="text-danger text-left m-0 mt-n3 p-0">{{dateError}}</div>                             
 				</b-col>
 			</b-row>
 			<b-row>
@@ -108,23 +114,23 @@
 						placeholder="Address"
 						:disabled="formPrinted"
 						v-model="driverInfo.address"
-						@change="update"
-						:state="mv2906InfoStates.address">
+						@input="update"
+						:state="driverState.address">
 					</b-form-input>
 				</b-col>
 				<b-col>
 					<label class="ml-1 m-0 p-0"> Phone </label>
 					<b-form-input						
 						v-model="driverInfo.driverPhoneNumber"						
-						@change="update"
+						:formatter="editPhoneNumber"
 						:disabled="formPrinted"
-						:state="mv2906InfoStates.driverPhoneNumber">
+						:state="driverState.driverPhoneNumber">
 					</b-form-input>  
 					<div
-                        v-if="(mv2906InfoStates.driverPhoneNumber != null)" 
-                        style="font-size: 0.75rem; margin-top:-0.75rem;" 
-                        class="bg-white text-danger is-invalid"><b-icon-exclamation-circle/>
-                        Invalid Phone number. <i>(If you provide phone number, It must be valid e.g. 123-456-7890)</i>
+                        v-if="(driverState.driverPhoneNumber != null)" 
+                        style="font-size: 10pt; " 
+                        class="text-left text-danger m-0 p-0">
+                        Phone number format <i>000-000-0000</i>
                     </div> 
 
 				</b-col>
@@ -134,9 +140,9 @@
 					<label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
 					<b-form-input						
 						v-model="driverInfo.driverCity"						
-						@change="update"
+						@input="update"
 						:disabled="formPrinted"
-						:state="mv2906InfoStates.driverCity">
+						:state="driverState.driverCity">
 					</b-form-input>                                
 				</b-col>
 				<b-col cols="2">
@@ -145,12 +151,12 @@
 						v-model="driverInfo.driverProvince"
 						:disabled="formPrinted"
 						@change="update"
-						:state="mv2906InfoStates.driverProvince"							
+						:state="driverState.driverProvince"							
 						placeholder="Search for a Province or State"
 						style="display: block;">
 							<b-form-select-option
-								v-for="province in provinces" 
-								:key="province.objectCd"
+								v-for="province,inx in provinces" 
+								:key="'dr-province-'+province.objectCd+inx"
 								:value="province">
 									{{province.objectDsc}}
 							</b-form-select-option>    
@@ -160,12 +166,18 @@
 					<label class="ml-1 m-0 p-0"> Postal / Zip</label>
 					<b-form-input						
 						v-model="driverInfo.driverPostalCode"						
-						@change="update"
+						@input="update"
 						:disabled="formPrinted"
-						:state="mv2906InfoStates.driverPostalCode">
-					</b-form-input>                                  
+						:state="driverState.driverPostalCode">
+					</b-form-input> 
+					<div
+                        v-if="(driverState.driverPostalCode != null)" 
+                        style="font-size: 9.5pt; " 
+                        class="text-left text-danger m-0 p-0">
+                        Invalid Postal Code <i>(For CANADA format is A1A 1A1)</i>
+                    </div>                                  
 				</b-col>
-			</b-row>	
+			</b-row>
 			<div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
 		</b-card>
 
@@ -206,7 +218,7 @@
 
 <script lang="ts">
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import { namespace } from "vuex-class";
 import moment from 'moment-timezone';
 
@@ -239,16 +251,16 @@ export default class DriversInformationCard extends Vue {
     public provinces: provinceInfoType[];
 	
 	@mv2906State.State
-    public mv2906InfoStates: twelveHourFormStatesInfoType;
-
-	@mv2906State.State
     public mv2906Info: twelveHourFormJsonInfoType;
-
-	@mv2906State.Action
-    public UpdateMV2906Info!: (newMV2906Info: twelveHourFormJsonInfoType) => void
+	
+	@Prop({required: true})
+    driverInfo!: twelveHourFormDataInfoType;
+	
+	@Prop({required: true})
+	driverState!: twelveHourFormStatesInfoType;
 
 	dataReady = false;
-    driverInfo = {} as twelveHourFormDataInfoType;
+	dob=''
 	age = 0;
 	error = '';
 	path = '';
@@ -257,12 +269,13 @@ export default class DriversInformationCard extends Vue {
 	scannerMessage = '';
 	searchingLookup = false;
 	searchingDl = false;
-	formPrinted = false;
-
+	formPrinted = false;	
+	dateError=''
+	updateDate=0;
+	phonePrvValue=''
 
 	mounted() { 
-        this.dataReady = false;
-        this.driverInfo = this.mv2906Info.data;
+		this.dataReady = false;				        
 		this.formPrinted = Boolean(this.mv2906Info.printedTimestamp);
         this.extractFields();
         this.dataReady = true;
@@ -271,7 +284,6 @@ export default class DriversInformationCard extends Vue {
 	public extractFields(){
 		this.age = 0;
 		this.path = 'forms/' + this.mv2906Info.form_type + '/' + this.mv2906Info.form_id + '/data'
-
 	}
 
 	public triggerDriversLookup(){
@@ -298,7 +310,8 @@ export default class DriversInformationCard extends Vue {
         this.driverInfo.driverPostalCode = data['address']['postalCode'];
         this.driverInfo.dob = data['dob'];
         this.driverInfo.givenName = data['name']['given'];
-        this.driverInfo.lastName = data['name']['surname'];		
+        this.driverInfo.lastName = data['name']['surname'];	
+		this.update()	
 	}
 
 	public handledScannedBarCode(event) {
@@ -334,11 +347,7 @@ export default class DriversInformationCard extends Vue {
 	}
 
 	public update(){     
-		// console.log(this.driverInfo) 
-		const mv2906 = this.mv2906Info
-		mv2906.data = this.driverInfo
-        this.UpdateMV2906Info(mv2906);
-        this.recheckStates()
+        this.recheckStates()		
     }
 
 	public recheckStates(){
@@ -347,17 +356,66 @@ export default class DriversInformationCard extends Vue {
 
 	get displayIcbcLicenceLookup(){
 
-        return this.mv2906Info.data.driversLicenceJurisdiction.objectCd == "BC" && this.$store.state.isUserAuthorized;
+        return this.driverInfo.driversLicenceJurisdiction.objectCd == "BC" && this.$store.state.isUserAuthorized;
     }
 
-	public validateDate(){
-		//TODO: ensure it's over 10 years old
-		const validDate = true;
-		if (validDate){
-			this.age = moment().diff(moment(this.driverInfo.dob), 'years');			
+	public validateDate(datePicker?){
+		if(datePicker){			
+			let dob=this.dob.replace('-','')
+			dob=dob.replace('-','')
+			this.driverInfo.dob=dob
+			this.updateDate++;
+		}
+		
+		if(!this.driverInfo.dob) return
+
+		if(!Number(this.driverInfo?.dob)||this.driverInfo?.dob?.length!=8){
+			this.dateError="The selected date is invalid!"
+			this.driverState.dob=false
+		}
+		else{ 
+						
+			const date = moment(this.driverInfo.dob)
+			const currentDate = moment() 
+			const age = currentDate.diff(date, 'years')
+			this.age = age? age : 0
+			
+			if(!date.isValid()){
+				this.dateError="The selected date is invalid!"
+				this.driverState.dob=false
+			}
+			else if(currentDate.format("YYYYMMDD")<this.driverInfo.dob){
+				this.dateError="The selected date is in the future!"
+				this.driverState.dob=false
+			}
+			else if(this.age<10 || this.age>120){
+				this.dateError="Driver must be between 10 and 120 years old!"
+				this.driverState.dob=false
+			}
+			else{ 
+				this.dateError=""
+				if(!datePicker){
+					const year = this.driverInfo.dob.slice(0,4)
+					const month = this.driverInfo.dob.slice(4,6)
+					const day = this.driverInfo.dob.slice(6)
+					this.dob = year+'-'+month+'-'+day
+				}
+				this.driverState.dob=null
+			}
 		}
 		this.update();
 	}
+
+	public editPhoneNumber(value: string, val){
+		this.update()
+		if(this.phonePrvValue.slice(-1)=='-' && this.phonePrvValue.length>=value.length) this.phonePrvValue=value.slice(0,-1)
+		else if(isNaN(Number(value.slice(-1))) && value.slice(-1)!='-') this.phonePrvValue= value.slice(0,-1) 
+		else if(value.length==3) this.phonePrvValue=value.slice(0,3)+'-'; 
+		else if(value.length==7) this.phonePrvValue=value.slice(0,7)+'-';
+		else if(value.length>12) this.phonePrvValue=value.slice(0,-1)	     
+        else this.phonePrvValue=value
+		return this.phonePrvValue;
+    }
 
 	public allowedDates(date){
         const day = moment().startOf('day').format('YYYY-MM-DD');           
@@ -368,6 +426,16 @@ export default class DriversInformationCard extends Vue {
 </script>
 
 <style scoped lang="scss">
+
+	input.is-invalid {
+		background: #ebc417;
+	}
+	select.is-invalid {
+		background: #ebc417;
+		option {
+			background: #FFF;
+		}
+	}
 
 	.fade-out {
 		animation: fadeOut ease 8s;

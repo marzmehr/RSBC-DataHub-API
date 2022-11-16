@@ -16,8 +16,8 @@
 						placeholder="Search for a Jurisdiction"
 						style="display: block;">
 							<b-form-select-option
-								v-for="jurisdiction in jurisdictions" 
-								:key="jurisdiction.objectCd"
+								v-for="jurisdiction,inx in jurisdictions" 
+								:key="'jurisdiction-'+jurisdiction.objectCd+inx"
 								:value="jurisdiction">
 									{{jurisdiction.objectDsc}}
 							</b-form-select-option>    
@@ -70,8 +70,8 @@
 						placeholder="Search for a Province or State"
 						style="display: block;">
 							<b-form-select-option
-								v-for="colour in vehicleColours" 
-								:key="colour.code"
+								v-for="colour,inx in vehicleColours" 
+								:key="'color-code-'+colour.code+inx"
 								:value="colour">
 									{{colour.displayName}}
 							</b-form-select-option>    
@@ -85,8 +85,8 @@
 						placeholder="Search for a Province or State"
 						style="display: block;">
 							<b-form-select-option
-								v-for="province in provinces" 
-								:key="province.objectCd"
+								v-for="province,inx in provinces" 
+								:key="'province-'+province.objectCd+inx"
 								:value="province">
 									{{province.objectDsc}}
 							</b-form-select-option>    
