@@ -79,7 +79,8 @@ rsiStore.subscribe((mutation) => {
           mutation.type === 'updateCheckBox' ||
           mutation.type === 'populateDriverFromICBC' ||
           mutation.type === 'populateVehicleFromICBC' ||
-          mutation.type === 'typeAheadUpdate'
+          mutation.type === 'typeAheadUpdate' ||
+          mutation.type === 'updateFormInRoot'
       ) {
         saveCurrentFormToDB(rsiStore.state.Common.currently_editing_form_object)
       }

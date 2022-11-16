@@ -8,6 +8,9 @@ export const mutations = {
     //     Vue.set(state.currently_editing_form_object, "form_type", payload.form_type)
 
     // },
+    updateFormInRoot(state, form_object){        
+        Vue.set(state.forms[form_object.form_type], form_object.form_id,form_object)
+    },
 
     updateFormField (state, event) {
         // DEPRECATED - use updateFormAttribute instead"
@@ -136,7 +139,7 @@ export const mutations = {
     },
 
     pushFormToStore(state, form_object) {
-        console.log("inside pushFormToStore()", form_object)
+        // console.log("inside pushFormToStore()", form_object)
         Vue.set(state.forms[form_object.form_type], form_object.form_id, form_object)
     },
 

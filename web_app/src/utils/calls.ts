@@ -13,7 +13,7 @@ export async function  fetchStaticLookupTables(payload) {
         url = constants.API_ROOT_URL + "/api/v1/" + payload.resource
     }
 
-    console.log("fetchStaticLookupTables()", url)
+    // console.log("fetchStaticLookupTables()", url)
 
     const commitPoint = (payload.resource=="users"|| payload.resource=="user_roles")? "populateStaticLookupTables":"Common/populateStaticLookupTables"
 

@@ -5,7 +5,7 @@
 	</b-card-header>
 	<b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
         <b-row class="pt-2 pb-0 text-danger border-light">            
-            <h4 style="float: right;">{{id}}</h4>      
+            <div class="ml-auto mr-2 h4">{{id}}</div>      
         </b-row>
         
 		<drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
@@ -77,6 +77,9 @@ export default class TwelveHourProhibition extends Vue {
 	@commonState.State
     public formsInfo: formsInfoType;
 
+    @commonState.State
+    public currently_editing_form_object: currentlyEditingFormObjectInfoType;
+
 	@commonState.Action
     public UpdateCurrentlyEditingFormObject!: (newCurrentlyEditingFormObject: currentlyEditingFormObjectInfoType) => void	
 
@@ -98,11 +101,12 @@ export default class TwelveHourProhibition extends Vue {
 	variants = ["icbc", "driver", "police"];
 
 	mounted() {		
-		this.id = this.$route.params?.id;
-		const payload = {form_type: this.name, form_id: this.id}
+		this.id = this.currently_editing_form_object.form_id;
+		// const payload = {form_type: this.name, form_id: this.id}
 		this.clearStates()
-		this.UpdateCurrentlyEditingFormObject(payload);
+		// this.UpdateCurrentlyEditingFormObject(payload);
         const formData = this.$store.state.forms[this.name][this.id]
+        console.log(formData)
         this.UpdateMV2906Info(formData)
 
 		this.extractCurrentlyEditedFormData();        		
@@ -111,13 +115,11 @@ export default class TwelveHourProhibition extends Vue {
 
 	public extractCurrentlyEditedFormData() {
 
-        if(this.mv2906Info.data?.driversLicenceJurisdiction?.objectCd){
+        if(this.mv2906Info?.data?.driversLicenceJurisdiction?.objectCd){
             this.twelveHourFormData = this.mv2906Info            
         }else{
-            this.prepopulateDefaultValues()
-            this.twelveHourData = this.twelveHourFormData.data
+            this.prepopulateDefaultValues()            
             this.recheckStates()
-            console.log(this.id)
         }        
 		this.dataReady = true;
 	}
@@ -151,8 +153,10 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourData.officerName='';
         twelveHourData.province= {"objectCd":null,"objectDsc":null};
         twelveHourData.submitted=false;
-
-        this.twelveHourFormData.data=twelveHourData
+        
+        this.twelveHourFormData = this.mv2906Info
+        this.twelveHourFormData.data = twelveHourData
+        this.twelveHourData = this.twelveHourFormData.data
     }
 
 	public clearStates(){
@@ -191,6 +195,7 @@ export default class TwelveHourProhibition extends Vue {
 
 	public recheckStates(){
         this.UpdateMV2906Info(this.twelveHourFormData)
+        this.$store.commit("updateFormInRoot",this.twelveHourFormData)
         console.log('check')
         const specialFields = ['dob']
         for(const field of Object.keys(this.fieldStates)){

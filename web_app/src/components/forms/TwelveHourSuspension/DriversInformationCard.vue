@@ -356,7 +356,7 @@ export default class DriversInformationCard extends Vue {
 
 	get displayIcbcLicenceLookup(){
 
-        return this.driverInfo.driversLicenceJurisdiction.objectCd == "BC" && this.$store.state.isUserAuthorized;
+        return this.driverInfo?.driversLicenceJurisdiction?.objectCd == "BC" && this.$store.state.isUserAuthorized;
     }
 
 	public validateDate(datePicker?){
