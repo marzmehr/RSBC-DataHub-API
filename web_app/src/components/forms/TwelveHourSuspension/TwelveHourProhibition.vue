@@ -50,7 +50,7 @@ import VehicleDispositionCard from "@/components/forms/TwelveHourSuspension/Vehi
 
 
 import { twelveHourFormDataInfoType, twelveHourFormJsonInfoType, twelveHourFormStatesInfoType } from '@/types/Forms/MV2906';
-import { currentlyEditingFormObjectInfoType, formsInfoType } from '@/types/Common';
+import { cityInfoType, currentlyEditingFormObjectInfoType, formsInfoType, impoundLotOperatorsInfoType } from '@/types/Common';
 
 import { namespace } from "vuex-class";
 import "@/store/modules/common";
@@ -106,7 +106,7 @@ export default class TwelveHourProhibition extends Vue {
 		this.clearStates()
 		// this.UpdateCurrentlyEditingFormObject(payload);
         const formData = this.$store.state.forms[this.name][this.id]
-        console.log(formData)
+        //console.log(formData)
         this.UpdateMV2906Info(formData)
 
 		this.extractCurrentlyEditedFormData();        		
@@ -115,17 +115,23 @@ export default class TwelveHourProhibition extends Vue {
 
 	public extractCurrentlyEditedFormData() {
 
+        //console.log(this.mv2906Info)
+
         if(this.mv2906Info?.data?.driversLicenceJurisdiction?.objectCd){
+            //console.log('updateData')
             this.twelveHourFormData = this.mv2906Info            
         }else{
+            //console.log('init')
             this.prepopulateDefaultValues()            
             this.recheckStates()
-        }        
+        }  
+        this.twelveHourData = this.twelveHourFormData.data      
 		this.dataReady = true;
 	}
 
     public prepopulateDefaultValues(){
         const twelveHourData = {} as twelveHourFormDataInfoType
+
         twelveHourData.driversNumber=null;
         twelveHourData.givenName='';
         twelveHourData.lastName='';
@@ -138,25 +144,40 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourData.driverPostalCode='';
         twelveHourData.plateProvince= {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
         twelveHourData.plateNumber='';
-        // plateValTag='';
-        // plateYear='';
-        twelveHourData.nscProvince= {"objectCd":null,"objectDsc":null};
+        
+        twelveHourData.puj_code= {"objectCd":null,"objectDsc":null};
         twelveHourData.nscNumber='';
-        twelveHourData.registrationNumber='';
-        // vehicleStyle: vehicleStyleInfoType;
+                
         twelveHourData.vehicleYear='';
         twelveHourData.vehicleMake={md:'', mk:'', search:''};
         twelveHourData.vehicleColor=[];
-        // vinNumber='';
+        
+        twelveHourData.prohibitionType='';
+           
+        twelveHourData.vehicleImpounded=false; 
+        twelveHourData.impountLot= {} as impoundLotOperatorsInfoType;
+        twelveHourData.locationOfKeys='';
+        twelveHourData.notImpoundingReason='';
+        twelveHourData.releasedDate='';
+        twelveHourData.releasedTime='';
+        twelveHourData.vehicleReleasedTo='';
+
+        twelveHourData.offenceAddress='';
+        twelveHourData.offenceCity = {} as cityInfoType; 
+        twelveHourData.agencyFileNumber='';
+        twelveHourData.prohibitionStartDate='';
+        twelveHourData.prohibitionStartTime='';
+
+
         twelveHourData.agency='';
-        twelveHourData.badgeNumber='';
-        twelveHourData.officerName='';
-        twelveHourData.province= {"objectCd":null,"objectDsc":null};
+        twelveHourData.badge_number='';
+        twelveHourData.officer_name='';
+        
         twelveHourData.submitted=false;
         
         this.twelveHourFormData = this.mv2906Info
         this.twelveHourFormData.data = twelveHourData
-        this.twelveHourData = this.twelveHourFormData.data
+        
     }
 
 	public clearStates(){
@@ -175,17 +196,13 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourFormStates.driversLicenceJurisdiction=null
         twelveHourFormStates.officerName=null
         twelveHourFormStates.plateProvince=null    
-        twelveHourFormStates.plateNumber=null 
-        // plateValTag=null 
-        // plateYear=null 
+        twelveHourFormStates.plateNumber=null         
         twelveHourFormStates.nscProvince=null 
         twelveHourFormStates.nscNumber=null 
         twelveHourFormStates.registrationNumber=null 
         twelveHourFormStates.vehicleYear=null
-        // vehicleStyle=null 
         twelveHourFormStates.vehicleMake=null 
         twelveHourFormStates.vehicleColor=null
-        // vinNumber=null 
         twelveHourFormStates.province=null
         twelveHourFormStates.submitted=null    
 

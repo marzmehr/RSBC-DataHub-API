@@ -1,9 +1,9 @@
 <template>
     <tr v-if="prohibition">
         <td>
-            {{ prohibition.data.last_name }},
-            {{ prohibition.data.first_name }}
-            ({{ prohibition.data.drivers_number }})
+            {{ prohibition.data.lastName }},
+            {{ prohibition.data.givenName }}
+            ({{ prohibition.data.driversNumber }})
         </td>
         <td>{{ prohibition.form_type }}</td>
         <td>{{ getServedStatus(prohibition) }}</td>
