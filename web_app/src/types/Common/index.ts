@@ -64,7 +64,7 @@ export interface formsInfoType {
 
 export interface impoundLotOperatorsInfoType {
     city: string;
-    lotAddress: string;
+    lot_address: string;
     name: string;
     phone: string;
 }
@@ -96,6 +96,6 @@ export interface vehicleStyleInfoType {
 
 export interface vehicleColourInfoType {
     code: string;
-    displayName: string;
-    colourClass: string;
+    display_name: string;
+    colour_class: string;
 }

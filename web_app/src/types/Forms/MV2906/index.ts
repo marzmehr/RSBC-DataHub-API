@@ -1,46 +1,61 @@
-import { jurisdictionInfoType, provinceInfoType, vehicleInfoType, vehicleStyleInfoType } from "@/types/Common";
+import { cityInfoType, impoundLotOperatorsInfoType, jurisdictionInfoType, provinceInfoType, vehicleColourInfoType, vehicleInfoType, vehicleStyleInfoType } from "@/types/Common";
 
 /* eslint-disable @typescript-eslint/class-name-casing */
 export interface twelveHourFormDataInfoType {
     
-    driversNumber?: string;
-    givenName: string;
-    lastName: string;
+    driversNumber?: string;//drivers_number?: string;
+    givenName: string; //first_name: string;
+    lastName: string; //last_name: string;
     dob: string;
-    driversLicenceJurisdiction: jurisdictionInfoType;
-    address: string;
-    driverPhoneNumber?: string;
-    driverCity: string;
-    driverProvince?: provinceInfoType;
-    driverPostalCode: string;
-    plateProvince: provinceInfoType;
-    plateNumber: string;    
-    nscProvince: provinceInfoType;
-    nscNumber: string;
-    registrationNumber: string;   
-    vehicleYear: string;
-    vehicleMake: vehicleInfoType;
-    vehicleColor: string[];
-    vehicleTowed: boolean;    
-    keysOnVehicle?: boolean;
-    impountLotName?: string;
-    impoundLotAddress?: string;
-    impoundLotCity?: string;
-    impoundLotPhone?: string;
-    notTowingReasonOtherDriver?: boolean;
-    otherDriverName?: string;
+    driversLicenceJurisdiction: jurisdictionInfoType; //drivers_licence_jurisdiction: jurisdictionInfoType;
+    address: string// address1: string;    
+    driverPhoneNumber?: string; //driver_phone?: string;
+    driverCity: string; //city: string;
+    prohibitionType: string; //Drugs || Alcohol //prohibition_type_12hr_drugs?: any; //prohibition_type_12hr_alcohol?: any;
+    driverProvince?: provinceInfoType; //province: provinceInfoType;
+    driverPostalCode: string; //postal: string;
+    plateProvince: provinceInfoType;//plate_province: provinceInfoType;
+    plateNumber: string; //plate_number: string;
+    puj_code: provinceInfoType;
+    nscNumber: string; //nsc_number: string;
+ 
+    vehicleYear: string; //vehicle_year: string;
+    vehicleMake: vehicleInfoType; //vehicle_make: vehicleInfoType;
+    vehicleColor: vehicleColourInfoType[]; //vehicle_color: vehicleColourInfoType[];
+    
+    vehicleImpounded: boolean; 
+    impountLot?: impoundLotOperatorsInfoType;
+    locationOfKeys?: string; // With vehicle￼|| With driver
+    notImpoundingReason?: string; //Released to other driver || Left at roadside
     releasedDate?: string;
     releasedTime?: string;
-    prohibitionAlcohol: boolean;
-    offenceAddress: string;
-    offenceCity: string;
-    agencyFileNumber: string;
-    offenceDate: string;
-    offenceTime: string;
+    vehicleReleasedTo?: string;
+    // vehicle_impounded_yes?:{
+    //     impounded_lot_operator: impoundLotOperatorsInfoType;
+    //     location_of_keys_vehicle: string;        
+    // } ;
+
+    // vehicle_impounded_no?: {
+    //    reason_for_not_impounding_roadside,
+    //    reason_for_not_impounding_released:
+    //    {
+    //      released_date: string;
+    //      released_time: string;
+    //      vehicle_released_to: string;
+    //    }
+    // };
+
+    
+    offenceAddress: string; //offence_address: string;
+    offenceCity: cityInfoType; //offence_city: cityInfoType;
+    agencyFileNumber: string; //file_number: string;
+    prohibitionStartDate: string; //prohibition_start_date: string;
+    prohibitionStartTime: string; //prohibition_start_time: string;
+    
     agency: string;
-    badgeNumber: string;
-    officerName: string;
-    province: provinceInfoType;
+    badge_number: string;
+    officer_name: string;
+  
     submitted: boolean;    
 }
 
@@ -53,12 +68,12 @@ export interface twelveHourFormJsonInfoType {
     description: string;
     data?: twelveHourFormDataInfoType;
     full_name: string;
-    printedTimestamp: string;
+    printed_timestamp: string;
     documents: twelveHourFormDocumentsInfoType;
     disabled: boolean;
     adminOnly: boolean;
     showCertificate: boolean;
-    checkDigit: boolean;
+    check_digit: boolean;
 }
 
 export interface twelveHourFormDocumentsInfoType {
