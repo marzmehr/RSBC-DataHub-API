@@ -11,9 +11,8 @@
 		<drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
 		<vehicle-information-card :vehicleInfo="twelveHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
 		<vehicle-disposition-card :vdInfo="twelveHourData" :vdState="fieldStates" @recheckStates="recheckStates()"/>
-		<!-- <prohibition-information-card :prohibitionInfo="twelveHourFormData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"></prohibition-information-card>
-		<officer-details-card :officerInfo="twelveHourFormData" :officerState="fieldStates" @recheckStates="recheckStates()"></officer-details-card>
-         -->
+		<prohibition-information-card :prohibitionInfo="twelveHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
+		<officer-details-card :officerInfo="twelveHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
 
 	</b-card>
 	<!-- <form-container title="Notice of 12 Hour Licence Suspension" :form_object="formObject" >
@@ -42,12 +41,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import DriversInformationCard from "@/components/forms/TwelveHourSuspension/DriversInformationCard.vue";
-import OfficerDetailsCard from "@/components/forms/OfficerDetailsCard.vue";
+import OfficerDetailsCard from "@/components/forms/TwelveHourSuspension/OfficerDetailsCard.vue";
 import VehicleInformationCard from "@/components/forms/TwelveHourSuspension/VehicleInformationCard.vue";
 import PrintDocuments from "../PrintDocuments.vue";
 import ProhibitionInformationCard from "@/components/forms/TwelveHourSuspension/ProhibitionInformationCard.vue";
 import VehicleDispositionCard from "@/components/forms/TwelveHourSuspension/VehicleDispositionCard.vue";
-
 
 import { twelveHourFormDataInfoType, twelveHourFormJsonInfoType, twelveHourFormStatesInfoType } from '@/types/Forms/MV2906';
 import { cityInfoType, currentlyEditingFormObjectInfoType, formsInfoType, impoundLotOperatorsInfoType } from '@/types/Common';

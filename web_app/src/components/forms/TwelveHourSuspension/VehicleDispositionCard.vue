@@ -1,5 +1,4 @@
 <template>
-
 	<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
 		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Vehicle Disposition</b>      
@@ -201,12 +200,6 @@ import Spinner from "@/components/utils/Spinner.vue";
 }) 
 export default class VehicleDispositionCard extends Vue {   
 
-	@commonState.State
-    public jurisdictions: jurisdictionInfoType[];
-
-	@commonState.State
-    public provinces: provinceInfoType[];	
-
     @commonState.State
     public impound_lot_operators: impoundLotOperatorsInfoType[];	
 
@@ -224,7 +217,6 @@ export default class VehicleDispositionCard extends Vue {
     dateReleased = '';
     dateError = '';
 	error = '';
-	path = '';
 	formPrinted = false;
 
     responseOptions = [
@@ -244,16 +236,9 @@ export default class VehicleDispositionCard extends Vue {
 
 	mounted() { 
         this.dataReady = false;				        
-		this.formPrinted = Boolean(this.mv2906Info.printed_timestamp);
-        this.extractFields();
+		this.formPrinted = Boolean(this.mv2906Info.printed_timestamp);        
         this.dataReady = true;
     }
-
-	public extractFields(){
-		
-		this.path = 'forms/' + this.mv2906Info.form_type + '/' + this.mv2906Info.form_id + '/data'
-
-	}
 
 	public update(){
         this.recheckStates()
