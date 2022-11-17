@@ -154,7 +154,7 @@ export default class TwelveHourProhibition extends Vue {
         
         twelveHourData.prohibitionType='';
            
-        twelveHourData.vehicleImpounded=false; 
+        twelveHourData.vehicleImpounded=null; 
         twelveHourData.impountLot= {} as impoundLotOperatorsInfoType;
         twelveHourData.locationOfKeys='';
         twelveHourData.notImpoundingReason='';
@@ -197,13 +197,12 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourFormStates.officerName=null
         twelveHourFormStates.plateProvince=null    
         twelveHourFormStates.plateNumber=null         
-        twelveHourFormStates.nscProvince=null 
+        twelveHourFormStates.puj_code=null 
         twelveHourFormStates.nscNumber=null 
         twelveHourFormStates.registrationNumber=null 
         twelveHourFormStates.vehicleYear=null
         twelveHourFormStates.vehicleMake=null 
-        twelveHourFormStates.vehicleColor=null
-        twelveHourFormStates.province=null
+        twelveHourFormStates.vehicleColor=null        
         twelveHourFormStates.submitted=null    
 
         this.fieldStates = twelveHourFormStates;
