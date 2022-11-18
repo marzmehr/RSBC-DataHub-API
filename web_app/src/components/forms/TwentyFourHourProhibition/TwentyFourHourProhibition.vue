@@ -1,24 +1,6 @@
 <template>
-  <form-container title="Notice of 24 Hour Licence Prohibition" :form_object="formObject" v-if="isMounted">
-    <validation-observer v-slot="{handleSubmit, validate}">
-      <form @submit.prevent="handleSubmit(onSubmit(validate))">
-        <drivers-information-card :path="getPath"></drivers-information-card>
-        <vehicle-information-card :path="getPath"></vehicle-information-card>
-        <vehicle-owner-card :path="getPath"></vehicle-owner-card>
-        <vehicle-impoundment-card :path="getPath"></vehicle-impoundment-card>
-        <return-of-licence-card :path="getPath"></return-of-licence-card>
-        <prohibition-information-card :path="getPath"></prohibition-information-card>
-        <reasonable-grounds-card :path="getPath"></reasonable-grounds-card>
-        <test-administered-alcohol-card :path="getPath + '/prohibition_type_alcohol'"
-                                        v-if="doesAttributeExist(getPath, 'prohibition_type_alcohol')
-                                        && doesAttributeExist(getPath, 'prescribed_device_yes')">
-
-        </test-administered-alcohol-card>
-        <test-administered-drugs-card :path="getPath + '/prohibition_type_drugs'"
-                                      v-if="doesAttributeExist(getPath, 'prohibition_type_drugs')
-                                        && doesAttributeExist(getPath, 'prescribed_device_yes')">
-        </test-administered-drugs-card>
-        <officer-details-card :path="getPath"></officer-details-card>
+  <!-- 
+       
         <form-card title="Generate PDF for Printing">
           <div class="d-flex">
             <print-documents
@@ -29,80 +11,295 @@
               {{ document.name }}
             </print-documents>
           </div>
-        </form-card>
-      </form>
-    </validation-observer>
-  </form-container>
+        </form-card> -->
+	<b-card header-tag="header" bg-variant="light" border-variant="primary" class="mx-auto p-0">
+		<b-card-header header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
+			<h4>Notice of 24 Hour Licence Prohibition</h4>      
+		</b-card-header>
+		<b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
+			<b-row class="pt-2 pb-0 text-danger border-light">            
+				<div class="ml-auto mr-2 h4">{{id}}</div>      
+			</b-row>
+			
+			<drivers-information-card :driverInfo="twentyFourHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
+			<vehicle-information-card :vehicleInfo="twentyFourHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
+			<vehicle-owner-card :ownerInfo="twentyFourHourData" :ownerState="fieldStates" @recheckStates="recheckStates()"/>
+			<vehicle-impoundment-card :viInfo="twentyFourHourData" :viState="fieldStates" @recheckStates="recheckStates()"/>
+			<prohibition-information-card :prohibitionInfo="twentyFourHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
+			<reasonable-grounds-card :rgInfo="twentyFourHourData" :rgState="fieldStates" @recheckStates="recheckStates()"/>		
+			<test-administered-card
+				v-if="twentyFourHourData.prescribedTest" 
+				:taInfo="twentyFourHourData" 
+				:taState="fieldStates"
+				@recheckStates="recheckStates()"/>
+			<officer-details-card :officerInfo="twentyFourHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
+
+		</b-card>
+
+  </b-card>
+
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
 
-import FormsCommon from "@/components/forms/FormsCommon";
-import {mapGetters} from 'vuex';
-import PrintDocuments from "../PrintDocuments";
-import DriversInformationCard from "@/components/forms/TwentyFourHourProhibition/DriversInformationCard";
-import OfficerDetailsCard from "@/components/forms/OfficerDetailsCard";
-import ProhibitionInformationCard from "@/components/forms/TwentyFourHourProhibition/ProhibitionInformationCard";
-import ReasonableGroundsCard from "@/components/forms/TwentyFourHourProhibition/ReasonableGroundsCard";
-import ReturnOfLicenceCard from "@/components/forms/ReturnOfLicenceCard";
-import TestAdministeredAlcoholCard from "@/components/forms/TwentyFourHourProhibition/TestAdministeredAlcoholCard";
-import TestAdministeredDrugsCard from "@/components/forms/TwentyFourHourProhibition/TestAdministeredDrugsCard";
-import VehicleImpoundmentCard from "@/components/forms/TwentyFourHourProhibition/VehicleImpoundmentCard";
-import VehicleInformationCard from "@/components/forms/TwentyFourHourProhibition/VehicleInformationCard";
-import VehicleOwnerCard from "@/components/forms/TwentyFourHourProhibition/VehicleOwnerCard";
+import PrintDocuments from "../PrintDocuments.vue";
+import DriversInformationCard from "@/components/forms/TwentyFourHourProhibition/DriversInformationCard.vue";
+import OfficerDetailsCard from "@/components/forms/TwentyFourHourProhibition/OfficerDetailsCard.vue";
+import ProhibitionInformationCard from "@/components/forms/TwentyFourHourProhibition/ProhibitionInformationCard.vue";
+import ReasonableGroundsCard from "@/components/forms/TwentyFourHourProhibition/ReasonableGroundsCard.vue";
+import TestAdministeredCard from "@/components/forms/TwentyFourHourProhibition/TestAdministeredCard.vue";
+import VehicleImpoundmentCard from "@/components/forms/TwentyFourHourProhibition/VehicleImpoundmentCard.vue";
+import VehicleInformationCard from "@/components/forms/TwentyFourHourProhibition/VehicleInformationCard.vue";
+import VehicleOwnerCard from "@/components/forms/TwentyFourHourProhibition/VehicleOwnerCard.vue";
 
-import {getCurrentlyEditedFormData, getCurrentlyEditedForm} from "@/utils/forms"
+import { namespace } from "vuex-class";
+import "@/store/modules/common";
+const commonState = namespace("Common");
 
-export default {
-  name: "TwentyFourHourProhibition",
-  components: {
-    DriversInformationCard,
-    OfficerDetailsCard,
-    PrintDocuments,
-    ProhibitionInformationCard,
-    ReasonableGroundsCard,
-    ReturnOfLicenceCard,
-    TestAdministeredAlcoholCard,
-    TestAdministeredDrugsCard,
-    VehicleImpoundmentCard,
-    VehicleInformationCard,
-    VehicleOwnerCard,
-  },
-  mixins: [FormsCommon],
-  computed: {
-    getCurrentlyEditedFormInfo(){
-      return getCurrentlyEditedForm()
-    },
-    ...mapGetters([
-        // "getDocumentsToPrint",
-        "getAttributeValue",
-        //"getCurrentlyEditedFormData",
-        // "getCurrentlyEditedFormObject",
-        // "getCurrentlyEditedForm",
-        "doesAttributeExist"]),
+import "@/store/modules/forms/mv2634";
+import { asdInfoType, twentyFourHourFormDataInfoType, twentyFourHourFormJsonInfoType, twentyFourHourFormStatesInfoType } from "@/types/Forms/MV2634";
+import { cityInfoType, currentlyEditingFormObjectInfoType, formsInfoType, impoundLotOperatorsInfoType, vehicleStyleInfoType } from "@/types/Common";
+const mv2634State = namespace("MV2634");
 
-    isPrescribedTestUsed() {
-      return this.getAttributeValue(this.getPath, 'prescribed_device') === "Yes";
+@Component({
+	components:{        
+        DriversInformationCard,
+		OfficerDetailsCard,
+		PrintDocuments,
+		ProhibitionInformationCard,
+		ReasonableGroundsCard,
+		TestAdministeredCard,
+		VehicleImpoundmentCard,
+		VehicleInformationCard,
+		VehicleOwnerCard
     }
-  },
-  methods: {
-    getDocumentsToPrint(form_type){
-        return this.$store.state.form_schemas.forms[form_type].documents;
+})
+export default class TwentyFourHourProhibition extends Vue {  
+
+	@mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;
+	
+	@commonState.State
+    public formsInfo: formsInfoType;
+
+    @commonState.State
+    public currently_editing_form_object: currentlyEditingFormObjectInfoType;
+
+	@commonState.Action
+    public UpdateCurrentlyEditingFormObject!: (newCurrentlyEditingFormObject: currentlyEditingFormObjectInfoType) => void	
+
+	@mv2634State.Action
+    public UpdateMV2634Info!: (newMV2634Info: twentyFourHourFormJsonInfoType) => void
+
+	
+	name = '24Hour'; 
+	updatedInfo = 0;
+    dataReady = false;
+    fieldStates = {} as twentyFourHourFormStatesInfoType;
+
+	id = '';
+	movedToPrintPage = false;
+	twentyFourHourFormData = {} as twentyFourHourFormJsonInfoType;
+    twentyFourHourData = {} as twentyFourHourFormDataInfoType;
+
+	variants = ["icbc", "driver", "ilo", "police"];
+
+
+	mounted() {		
+		this.id = this.currently_editing_form_object.form_id;
+		this.clearStates();		
+        const formData = this.$store.state.forms[this.name][this.id];        
+        this.UpdateMV2634Info(formData);
+		this.extractCurrentlyEditedFormData();
+	}
+
+	public extractCurrentlyEditedFormData() {
+
+        //console.log(this.mv2634Info)
+
+        if(this.mv2634Info?.data?.driversLicenceJurisdiction?.objectCd){
+            //console.log('updateData')
+            this.twentyFourHourFormData = this.mv2634Info            
+        }else{
+            //console.log('init')
+            this.prepopulateDefaultValues()            
+            this.recheckStates()
+        }  
+        this.twentyFourHourData = this.twentyFourHourFormData.data      
+		this.dataReady = true;
+	}
+
+    public prepopulateDefaultValues(){
+        const twentyFourHourData = {} as twentyFourHourFormDataInfoType
+
+        twentyFourHourData.driversNumber=null;
+        twentyFourHourData.givenName='';
+        twentyFourHourData.lastName='';
+        twentyFourHourData.dob='';
+        twentyFourHourData.driversLicenceJurisdiction= {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
+        twentyFourHourData.address='';
+        twentyFourHourData.driverCity='';
+        twentyFourHourData.driverProvince= {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
+        twentyFourHourData.driverPostalCode='';
+        twentyFourHourData.plateProvince= {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
+        twentyFourHourData.plateNumber='';
+        twentyFourHourData.plateValTag='';
+		twentyFourHourData.plateYear='';
+		twentyFourHourData.puj_code= {"objectCd":null,"objectDsc":null};
+        twentyFourHourData.nscNumber='';
+		twentyFourHourData.ownerFirstName='';
+		twentyFourHourData.ownerLastName='';
+		twentyFourHourData.ownerOrganization = null;
+		twentyFourHourData.ownerOrganizationName='';
+
+		twentyFourHourData.ownerAddress='';
+		twentyFourHourData.ownerCity='';
+		twentyFourHourData.ownerPhoneNumber='';
+		twentyFourHourData.ownerPostalCode='';
+		twentyFourHourData.ownerProvince= {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
+        twentyFourHourData.registrationNumber='';        
+        twentyFourHourData.vehicleYear='';
+        twentyFourHourData.vehicleMake={md:'', mk:'', search:''};
+        twentyFourHourData.vehicleColor=[];
+		twentyFourHourData.vehicleType= {} as vehicleStyleInfoType;
+		twentyFourHourData.vin_number='';
+
+        
+        twentyFourHourData.prohibitionType='';
+           
+        twentyFourHourData.vehicleImpounded=null; 
+        twentyFourHourData.impountLot= {} as impoundLotOperatorsInfoType;
+        twentyFourHourData.locationOfKeys='';
+        twentyFourHourData.notImpoundingReason='';
+        twentyFourHourData.releasedDate='';
+        twentyFourHourData.releasedTime='';
+        twentyFourHourData.vehicleReleasedTo='';
+
+        twentyFourHourData.offenceAddress='';
+        twentyFourHourData.offenceCity = {} as cityInfoType; 
+        twentyFourHourData.agencyFileNumber='';
+        twentyFourHourData.prohibitionStartDate='';
+        twentyFourHourData.prohibitionStartTime='';
+        twentyFourHourData.agency='';
+        twentyFourHourData.badge_number='';
+        twentyFourHourData.officer_name='';
+		twentyFourHourData.reasonableGrounds = [];
+		twentyFourHourData.reasonableGroundsOther='';		
+
+		twentyFourHourData.prescribedTest = null;
+		twentyFourHourData.prescribedTestDate='';
+		twentyFourHourData.prescribedTestTime='';
+		twentyFourHourData.prescribedNoTestReason='';
+		twentyFourHourData.alcoholTest='';
+		twentyFourHourData.asd = {} as asdInfoType;
+		twentyFourHourData.BacResult='';		
+		twentyFourHourData.drugsTest='';
+		twentyFourHourData.approvedDrugScreeningEquipment = [];        
+        twentyFourHourData.submitted=false;
+        
+        this.twentyFourHourFormData = this.mv2634Info
+        this.twentyFourHourFormData.data = twentyFourHourData
+        
     }
-  },
-  props: {
-    name: {
-      type: String,
-      default: '24Hour'
+
+	public clearStates(){
+        const twentyFourHourFormStates = {} as twentyFourHourFormStatesInfoType;        
+                
+        twentyFourHourFormStates.ownerFirstName=null
+		twentyFourHourFormStates.ownerLastName=null
+		twentyFourHourFormStates.ownerOrganization=null
+		twentyFourHourFormStates.ownerOrganizationName=null  
+		twentyFourHourFormStates.ownerAddress=null
+		twentyFourHourFormStates.ownerCity=null
+		twentyFourHourFormStates.ownerPhoneNumber=null
+		twentyFourHourFormStates.ownerPostalCode=null
+		twentyFourHourFormStates.ownerProvince=null
+		twentyFourHourFormStates.driversNumber=null
+		twentyFourHourFormStates.givenName=null
+		twentyFourHourFormStates.lastName=null
+		twentyFourHourFormStates.dob=null
+		twentyFourHourFormStates.driversLicenceJurisdiction=null
+		twentyFourHourFormStates.address=null 
+		twentyFourHourFormStates.driverCity=null
+		twentyFourHourFormStates.driverProvince=null
+		twentyFourHourFormStates.driverPostalCode=null
+		twentyFourHourFormStates.plateProvince=null
+		twentyFourHourFormStates.plateNumber=null
+		twentyFourHourFormStates.plateValTag=null
+		twentyFourHourFormStates.plateYear=null
+		twentyFourHourFormStates.puj_code=null
+		twentyFourHourFormStates.nscNumber=null
+		twentyFourHourFormStates.registrationNumber=null
+		twentyFourHourFormStates.vehicleYear=null
+		twentyFourHourFormStates.vehicleMake=null
+		twentyFourHourFormStates.vehicleColor=null
+		twentyFourHourFormStates.vehicleType=null
+		twentyFourHourFormStates.vin_number=null
+		twentyFourHourFormStates.vehicleImpounded=null 
+		twentyFourHourFormStates.impountLot=null
+		twentyFourHourFormStates.locationOfKeys=null
+		twentyFourHourFormStates.notImpoundingReason=null
+		twentyFourHourFormStates.releasedDate=null
+		twentyFourHourFormStates.releasedTime=null
+		twentyFourHourFormStates.vehicleReleasedTo=null    
+		twentyFourHourFormStates.offenceAddress=null
+		twentyFourHourFormStates.offenceCity=null
+		twentyFourHourFormStates.agencyFileNumber=null
+		twentyFourHourFormStates.prohibitionStartDate=null
+		twentyFourHourFormStates.prohibitionStartTime=null
+		twentyFourHourFormStates.agency=null
+		twentyFourHourFormStates.badge_number=null
+		twentyFourHourFormStates.officer_name=null
+		twentyFourHourFormStates.submitted=null
+		twentyFourHourFormStates.reasonableGrounds=null
+		twentyFourHourFormStates.reasonableGroundsOther=null  
+		twentyFourHourFormStates.prescribedTest=null
+		twentyFourHourFormStates.prescribedTestDate=null
+		twentyFourHourFormStates.prescribedTestTime=null
+		twentyFourHourFormStates.prescribedNoTestReason=null    
+		twentyFourHourFormStates.prohibitionType=null    
+		twentyFourHourFormStates.alcoholTest=null
+		twentyFourHourFormStates.asdExpiryDate=null
+		twentyFourHourFormStates.asdResult=null
+		twentyFourHourFormStates.BacResult=null   
+		twentyFourHourFormStates.drugsTest=null
+		twentyFourHourFormStates.approvedDrugScreeningEquipment=null    
+
+        this.fieldStates = twentyFourHourFormStates;
+        this.dataReady = true
     }
-  },
-  mounted() {
-    const payload = {form_type: this.name, form_id: this.id}
-    this.$store.commit("Common/editExistingForm",payload)
-    this.setNewFormDefaults(payload)
-    this.data = getCurrentlyEditedFormData()
-    this.isMounted = true
-  }
+
+	public recheckStates(){
+        this.UpdateMV2634Info(this.twentyFourHourFormData)
+        this.$store.commit("updateFormInRoot",this.twentyFourHourFormData)
+        console.log('check')			
+        const specialFields = ['dob']
+        for(const field of Object.keys(this.fieldStates)){
+            if(this.fieldStates[field]==false && !specialFields.includes(field)){
+                this.checkStates()
+                return 
+            }
+        }  
+    }
+
+	public checkStates(){
+        const data = this.twentyFourHourFormData.data
+        
+        this.fieldStates.driverProvince = data.driverProvince?.objectCd? null:false;
+        this.fieldStates.driverPostalCode = Vue.filter('verifyPostCode')(data.driverPostalCode, data.driverProvince?.objectCd)? null:false;      
+
+        for(const field of Object.keys(this.fieldStates)){
+            if(this.fieldStates[field]==false){
+                // Vue.filter('findInvalidFields')()
+                return false
+            }                
+        }       
+
+        return true;            
+    }
+
+
 }
 </script>
 

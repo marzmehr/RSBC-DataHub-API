@@ -222,7 +222,7 @@ export default class VehicleInformationCard extends Vue {
 		this.searchingLookup = true;
 		lookupPlateFromICBC([this.mv2906Info.data.plateNumber, this.path ])
 			.then(() => {
-				const data = this.$store.state.forms['12Hour'][this.mv2906Info.form_id]
+				const data = this.$store.state.forms['12Hour'][this.mv2906Info.form_id] //TODO: get this 'data' from ICBC
 				this.updateFormFields(data);
 				this.searchingLookup = false;
 			})
@@ -234,13 +234,13 @@ export default class VehicleInformationCard extends Vue {
 	}
 
 	public updateFormFields(data: any){
-		this.vehicleInfo.driversNumber = data.number;		
-        this.vehicleInfo.address = data['address']['street'];
-        this.vehicleInfo.driverCity = data['address']['city'];
-        this.vehicleInfo.driverPostalCode = data['address']['postalCode'];
-        this.vehicleInfo.dob = data['dob'];
-        this.vehicleInfo.givenName = data['name']['given'];
-        this.vehicleInfo.lastName = data['name']['surname'];		
+		this.vehicleInfo.vehicleYear = data['vehicleModelYear'];		
+        this.vehicleInfo.vehicleColor = [{code: data['vehicleColour'], display_name: data['vehicleColour'], colour_class: data['vehicleColour']}];
+		//TODO: fix color info fields
+		this.vehicleInfo.vehicleMake = {
+			"md": data['vehicleMake'], 
+			"mk": data['vehicleModel'], 
+			"search": data['vehicleMake'] + " - " + data['vehicleModel']};
 	}
 
 	public update(){     

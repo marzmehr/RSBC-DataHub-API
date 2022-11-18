@@ -1,13 +1,12 @@
 import Common from '@/store/modules/common';
 import MV2906 from '@/store/modules/forms/mv2906';
+import MV2634 from '@/store/modules/forms/mv2634';
 import {plugins} from "@/store/plugins";
-
 
 
 import {getters} from "@/store/getters";
 import {mutations} from "@/store/mutations";
 // import {version} from "../../package.json";
-
 
 
 import Vue from "vue";
@@ -17,7 +16,8 @@ Vue.use(Vuex)
 const rsiStore = new Vuex.Store({
     modules: {
         Common,
-        MV2906
+        MV2906,
+        MV2634
     },
 
     state: {

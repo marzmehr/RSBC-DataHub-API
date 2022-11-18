@@ -97,5 +97,5 @@ export interface vehicleStyleInfoType {
 export interface vehicleColourInfoType {
     code: string;
     display_name: string;
-    colour_class: string;
+    colour_class?: string;
 }

@@ -1,39 +1,39 @@
 <template>
-  <b-card header-tag="header" bg-variant="light" border-variant="primary" class="mx-auto p-0">
-	<b-card-header header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
-		<h4>Notice of 12 Hour Licence Suspension</h4>      
-	</b-card-header>
-	<b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
-        <b-row class="pt-2 pb-0 text-danger border-light">            
-            <div class="ml-auto mr-2 h4">{{id}}</div>      
-        </b-row>
+    <b-card header-tag="header" bg-variant="light" border-variant="primary" class="mx-auto p-0">
+        <b-card-header header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
+            <h4>Notice of 12 Hour Licence Suspension</h4>      
+        </b-card-header>
+        <b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
+            <b-row class="pt-2 pb-0 text-danger border-light">            
+                <div class="ml-auto mr-2 h4">{{id}}</div>      
+            </b-row>
+            
+            <drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
+            <vehicle-information-card :vehicleInfo="twelveHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
+            <vehicle-disposition-card :vdInfo="twelveHourData" :vdState="fieldStates" @recheckStates="recheckStates()"/>
+            <prohibition-information-card :prohibitionInfo="twelveHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
+            <officer-details-card :officerInfo="twelveHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
+
+        </b-card>
+        <!-- <form-container title="Notice of 12 Hour Licence Suspension" :form_object="formObject" >
+            
+            
+            <b-card title="Generate PDF for Printing">
+                <div class="d-flex justify-content-between">
         
-		<drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
-		<vehicle-information-card :vehicleInfo="twelveHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
-		<vehicle-disposition-card :vdInfo="twelveHourData" :vdState="fieldStates" @recheckStates="recheckStates()"/>
-		<prohibition-information-card :prohibitionInfo="twelveHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
-		<officer-details-card :officerInfo="twelveHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
+                    <print-documents				
+                    :show_certificate="isCertificateOfServiceEnabled(getPath)"
+                    :path="getPath"
+                    :form_object="getCurrentlyEditedForm"
+                    :validate="validate"
+                    :variants="variants">
+                    Print All Copies
+                </print-documents>
+                </div>
+            </b-card>
 
-	</b-card>
-	<!-- <form-container title="Notice of 12 Hour Licence Suspension" :form_object="formObject" >
-		
-		
-		<b-card title="Generate PDF for Printing">
-			<div class="d-flex justify-content-between">
-	
-				<print-documents				
-				:show_certificate="isCertificateOfServiceEnabled(getPath)"
-				:path="getPath"
-				:form_object="getCurrentlyEditedForm"
-				:validate="validate"
-				:variants="variants">
-				Print All Copies
-			</print-documents>
-			</div>
-		</b-card>
-
-	</form-container> -->
-  </b-card>
+        </form-container> -->
+    </b-card>
 </template>
 
 <script lang="ts">
@@ -83,8 +83,6 @@ export default class TwelveHourProhibition extends Vue {
 
 	@mv2906State.Action
     public UpdateMV2906Info!: (newMV2906Info: twelveHourFormJsonInfoType) => void
-
-
 	
 	name = '12Hour'; 
 	updatedInfo = 0;

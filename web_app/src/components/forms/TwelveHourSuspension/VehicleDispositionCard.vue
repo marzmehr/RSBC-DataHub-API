@@ -100,7 +100,7 @@
 
 
             </b-card>
-            <b-card no-body v-else>
+            <b-card no-body v-else-if="vdInfo.vehicleImpounded != null" >
                 <b-row>   
                     <b-col cols="4"> 
                         <label class="ml-1 m-0 p-0"> Reason for not towing? <span class="text-danger">*</span></label>
@@ -165,10 +165,10 @@
                         </label>
                         <b-form-input
                             placeholder="HHMM"
-                            v-model="vdInfo.impountLot.phone"
+                            v-model="vdInfo.releasedTime"
                             :disabled="formPrinted"
                             @input="update"
-                            :state="vdState.impoundLotPhone">
+                            :state="vdState.releasedTime">
                         </b-form-input>                             
                     </b-col>
                 </b-row>
