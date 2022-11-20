@@ -237,7 +237,10 @@ export default class TwentyFourHourProhibition extends Vue {
 		twentyFourHourFormStates.vehicleType=null
 		twentyFourHourFormStates.vin_number=null
 		twentyFourHourFormStates.vehicleImpounded=null 
-		twentyFourHourFormStates.impountLot=null
+		twentyFourHourFormStates.impoundLotName=null
+		twentyFourHourFormStates.impoundLotAddress=null
+		twentyFourHourFormStates.impoundLotCity = null;
+		twentyFourHourFormStates.impoundLotPhone = null;
 		twentyFourHourFormStates.locationOfKeys=null
 		twentyFourHourFormStates.notImpoundingReason=null
 		twentyFourHourFormStates.releasedDate=null

@@ -11,13 +11,15 @@ import {mutations} from "@/store/mutations";
 
 import Vue from "vue";
 import Vuex from "vuex";
+import VI from './modules/forms/vi';
 Vue.use(Vuex)
 
 const rsiStore = new Vuex.Store({
     modules: {
         Common,
         MV2906,
-        MV2634
+        MV2634,
+        VI
     },
 
     state: {

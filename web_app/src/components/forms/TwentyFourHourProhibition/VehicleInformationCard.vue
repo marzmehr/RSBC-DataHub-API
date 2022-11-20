@@ -67,18 +67,23 @@
 				</b-col>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Plate Val Tag </label>
-					<b-form-input
-					type="number">
+					<b-form-input						
+						v-model="vehicleInfo.plateValTag"						
+						:disabled="formPrinted"
+                        :state="vehicleState.plateValTag"
+						@change="update">
 					</b-form-input>  
 				</b-col>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Registration Number</label>
-					<b-form-input>
+					<b-form-input						
+						v-model="vehicleInfo.registrationNumber"						
+						:disabled="formPrinted"
+                        :state="vehicleState.registrationNumber"
+						@change="update">
 					</b-form-input>                                 
 				</b-col>
 			</b-row>
-
-
 			<b-row>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Vehicle Year </label>

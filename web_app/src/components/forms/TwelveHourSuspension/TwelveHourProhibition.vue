@@ -198,7 +198,23 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourFormStates.registrationNumber=null 
         twelveHourFormStates.vehicleYear=null
         twelveHourFormStates.vehicleMake=null 
-        twelveHourFormStates.vehicleColor=null        
+        twelveHourFormStates.vehicleColor=null   
+        twelveHourFormStates.vehicleImpounded=null    
+        twelveHourFormStates.locationOfKeys=null 
+        twelveHourFormStates.impoundLotName=null 
+        twelveHourFormStates.impoundLotAddress=null 
+        twelveHourFormStates.impoundLotCity=null 
+        twelveHourFormStates.impoundLotPhone=null 
+        twelveHourFormStates.notImpoundingReason=null    
+        twelveHourFormStates.vehicleReleasedTo=null    
+        twelveHourFormStates.releasedDate=null 
+        twelveHourFormStates.releasedTime=null 
+        twelveHourFormStates.prohibitionType=null 
+        twelveHourFormStates.offenceAddress=null 
+        twelveHourFormStates.offenceCity=null 
+        twelveHourFormStates.agencyFileNumber=null 
+        twelveHourFormStates.prohibitionStartDate=null 
+        twelveHourFormStates.prohibitionStartTime=null      
         twelveHourFormStates.submitted=null    
 
         this.fieldStates = twelveHourFormStates;

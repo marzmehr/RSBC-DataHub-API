@@ -92,7 +92,7 @@
 						style="display: block;">
 							<b-form-select-option
 								v-for="province,inx in provinces" 
-								:key="'dr-province-'+province.objectCd+inx"
+								:key="'owner-province-'+province.objectCd+inx"
 								:value="province">
 									{{province.objectDsc}}
 							</b-form-select-option>    

@@ -110,7 +110,7 @@ export interface twelveHourFormStatesInfoType {
     vehicleColor: null | boolean;
     vehicleImpounded: null | boolean;    
     locationOfKeys: null | boolean;
-    impountLotName: null | boolean;
+    impoundLotName: null | boolean;
     impoundLotAddress: null | boolean;
     impoundLotCity: null | boolean;
     impoundLotPhone: null | boolean;

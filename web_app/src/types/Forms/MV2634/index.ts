@@ -176,7 +176,10 @@ export interface twentyFourHourFormStatesInfoType {
     vehicleType: null | boolean;
     vin_number: null | boolean;
     vehicleImpounded: null | boolean; 
-    impountLot: null | boolean;
+    impoundLotName: null | boolean;
+    impoundLotAddress: null | boolean;
+    impoundLotCity: null | boolean;
+    impoundLotPhone: null | boolean;
     locationOfKeys: null | boolean;
     notImpoundingReason: null | boolean;
     releasedDate: null | boolean;
