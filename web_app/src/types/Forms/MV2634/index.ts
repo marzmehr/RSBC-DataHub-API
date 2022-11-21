@@ -68,7 +68,7 @@ export interface twentyFourHourFormDataInfoType {
     vin_number?: string;
 
     vehicleImpounded: boolean; 
-    impountLot?: impoundLotOperatorsInfoType;
+    impoundLot?: impoundLotOperatorsInfoType;
     locationOfKeys?: string; // With vehicle￼|| With driver
     notImpoundingReason?: string; //Released to other driver || Left at roadside || Private tow || Seized for investigation
     releasedDate?: string;

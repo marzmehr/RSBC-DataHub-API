@@ -35,7 +35,7 @@
                 <b-row class="mx-3">
                     <label class="ml-1 m-0 p-0"></label>
                     <b-form-select	
-                        v-model="vdInfo.impountLot"
+                        v-model="vdInfo.impoundLot"
                         :disabled="formPrinted"
                         @change="update"                        							
                         placeholder="Search for an Impound Lot Operator"
@@ -53,9 +53,9 @@
                     <label class="ml-1 m-0 p-0"> Impound Lot Operator Name <span class="text-danger">*</span></label>
                     <b-form-input						
 						:disabled="formPrinted"
-						v-model="vdInfo.impountLot.name"
+						v-model="vdInfo.impoundLot.name"
 						@input="update"
-						:state="vdState.impountLotName">
+						:state="vdState.impoundLotName">
 					</b-form-input> 
                 </b-row>
 
@@ -64,7 +64,7 @@
                         <label class="ml-1 m-0 p-0"> Public lot address <span class="text-danger">*</span></label>
                         <b-form-input
                             placeholder="Public lot address"
-                            v-model="vdInfo.impountLot.lot_address"
+                            v-model="vdInfo.impoundLot.lot_address"
                             :disabled="formPrinted"
                             @input="update"
                             :state="vdState.impoundLotAddress">
@@ -74,7 +74,7 @@
 					<label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
 					<b-form-input
 						placeholder="City"
-						v-model="vdInfo.impountLot.city"
+						v-model="vdInfo.impoundLot.city"
 						:disabled="formPrinted"
 						@input="update"
 						:state="vdState.impoundLotCity">
@@ -84,7 +84,7 @@
 					<label class="ml-1 m-0 p-0"> Public phone <span class="text-danger">*</span></label>
 					<b-form-input
 						placeholder="Public phone"
-						v-model="vdInfo.impountLot.phone"
+						v-model="vdInfo.impoundLot.phone"
 						:disabled="formPrinted"
 						@input="update"
 						:state="vdState.impoundLotPhone">

@@ -169,7 +169,7 @@ export default class VehicleImpoundment extends Vue {
         viData.vehicleMake={md:'', mk:'', search:''};
         viData.vehicleColor=[];		
 		viData.vin_number=''; 
-        viData.impountLot= {} as impoundLotOperatorsInfoType;
+        viData.impoundLot= {} as impoundLotOperatorsInfoType;
         viData.impoundedDate = '';
 		viData.incidentDetails=''; 
         viData.offenceAddress='';

@@ -24,7 +24,7 @@ export interface twelveHourFormDataInfoType {
     vehicleColor: vehicleColourInfoType[]; //vehicle_color: vehicleColourInfoType[];
     
     vehicleImpounded: boolean; 
-    impountLot?: impoundLotOperatorsInfoType;
+    impoundLot?: impoundLotOperatorsInfoType;
     locationOfKeys?: string; // With vehicle￼|| With driver
     notImpoundingReason?: string; //Released to other driver || Left at roadside
     releasedDate?: string;

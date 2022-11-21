@@ -62,7 +62,7 @@ export interface viFormDataInfoType {
     vehicleMake: vehicleInfoType; //vehicle_make: vehicleInfoType;
     vehicleColor: vehicleColourInfoType[]; //vehicle_color: vehicleColourInfoType[];
     vin_number?: string;
-    impountLot?: impoundLotOperatorsInfoType; //impound_lot_operator: impoundLotOperatorsInfoType;
+    impoundLot?: impoundLotOperatorsInfoType; //impound_lot_operator: impoundLotOperatorsInfoType;
     impoundedDate?: string; //impounded_dt
     incidentDetails: string; //incident_details: string;
     offenceAddress: string; //offence_address: string;

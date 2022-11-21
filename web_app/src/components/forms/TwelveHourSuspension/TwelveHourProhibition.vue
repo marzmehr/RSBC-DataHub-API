@@ -151,7 +151,7 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourData.prohibitionType='';
            
         twelveHourData.vehicleImpounded=null; 
-        twelveHourData.impountLot= {} as impoundLotOperatorsInfoType;
+        twelveHourData.impoundLot= {} as impoundLotOperatorsInfoType;
         twelveHourData.locationOfKeys='';
         twelveHourData.notImpoundingReason='';
         twelveHourData.releasedDate='';

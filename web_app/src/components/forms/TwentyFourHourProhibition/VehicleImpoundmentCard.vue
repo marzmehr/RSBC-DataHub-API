@@ -35,7 +35,7 @@
                 <b-row class="mx-3">
                     <label class="ml-1 m-0 p-0"></label>
                     <b-form-select	
-                        v-model="viInfo.impountLot"
+                        v-model="viInfo.impoundLot"
                         :disabled="formPrinted"
                         @change="update"                        							
                         placeholder="Search for an Impound Lot Operator"
@@ -53,9 +53,9 @@
                     <label class="ml-1 m-0 p-0"> Impound Lot Operator Name <span class="text-danger">*</span></label>
                     <b-form-input						
 						:disabled="formPrinted"
-						v-model="viInfo.impountLot.name"
+						v-model="viInfo.impoundLot.name"
 						@input="update"
-						:state="viState.impountLotName">
+						:state="viState.impoundLotName">
 					</b-form-input> 
                 </b-row>
 
@@ -64,7 +64,7 @@
                         <label class="ml-1 m-0 p-0"> Public lot address <span class="text-danger">*</span></label>
                         <b-form-input
                             placeholder="Public lot address"
-                            v-model="viInfo.impountLot.lot_address"
+                            v-model="viInfo.impoundLot.lot_address"
                             :disabled="formPrinted"
                             @input="update"
                             :state="viState.impoundLotAddress">
@@ -74,7 +74,7 @@
 						<label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
 						<b-form-input
 							placeholder="City"
-							v-model="viInfo.impountLot.city"
+							v-model="viInfo.impoundLot.city"
 							:disabled="formPrinted"
 							@input="update"
 							:state="viState.impoundLotCity">
@@ -84,7 +84,7 @@
 						<label class="ml-1 m-0 p-0"> Public phone <span class="text-danger">*</span></label>
 						<b-form-input
 							placeholder="Public phone"
-							v-model="viInfo.impountLot.phone"
+							v-model="viInfo.impoundLot.phone"
 							:disabled="formPrinted"
 							@input="update"
 							:state="viState.impoundLotPhone">

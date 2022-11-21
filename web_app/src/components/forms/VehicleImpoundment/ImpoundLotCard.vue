@@ -43,7 +43,7 @@
             <b-row class="mx-3">
                 <label class="ml-1 m-0 p-0"></label>
                 <b-form-select	
-                    v-model="ilInfo.impountLot"
+                    v-model="ilInfo.impoundLot"
                     :disabled="formPrinted"
                     @change="update"                        							
                     placeholder="Search for an Impound Lot Operator"
@@ -61,7 +61,7 @@
                 <label class="ml-1 m-0 p-0"> Impound Lot Operator Name <span class="text-danger">*</span></label>
                 <b-form-input						
                     :disabled="formPrinted"
-                    v-model="ilInfo.impountLot.name"
+                    v-model="ilInfo.impoundLot.name"
                     @input="update"
                     :state="ilState.impoundLotName">
                 </b-form-input> 
@@ -72,7 +72,7 @@
                     <label class="ml-1 m-0 p-0"> Public lot address <span class="text-danger">*</span></label>
                     <b-form-input
                         placeholder="Public lot address"
-                        v-model="ilInfo.impountLot.lot_address"
+                        v-model="ilInfo.impoundLot.lot_address"
                         :disabled="formPrinted"
                         @input="update"
                         :state="ilState.impoundLotAddress">
@@ -82,7 +82,7 @@
                     <label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
                     <b-form-input
                         placeholder="City"
-                        v-model="ilInfo.impountLot.city"
+                        v-model="ilInfo.impoundLot.city"
                         :disabled="formPrinted"
                         @input="update"
                         :state="ilState.impoundLotCity">
@@ -92,7 +92,7 @@
                     <label class="ml-1 m-0 p-0"> Public phone <span class="text-danger">*</span></label>
                     <b-form-input
                         placeholder="Public phone"
-                        v-model="ilInfo.impountLot.phone"
+                        v-model="ilInfo.impoundLot.phone"
                         :disabled="formPrinted"
                         @input="update"
                         :state="ilState.impoundLotPhone">

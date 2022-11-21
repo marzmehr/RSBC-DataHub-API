@@ -169,7 +169,7 @@ export default class TwentyFourHourProhibition extends Vue {
         twentyFourHourData.prohibitionType='';
            
         twentyFourHourData.vehicleImpounded=null; 
-        twentyFourHourData.impountLot= {} as impoundLotOperatorsInfoType;
+        twentyFourHourData.impoundLot= {} as impoundLotOperatorsInfoType;
         twentyFourHourData.locationOfKeys='';
         twentyFourHourData.notImpoundingReason='';
         twentyFourHourData.releasedDate='';
