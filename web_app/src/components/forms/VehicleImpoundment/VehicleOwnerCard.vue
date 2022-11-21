@@ -102,19 +102,12 @@
 				</b-col>
 				<b-col cols="4">
 					<label class="ml-1 m-0 p-0"> City </label>
-					<b-form-select	
-						v-model="ownerInfo.ownerCity"
+					<b-form-input						
+						v-model="ownerInfo.ownerCity"						
+						@input="update"
 						:disabled="formPrinted"
-						@change="update"
-						:state="ownerState.ownerCity"
-						style="display: block;">
-							<b-form-select-option
-								v-for="city,inx in cities" 
-								:key="'owner-city-'+city.objectCd+inx"
-								:value="city.objectDsc">
-									{{city.objectDsc}}
-							</b-form-select-option>    
-					</b-form-select>   
+						:state="ownerState.ownerCity">
+					</b-form-input>   
 				</b-col>				
 			</b-row>
 			<b-row>				
@@ -225,9 +218,6 @@ export default class VehicleOwnerCard extends Vue {
 
 	@commonState.State
     public provinces: provinceInfoType[];
-
-	@commonState.State
-    public cities: cityInfoType[];
 	
 	@viState.State
     public viInfo: viFormJsonInfoType;
