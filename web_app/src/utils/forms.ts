@@ -172,6 +172,23 @@ export function getFormTypeCount(){
     return FormTypeCount;
 }
 
+export function getArrayOfRecentViNumbers() {
+    const localViNumbers = Object.keys(rsiStore.state.forms.VI);
+    const optionsArray = [];
+    for (const viNumber of localViNumbers) {
+        const viInfo = rsiStore.state.forms.VI[viNumber]
+        if (viInfo.data?.lastName && viInfo.data?.givenName) {
+            optionsArray.push({
+                viNumber: viNumber,
+                label: viInfo.data.lastName +
+                    ", " + viInfo.data.givenName+ " (" + viNumber + ")"
+            })
+        }
+
+    }    
+    return optionsArray
+}
+
 
 function getNumberOfUniqueIdsRequired(form_type){
     // Business rules state that X number of forms must be available to use offline

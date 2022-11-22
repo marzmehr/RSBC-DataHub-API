@@ -57,23 +57,39 @@
 			</b-row>
 			<b-row>
 				<b-col >
-					<label class="ml-1 m-0 p-0"> Surname <span class="text-danger">*</span></label>
-					<b-form-input
-						placeholder="Last Name"
-						v-model="driverInfo.lastName"
+					<label class="ml-1 m-0 p-0">Gender</label>
+					<b-form-select	
+						v-model="driverInfo.driverGender"
 						:disabled="formPrinted"
-						@input="update"
-						:state="driverState.lastName">
-					</b-form-input>                                
+						@change="update"
+						:state="driverState.driverGender"
+						style="display: block;">
+							<b-form-select-option
+								v-for="gender,inx in genderOptions" 
+								:key="'dr-gender-'+gender.value+inx"
+								:value="gender.value">
+									{{gender.text}}
+							</b-form-select-option>    
+					</b-form-select>                                
 				</b-col>
-				<b-col >
-					<label class="ml-1 m-0 p-0"> Given Names </label>
+				<b-col>
+					<label class="ml-1 m-0 p-0"> License Expiry Year</label>
 					<b-form-input
-						placeholder="Given Names"
-						v-model="driverInfo.givenName"
+						placeholder="YYYY"				
+						v-model="driverInfo.licenseExpiryYear"						
+						@input="update"
+						:disabled="formPrinted"
+						:state="driverState.licenseExpiryYear">
+					</b-form-input>  
+				</b-col>
+				<b-col v-if="driverInfo.driversLicenceJurisdiction.objectCd == 'BC'">
+					<label class="ml-1 m-0 p-0"> BCDL Class </label>
+					<b-form-input
+						type="number"
+						v-model="driverInfo.bcdlClass"
 						:disabled="formPrinted"
 						@input="update"
-						:state="driverState.givenName">
+						:state="driverState.bcdlClass">
 					</b-form-input>  
 				</b-col>
 				<b-col >
@@ -106,43 +122,82 @@
 					</b-input-group> 
 					<div v-if="dateError" style="font-size:10pt;" class="text-danger text-left m-0 mt-n3 p-0">{{dateError}}</div>                             
 				</b-col>
-			</b-row>			
+			</b-row>
+			<b-row>
+				<b-col >
+					<label class="ml-1 m-0 p-0"> Last Name <span class="text-danger">*</span></label>
+					<b-form-input
+						placeholder="Last Name"
+						v-model="driverInfo.lastName"
+						:disabled="formPrinted"
+						@input="update"
+						:state="driverState.lastName">
+					</b-form-input>                                
+				</b-col>
+				<b-col >
+					<label class="ml-1 m-0 p-0"> Given Names </label>
+					<b-form-input
+						placeholder="Given Names"
+						v-model="driverInfo.givenName"
+						:disabled="formPrinted"
+						@input="update"
+						:state="driverState.givenName">
+					</b-form-input>  
+				</b-col>
+			</b-row>
+			<b-row>
+				<b-col>					
+					<label class="ml-1 m-0 p-0"> Address <span class="text-danger">*</span></label>
+					<b-form-input
+						placeholder="Address"
+						:disabled="formPrinted"
+						v-model="driverInfo.address"
+						@input="update"
+						:state="driverState.address">
+					</b-form-input>
+				</b-col>				
+			</b-row>
 			<b-row>
 				<b-col cols="6" >
-					<label class="ml-1 m-0 p-0">Gender</label>
-					<b-form-select	
-						v-model="driverInfo.driver_gender"
+					<label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
+					<b-form-input						
+						v-model="driverInfo.driverCity"						
+						@input="update"
 						:disabled="formPrinted"
-						@change="update"
-						:state="driverState.driver_gender"
-						style="display: block;">
-							<b-form-select-option
-								v-for="gender,inx in genderOptions" 
-								:key="'dr-gender-'+gender.value+inx"
-								:value="gender.value">
-									{{gender.text}}
-							</b-form-select-option>    
-					</b-form-select>                                
+						:state="driverState.driverCity">
+					</b-form-input>                                
 				</b-col>
 				<b-col cols="2">
-					<label class="ml-1 m-0 p-0"> License Expiry Year</label>
-					<b-form-input
-						placeholder="YYYY"				
-						v-model="driverInfo.dlExpiryYear"						
-						@input="update"
+					<label class="ml-1 m-0 p-0"> Prov / State <span class="text-danger">*</span></label>
+					<b-form-select	
+						v-model="driverInfo.driverProvince"
 						:disabled="formPrinted"
-						:state="driverState.dlExpiryYear">
-					</b-form-input>   
+						@change="update"
+						:state="driverState.driverProvince"							
+						placeholder="Search for a Province or State"
+						style="display: block;">
+							<b-form-select-option
+								v-for="province,inx in provinces" 
+								:key="'dr-province-'+province.objectCd+inx"
+								:value="province">
+									{{province.objectDsc}}
+							</b-form-select-option>    
+					</b-form-select>   
 				</b-col>
-				<b-col v-if="driverInfo.driversLicenceJurisdiction.objectCd == 'BC'">
-					<label class="ml-1 m-0 p-0"> BCDL Class</label>
-					<b-form-input	
-						type="number"					
-						v-model="driverInfo.dlClass"						
+				<b-col >
+					<label class="ml-1 m-0 p-0"> Postal / Zip</label>
+					<b-form-input						
+						v-model="driverInfo.driverPostalCode"						
 						@input="update"
 						:disabled="formPrinted"
-						:state="driverState.dlClass">
-					</b-form-input>                  
+						:state="driverState.driverPostalCode">
+					</b-form-input> 
+					<div
+                        v-if="(driverState.driverPostalCode != null)" 
+                        style="font-size: 9.5pt; " 
+                        class="text-left text-danger m-0 p-0">
+                        Invalid Postal Code <i>(For CANADA format is A1A 1A1)</i>
+                    </div>                                  
 				</b-col>
 			</b-row>
 			<div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
@@ -189,13 +244,13 @@ import moment from 'moment-timezone';
 import "@/store/modules/common";
 const commonState = namespace("Common");
 
-import "@/store/modules/forms/vi";
-const viState = namespace("VI");
+import "@/store/modules/forms/irp";
+const irpState = namespace("IRP");
 
 import rsiStore from "@/store";
 
 import { jurisdictionInfoType, provinceInfoType } from '@/types/Common';
-import { viFormStatesInfoType, viFormDataInfoType, viFormJsonInfoType } from '@/types/Forms/VI';
+import { irpFormStatesInfoType, irpFormDataInfoType, irpFormJsonInfoType } from '@/types/Forms/IRP';
 import Spinner from "@/components/utils/Spinner.vue";
 import {lookupDriverFromICBC} from "@/utils/icbc";
 import {lookupDriverProvince} from "@/utils/lookups";
@@ -214,14 +269,14 @@ export default class DriversInformationCard extends Vue {
 	@commonState.State
     public provinces: provinceInfoType[];
 	
-	@viState.State
-    public viInfo: viFormJsonInfoType;
+	@irpState.State
+    public irpInfo: irpFormJsonInfoType;
 	
 	@Prop({required: true})
-    driverInfo!: viFormDataInfoType;
+    driverInfo!: irpFormDataInfoType;
 	
 	@Prop({required: true})
-	driverState!: viFormStatesInfoType;
+	driverState!: irpFormStatesInfoType;
 
 	dataReady = false;
 	dob=''
@@ -246,23 +301,23 @@ export default class DriversInformationCard extends Vue {
 
 	mounted() { 
 		this.dataReady = false;				        
-		this.formPrinted = Boolean(this.viInfo.printed_timestamp);
+		this.formPrinted = Boolean(this.irpInfo.printed_timestamp);
         this.extractFields();
         this.dataReady = true;
     }
 
 	public extractFields(){
 		this.age = 0;
-		this.path = 'forms/' + this.viInfo.form_type + '/' + this.viInfo.form_id + '/data'
+		this.path = 'forms/' + this.irpInfo.form_type + '/' + this.irpInfo.form_id + '/data'
 	}
 
 	public triggerDriversLookup(){
 		console.log("inside triggerDriversLookup()")
 		this.error = ''
 		this.searchingLookup = true;
-		lookupDriverFromICBC([this.path, this.viInfo.data.driversNumber])
+		lookupDriverFromICBC([this.path, this.irpInfo.data.driversNumber])
 			.then(() => {
-				const data = this.$store.state.forms['12Hour'][this.viInfo.form_id]
+				const data = this.$store.state.forms['12Hour'][this.irpInfo.form_id]
 				this.updateFormFields(data);
 				this.searchingLookup = false;
 			})
@@ -274,7 +329,10 @@ export default class DriversInformationCard extends Vue {
 	}
 
 	public updateFormFields(data: any){
-		this.driverInfo.driversNumber = data.number;
+		this.driverInfo.driversNumber = data.number;		
+        this.driverInfo.address = data['address']['street'];
+        this.driverInfo.driverCity = data['address']['city'];
+        this.driverInfo.driverPostalCode = data['address']['postalCode'];
         this.driverInfo.dob = data['dob'];
         this.driverInfo.givenName = data['name']['given'];
         this.driverInfo.lastName = data['name']['surname'];	
@@ -298,14 +356,14 @@ export default class DriversInformationCard extends Vue {
 	}
 
 	async launchDlScanner() {
-		console.log('inside launchDlScanner')
-		this.$bvModal.show('dl-scanner')
+      console.log('inside launchDlScanner')
+      this.$bvModal.show('dl-scanner')
 
-		const scanner = await dlScanner.openScanner();
+      const scanner = await dlScanner.openScanner();
 
-		scanner.addEventListener("inputreport", this.handledScannedBarCode);
+      scanner.addEventListener("inputreport", this.handledScannedBarCode);
 
-		this.scannerOpened = !!scanner.opened;
+      this.scannerOpened = !!scanner.opened;
 
     }
 
