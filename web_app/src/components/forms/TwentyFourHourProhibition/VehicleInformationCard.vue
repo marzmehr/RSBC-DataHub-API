@@ -1,41 +1,23 @@
 <template>
-<form-card title="Vehicle information">
-  <form-row>
-    <jurisdiction-field id="plate_province" :path=path fg_class="col-sm-3">Jurisdiction</jurisdiction-field>
-    <plate-number id="plate_number" :path=path fg_class="col-sm-6">Plate Number</plate-number>
-  </form-row>
-  <form-row>
-    <text-field id="plate_year" :path=path rules="plate_year" fg_class="col-sm-4">Plate Year</text-field>
-    <text-field id="plate_val_tag" :path=path input_type="number" fg_class="col-sm-4">Plate Val Tag</text-field>
-    <text-field id="registration_number" :path=path fg_class="col-sm-4">Registration Number</text-field>
-  </form-row>
-  <form-row>
-    <vehicle-year :path=path rules="vehicleYear" fg_class="col-sm-2">Vehicle Year</vehicle-year>
-    <vehicle-make-model :path="path" fg_class="col-sm-3"></vehicle-make-model>
-    <vehicle-style :path=path fg_class="col-sm-4"></vehicle-style>
-    <vehicle-colour :path=path fg_class="col-sm-3"></vehicle-colour>
-  </form-row>
-	<form-row>
-		<text-field id="vin_number" :path=path fg_class="col-sm-5" rules="max:20">VIN Number</text-field>
-		<province-field id="puj_code" :path=path fg_class="col-sm-3" :default-to-bc=false>NSC Prov / State</province-field>
-		<text-field id="nsc_number" :path=path fg_class="col-sm-4" rules="max:14">NSC Number</text-field>
-	</form-row>
-	<b-card header-tag="header" bg-variant="gov-accent-grey" border-variant="light" class="mx-auto">
-		<b-card-header header-bg-variant="light" header-border-variant="secondary" header-text-variant="dark">            
+
+		<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light">
+		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Vehicle information</b>      
 		</b-card-header>
-		<b-card border-variant="light" bg-variant="light" class="my-2">
-
-			<b-row>				
-				
-				<b-col cols="3">
-					<label class="ml-1 m-0 p-0"> Jurisdiction </label>
-					<b-form-select							
+		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
+			<b-row>
+				<b-col cols="3" class="pl-1">
+					<label class="ml-0 m-0 p-0"> Jurisdiction </label>
+					<b-form-select		
+						v-model="vehicleInfo.plateProvince"
+						@change="update"
+						:disabled="formPrinted"
+						:state="vehicleState.plateProvince"
 						placeholder="Search for a Jurisdiction"
 						style="display: block;">
 							<b-form-select-option
-								v-for="jurisdiction in jurisdictions" 
-								:key="jurisdiction.objectCd"
+								v-for="jurisdiction,inx in jurisdictions" 
+								:key="'plt-jurisdiction-'+jurisdiction.objectCd+inx"
 								:value="jurisdiction">
 									{{jurisdiction.objectDsc}}
 							</b-form-select-option>    
@@ -44,6 +26,10 @@
 				<b-col class="pr-2" cols="4">
 					<label class="ml-1 m-0 p-0"> Plate Number</label>
 					<b-form-input
+						v-model="vehicleInfo.plateNumber"
+						:disabled="formPrinted"
+                        :state="vehicleState.plateNumber"
+						@change="update"
 						placeholder="Plate">
 					</b-form-input>                                
 				</b-col>
@@ -51,7 +37,12 @@
 					<b-button 
 						class="bg-primary text-white mt-4"
 						style="opacity:1;"
+						:disabled="formPrinted || !displayIcbcPlateLookup"
 						@click="triggerPlateLookup">
+						<spinner 
+							color="#FFF" 
+							v-if="searchingLookup" 
+							style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
 						<b style="font-size: 0.875rem;">ICBC Prefill</b>
 					</b-button>  
 				</b-col>
@@ -59,118 +50,373 @@
 			<b-row>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Plate Year </label>
-					<b-form-input>
-					</b-form-input>                                
+					<b-form-select	
+						v-model="vehicleInfo.plateYear"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.plateYear"							
+						placeholder="Select a plate year"
+						style="display: block;">
+							<b-form-select-option
+								v-for="year in plateYears" 
+								:key="year"
+								:value="year">
+									{{year}}
+							</b-form-select-option>    
+					</b-form-select>                                  
 				</b-col>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Plate Val Tag </label>
-					<b-form-input
-					type="number">
+					<b-form-input						
+						v-model="vehicleInfo.plateValTag"						
+						:disabled="formPrinted"
+                        :state="vehicleState.plateValTag"
+						@change="update">
 					</b-form-input>  
 				</b-col>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Registration Number</label>
-					<b-form-input>
+					<b-form-input						
+						v-model="vehicleInfo.registrationNumber"						
+						:disabled="formPrinted"
+                        :state="vehicleState.registrationNumber"
+						@change="update">
 					</b-form-input>                                 
 				</b-col>
 			</b-row>
 			<b-row>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Vehicle Year </label>
-					<b-form-input>
-					</b-form-input>                                
+					<b-form-select	
+						v-model="vehicleInfo.vehicleYear"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.vehicleYear"							
+						placeholder="Select a vehicle year"
+						style="display: block;">
+							<b-form-select-option
+								v-for="year in vehicleYears" 
+								:key="year"
+								:value="year">
+									{{year}}
+							</b-form-select-option>    
+					</b-form-select>                                
 				</b-col>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Vehicle Make and Model </label>
-					<b-form-input
-					type="number">
-					</b-form-input>  
+					<b-form-select	
+						v-model="vehicleInfo.vehicleMake"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.vehicleMake"							
+						placeholder="Search for a vehicle make and model"
+						style="display: block;">
+							<b-form-select-option
+								v-for="vehicle,inx in vehicles" 
+								:key="vehicle.md+inx"
+								:value="vehicle">
+									{{vehicle.search}}
+							</b-form-select-option>    
+					</b-form-select>  
 				</b-col>
 				<b-col >
-					<label class="ml-1 m-0 p-0"> Vehicle Style</label>
-					<b-form-input>
-					</b-form-input>                                 
+					<label class="ml-1 m-0 p-0"> Vehicle Style </label>
+					<b-form-select	
+						v-model="vehicleInfo.vehicleType"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.vehicleType"							
+						placeholder="Search for a vehicle style"
+						style="display: block;">
+							<b-form-select-option
+								v-for="vehicle,inx in vehicle_styles" 
+								:key="vehicle.code+inx"
+								:value="vehicle">
+									{{vehicle.name}}
+							</b-form-select-option>    
+					</b-form-select>  
 				</b-col>
+				
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Vehicle Colour(s)</label>
-					<b-form-input>
-					</b-form-input>                                 
+					<b-form-select	
+						multiple
+						v-model="vehicleInfo.vehicleColor"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.vehicleColor"							
+						placeholder="Search for a car colour"
+						style="display: block;">
+							<b-form-select-option
+								v-for="colour,inx in vehicleColours" 
+								:key="'color-code-'+colour.code+inx"
+								:value="colour">
+									{{colour.display_name}}
+							</b-form-select-option>    
+					</b-form-select>                                 
 				</b-col>
 			</b-row>
-			<b-row>
-				<b-col cols="6" >
-					<label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
-					<b-form-input>
-					</b-form-input>                                
-				</b-col>
-				<b-col cols="2">
-					<label class="ml-1 m-0 p-0"> Prov / State <span class="text-danger">*</span></label>
-					<b-form-select							
+			<b-row>	
+				<b-col cols="5">
+					<label class="ml-1 m-0 p-0"> VIN Number</label>
+					<b-form-input
+						:class="vehicleInfo.vin_number.length > 20?'is-invalid':''"
+						v-model="vehicleInfo.vin_number"						
+						:disabled="formPrinted"
+                        :state="vehicleState.vin_number"
+						@change="update">
+					</b-form-input>
+					<div 
+						v-if="vehicleInfo.vin_number.length > 20" 
+						style="font-size:10pt;" 
+						class="text-danger text-left m-0 mt-n p-0">
+						The VIN number cannot exceed 20 characters.
+					</div>					                             
+				</b-col>			
+				<b-col cols="3">
+					<label class="ml-1 m-0 p-0"> NSC Prov / State </label>
+					<b-form-select	
+						v-model="vehicleInfo.puj_code"
+						:disabled="formPrinted"
+						@change="update"
+						:state="vehicleState.puj_code"						
 						placeholder="Search for a Province or State"
 						style="display: block;">
 							<b-form-select-option
-								v-for="province in provinces" 
-								:key="province.objectCd"
+								v-for="province,inx in provinces" 
+								:key="'province-'+province.objectCd+inx"
 								:value="province">
 									{{province.objectDsc}}
 							</b-form-select-option>    
 					</b-form-select>   
 				</b-col>
-				<b-col >
-					<label class="ml-1 m-0 p-0"> Postal / Zip</label>
-					<b-form-input>
-					</b-form-input>                                 
+				<b-col cols="4">
+					<label class="ml-1 m-0 p-0"> NSC Number</label>
+					<b-form-input
+						:class="vehicleInfo.nscNumber.length > 14?'is-invalid':''"
+						v-model="vehicleInfo.nscNumber"						
+						:disabled="formPrinted"
+                        :state="vehicleState.nscNumber"
+						@change="update">
+					</b-form-input>
+					<div 
+						v-if="vehicleInfo.nscNumber.length > 14" 
+						style="font-size:10pt;" 
+						class="text-danger text-left m-0 mt-n p-0">
+						The NSC number cannot exceed 14 characters.
+					</div>					                             
 				</b-col>
 			</b-row>	
 			<div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
-		</b-card>
-
-		<b-modal v-model="showScannerMessage" id="bv-modal-scanner" header-class="bg-warning text-light">            
-			<template v-slot:modal-title>					               
-				<h2 class="mb-0 text-light"> Driver's Licence Scanner </h2>                                 
-			</template>
-			<div v-if="scannerOpened">
-				<div>Please scan the BC Driver's licence</div>
-				<br />
-				<b-spinner></b-spinner>
-
-			</div>
-			<div class="alert-warning pt-2 pb-2" v-if=" ! scannerOpened">
-				<div>Requesting access to the scanner</div>
-				<div class="small">
-					{{ scannerMessage }}
-				</div>
-			</div>
-			<template v-slot:modal-footer>
-				<b-button 
-					variant="primary" 
-					@click="closeScannner()">
-					Cancel
-				</b-button>
-			</template>            
-			<template v-slot:modal-header-close>                 
-				<b-button variant="outline-warning" class="text-light closeButton" @click="$bvModal.hide('bv-modal-scanner')"
-				>&times;</b-button>
-			</template>
-		</b-modal>   
-		
+		</b-card>		
 
 	</b-card>
 
 
-</form-card>
+
 </template>
 
-<script>
 
-import CardsCommon from "@/components/forms/CardsCommon";
+<script lang="ts">
 
-export default {
-  name: "VehicleInformationCard",
-  mixins: [CardsCommon],
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
+
+import "@/store/modules/common";
+const commonState = namespace("Common");
+
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
+
+import { jurisdictionInfoType, provinceInfoType, vehicleColourInfoType, vehicleInfoType, vehicleStyleInfoType } from '@/types/Common';
+import { twentyFourHourFormStatesInfoType, twentyFourHourFormDataInfoType, twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
+import Spinner from "@/components/utils/Spinner.vue";
+import { lookupPlateFromICBC } from '@/utils/icbc';
+import {getArrayOfVehicleYears, getArrayOfPlateYears} from "@/utils/vehicle";
+
+@Component({
+    components: {           
+        Spinner
+    }        
+}) 
+export default class VehicleInformationCard extends Vue {   
+
+	@commonState.State
+    public jurisdictions: jurisdictionInfoType[];
+
+	@commonState.State
+    public provinces: provinceInfoType[];
+
+	@commonState.State
+    public vehicles: vehicleInfoType[];
+
+	@commonState.State
+    public vehicle_styles: vehicleStyleInfoType[];
+
+	@commonState.State
+    public vehicleColours: vehicleColourInfoType[];	
+
+	@mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;
+
+	@Prop({required: true})
+    vehicleInfo!: twentyFourHourFormDataInfoType;
+	
+	@Prop({required: true})
+	vehicleState!: twentyFourHourFormStatesInfoType;
+
+	dataReady = false;  
+	
+	error = '';
+	path = '';
+	showScannerMessage = false;
+	scannerOpened = false;
+	scannerMessage = '';
+	searchingLookup = false;
+	searchingDl = false;
+	formPrinted = false;
+	vehicleYears = [];
+	plateYears = [];
+
+
+	mounted() { 
+        this.dataReady = false;
+		this.formPrinted = Boolean(this.mv2634Info.printed_timestamp);
+        this.extractFields();
+        this.dataReady = true;
+    }
+
+	public extractFields(){		
+		this.path = 'forms/' + this.mv2634Info.form_type + '/' + this.mv2634Info.form_id + '/data';
+		this.vehicleYears = getArrayOfVehicleYears();
+		this.plateYears = getArrayOfPlateYears();
+	}
+
+	public triggerPlateLookup(){		
+		this.error = ''
+		this.searchingLookup = true;
+		lookupPlateFromICBC([this.mv2634Info.data.plateNumber, this.path ])
+			.then(() => {
+				const data = this.$store.state.forms['12Hour'][this.mv2634Info.form_id] //TODO: get this 'data' from ICBC
+				this.updateFormFields(data);
+				this.searchingLookup = false;
+			})
+			.catch( error => {
+				console.log("error", error)
+				this.searchingLookup = false;
+				this.error = error.description;
+			})
+	}
+
+	public updateFormFields(data: any){
+
+		this.vehicleInfo.registrationNumber = data['registrationNumber'];
+		this.vehicleInfo.vehicleYear = data['vehicleModelYear'];		
+        this.vehicleInfo.vehicleColor = [{code: data['vehicleColour'], display_name: data['vehicleColour'], colour_class: data['vehicleColour']}];
+		//TODO: fix color info fields
+		this.vehicleInfo.vehicleMake = {
+			"md": data['vehicleMake'], 
+			"mk": data['vehicleModel'], 
+			"search": data['vehicleMake'] + " - " + data['vehicleModel']};
+		this.vehicleInfo.vehicleType = {
+			"code": data['vehicleStyle'].substr(0,6), 
+			"name": data['vehicleStyle']};
+		
+		const owner = data['vehicleParties'][0]['party'];
+        const address = owner['addresses'][0];
+
+        if(owner.partyType === 'Organisation') {
+			this.vehicleInfo.ownerOrganization = true;
+            this.vehicleInfo.ownerOrganizationName = owner['orgName'];
+        } else {
+            this.vehicleInfo.ownerOrganization = false;
+            this.vehicleInfo.ownerLastName = owner['lastName'];
+            this.vehicleInfo.ownerFirstName = owner['firstName'];
+        }
+
+		this.vehicleInfo.ownerAddress = address['addressLine1'];
+        this.vehicleInfo.ownerCity = address['city'];
+        this.vehicleInfo.ownerPostalCode = address['postalCode'];	
+	}
+
+	public update(){     
+        this.recheckStates()
+    }
+
+	public recheckStates(){
+        this.$emit('recheckStates')
+    }
+
+	get displayIcbcPlateLookup(){
+        return this.vehicleInfo.plateProvince.objectCd == "BC" && this.$store.state.isUserAuthorized;
+    }
+
+ 
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+	input.is-invalid {
+		background: #ebc417;
+	}
+	select.is-invalid {
+		background: #ebc417;
+		option {
+			background: #FFF;
+		}
+	}
+
+	.fade-out {
+		animation: fadeOut ease 8s;
+		-webkit-animation: fadeOut ease 8s;
+		-moz-animation: fadeOut ease 8s;
+		-o-animation: fadeOut ease 8s;
+		-ms-animation: fadeOut ease 8s;
+	}
+	@keyframes fadeOut {
+		0% {
+			opacity:1;
+		}
+		100% {
+			opacity:0;
+		}
+	}
+
+	@-moz-keyframes fadeOut {
+		0% {
+			opacity:1;
+		}
+		100% {
+			opacity:0;
+		}
+	}
+
+	@-webkit-keyframes fadeOut {
+		0% {
+			opacity:1;
+		}
+		100% {
+			opacity:0;
+		}
+	}
+
+	@-o-keyframes fadeOut {
+		0% {
+			opacity:1;
+		}
+		100% {
+			opacity:0;
+		}
+	}
+
+	@-ms-keyframes fadeOut {
+		0% {
+			opacity:1;
+		}
+		100% {
+			opacity:0;
+		}
+	}
 
 </style>

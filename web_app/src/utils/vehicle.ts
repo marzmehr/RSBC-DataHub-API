@@ -27,10 +27,19 @@ export function populateOwnerFromDriver(form_path) {
     rsiStore.commit("deleteFormAttribute", [form_path, "corp_owner_true" ])
 }
 
-
 export function getArrayOfVehicleYears(){
     const start = Number(constants.MIN_VEHICLE_YEAR);
     const end = Number(constants.MAX_VEHICLE_YEAR);
+    const years = []
+    for (let i = start; i <= end; i++) {
+        years.push(String(i))
+    }
+    return years.reverse();
+}
+
+export function getArrayOfPlateYears(){
+    const start = Number(constants.MIN_PLATE_YEAR);
+    const end = Number(constants.MAX_PLATE_YEAR);
     const years = []
     for (let i = start; i <= end; i++) {
         years.push(String(i))

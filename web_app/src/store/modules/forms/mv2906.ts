@@ -1,4 +1,4 @@
-import { twelveHourFormDataInfoType, twelveHourFormJsonInfoType, twelveHourFormStatesInfoType } from '@/types/Forms/MV2906';
+import { twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 import { VuexModule, Module, Mutation, Action } from 'vuex-module-decorators';
 
 @Module({

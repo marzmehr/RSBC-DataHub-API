@@ -1,137 +1,137 @@
 [
     {
       "code": "BGE",
-      "displayName": "BEIGE",
-      "colourClass": "beige"
+      "display_name": "BEIGE",
+      "colour_class": "beige"
     },
     {
       "code": "BLK",
-      "displayName": "BLACK",
-      "colourClass": "black"
+      "display_name": "BLACK",
+      "colour_class": "black"
     },
     {
       "code": "BLU",
-      "displayName": "BLUE",
-      "colourClass": "blue"
+      "display_name": "BLUE",
+      "colour_class": "blue"
     },
     {
       "code": "BRN",
-      "displayName": "BROWN",
-      "colourClass": "brown"
+      "display_name": "BROWN",
+      "colour_class": "brown"
     },
     {
       "code": "BRZ",
-      "displayName": "BRONZE",
-      "colourClass": "bronze"
+      "display_name": "BRONZE",
+      "colour_class": "bronze"
     },
     {
       "code": "BUR",
-      "displayName": "BURGUNDY",
-      "colourClass": "burgundy"
+      "display_name": "BURGUNDY",
+      "colour_class": "burgundy"
     },
     {
       "code": "CPR",
-      "displayName": "COPPER",
-      "colourClass": "copper"
+      "display_name": "COPPER",
+      "colour_class": "copper"
     },
     {
       "code": "CRM",
-      "displayName": "CREAM/IVORY",
-      "colourClass": "ivory"
+      "display_name": "CREAM/IVORY",
+      "colour_class": "ivory"
     },
     {
       "code": "DBL",
-      "displayName": "DARK BLUE",
-      "colourClass": "darkblue"
+      "display_name": "DARK BLUE",
+      "colour_class": "darkblue"
     },
     {
       "code": "DGR",
-      "displayName": "DARK GREEN",
-      "colourClass": "darkgreen"
+      "display_name": "DARK GREEN",
+      "colour_class": "darkgreen"
     },
     {
       "code": "GLD",
-      "displayName": "GOLD",
-      "colourClass": "gold"
+      "display_name": "GOLD",
+      "colour_class": "gold"
     },
     {
       "code": "GRN",
-      "displayName": "GREEN",
-      "colourClass": "green"
+      "display_name": "GREEN",
+      "colour_class": "green"
     },
     {
       "code": "GRY",
-      "displayName": "GREY",
-      "colourClass": "grey"
+      "display_name": "GREY",
+      "colour_class": "grey"
     },
     {
       "code": "LBL",
-      "displayName": "LIGHT BLUE",
-      "colourClass": "lightblue"
+      "display_name": "LIGHT BLUE",
+      "colour_class": "lightblue"
     },
     {
       "code": "LGR",
-      "displayName": "LIGHT GREEN",
-      "colourClass": "lightgreen"
+      "display_name": "LIGHT GREEN",
+      "colour_class": "lightgreen"
     },
     {
       "code": "MRN",
-      "displayName": "MAROON",
-      "colourClass": "maroon"
+      "display_name": "MAROON",
+      "colour_class": "maroon"
     },
     {
       "code": "ONG",
-      "displayName": "ORANGE",
-      "colourClass": "orange"
+      "display_name": "ORANGE",
+      "colour_class": "orange"
     },
     {
       "code": "OTH",
-      "displayName": "OTHER",
-      "colourClass": "other"
+      "display_name": "OTHER",
+      "colour_class": "other"
     },
     {
       "code": "PLE",
-      "displayName": "PURPLE",
-      "colourClass": "purple"
+      "display_name": "PURPLE",
+      "colour_class": "purple"
     },
     {
       "code": "PNK",
-      "displayName": "PINK",
-      "colourClass": "pink"
+      "display_name": "PINK",
+      "colour_class": "pink"
     },
     {
       "code": "PRI",
-      "displayName": "PRIMER",
-      "colourClass": "primer"
+      "display_name": "PRIMER",
+      "colour_class": "primer"
     },
     {
       "code": "RED",
-      "displayName": "RED",
-      "colourClass": "red"
+      "display_name": "RED",
+      "colour_class": "red"
     },
     {
       "code": "SIL",
-      "displayName": "SILVER",
-      "colourClass": "silver"
+      "display_name": "SILVER",
+      "colour_class": "silver"
     },
     {
       "code": "TAN",
-      "displayName": "TAN",
-      "colourClass": "tan"
+      "display_name": "TAN",
+      "colour_class": "tan"
     },
     {
       "code": "TRQ",
-      "displayName": "TURQUOISE",
-      "colourClass": "turquoise"
+      "display_name": "TURQUOISE",
+      "colour_class": "turquoise"
     },
     {
       "code": "WHI",
-      "displayName": "WHITE",
-      "colourClass": "white"
+      "display_name": "WHITE",
+      "colour_class": "white"
     },
     {
       "code": "YEL",
-      "displayName": "YELLOW",
-      "colourClass": "yellow"
+      "display_name": "YELLOW",
+      "colour_class": "yellow"
     }
   ]

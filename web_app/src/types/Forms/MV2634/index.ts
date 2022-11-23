@@ -2,20 +2,21 @@
 
 import { cityInfoType, impoundLotOperatorsInfoType, jurisdictionInfoType, provinceInfoType, vehicleColourInfoType, vehicleInfoType, vehicleStyleInfoType } from "@/types/Common";
 
-export interface twentyFourHourFormInfoType {
+export interface twentyFourHourFormJsonInfoType {
     component: string;
     form_type: string;
     form_id: string;
-    full_name: string;
     label: string;
     lease_expiry: string;
     description: string;
-    fullName: string;
+    data?: twentyFourHourFormDataInfoType;
+    full_name: string;
+    printed_timestamp: string;
     documents: twentyFourHourFormDocumentsInfoType;
     disabled: boolean;
-    check_digit: boolean;
-    printed_timestamp: string;
-    data?: twentyFourHourFormDataInfoType;
+    adminOnly: boolean;
+    showCertificate: boolean;
+    check_digit: boolean;    
 }
 
 export interface twentyFourHourFormDocumentsInfoType {
@@ -41,7 +42,7 @@ export interface twentyFourHourFormDataInfoType {
     ownerCity?: string; //owners_city:"Victoria"
     ownerPhoneNumber?: string; //owners_phone:"435-345-6465"
     ownerPostalCode?: string; //owners_postal:"V0F 0F1"
-    ownerProvince?: string; //owners_province:provinceInfoType;
+    ownerProvince?: provinceInfoType; //owners_province:provinceInfoType;
 
 
     driversNumber?: string;//drivers_number?: string;
@@ -49,10 +50,8 @@ export interface twentyFourHourFormDataInfoType {
     lastName: string; //last_name: string;
     dob: string;
     driversLicenceJurisdiction: jurisdictionInfoType; //drivers_licence_jurisdiction: jurisdictionInfoType;
-    address: string// address1: string;    
-
+    address: string;// address1: string;
     driverCity: string; //city: string;
-
     driverProvince?: provinceInfoType; //province: provinceInfoType;
     driverPostalCode: string; //postal: string;
     plateProvince: provinceInfoType;//plate_province: provinceInfoType;
@@ -69,7 +68,7 @@ export interface twentyFourHourFormDataInfoType {
     vin_number?: string;
 
     vehicleImpounded: boolean; 
-    impountLot?: impoundLotOperatorsInfoType;
+    impoundLot?: impoundLotOperatorsInfoType;
     locationOfKeys?: string; // With vehicle￼|| With driver
     notImpoundingReason?: string; //Released to other driver || Left at roadside || Private tow || Seized for investigation
     releasedDate?: string;
@@ -126,10 +125,7 @@ export interface twentyFourHourFormDataInfoType {
     //  test_administered_asd: {asd_expiry_date,  result_alcohol_under, result_alcohol_over }
     //}    
     alcoholTest?: string;// Alco-Sensor FST (ASD) || Approved Instrument || Prescribed Physical Coordination Test (SFST)
-    asd?: {
-        expiryDate :string;
-        result?: string; //under || over
-    }
+    asd?: asdInfoType;
     BacResult?: string;
     // prohibition_type_drugs{
     //     test_administered_adse {positive_adse_cocaine, positive_adse_thc},
@@ -140,4 +136,75 @@ export interface twentyFourHourFormDataInfoType {
     approvedDrugScreeningEquipment?: string[]; //THC ||/&& Cocaine
 
 
+}
+
+export interface asdInfoType {
+    expiryDate: string;
+    result?: string; //under || over
+}
+
+export interface twentyFourHourFormStatesInfoType {
+    
+    ownerFirstName: null | boolean;
+    ownerLastName: null | boolean;
+    ownerOrganization: null | boolean;
+    ownerOrganizationName: null | boolean;  
+    ownerAddress: null | boolean;
+    ownerCity: null | boolean;
+    ownerPhoneNumber: null | boolean;
+    ownerPostalCode: null | boolean;
+    ownerProvince: null | boolean;
+    driversNumber: null | boolean;
+    givenName: null | boolean;
+    lastName: null | boolean;
+    dob: null | boolean;
+    driversLicenceJurisdiction: null | boolean;
+    address: null | boolean; 
+    driverCity: null | boolean;
+    driverProvince: null | boolean;
+    driverPostalCode: null | boolean;
+    plateProvince: null | boolean;
+    plateNumber: null | boolean;
+    plateValTag: null | boolean;
+    plateYear: null | boolean;
+    puj_code: null | boolean;
+    nscNumber: null | boolean;
+    registrationNumber: null | boolean;
+    vehicleYear: null | boolean;
+    vehicleMake: null | boolean;
+    vehicleColor: null | boolean;
+    vehicleType: null | boolean;
+    vin_number: null | boolean;
+    vehicleImpounded: null | boolean; 
+    impoundLotName: null | boolean;
+    impoundLotAddress: null | boolean;
+    impoundLotCity: null | boolean;
+    impoundLotPhone: null | boolean;
+    locationOfKeys: null | boolean;
+    notImpoundingReason: null | boolean;
+    releasedDate: null | boolean;
+    releasedTime: null | boolean;
+    vehicleReleasedTo: null | boolean;    
+    offenceAddress: null | boolean;
+    offenceCity: null | boolean;
+    agencyFileNumber: null | boolean;
+    prohibitionStartDate: null | boolean;
+    prohibitionStartTime: null | boolean;
+    agency: null | boolean;
+    badge_number: null | boolean;
+    officer_name: null | boolean;
+    submitted: null | boolean;
+    reasonableGrounds: null | boolean;
+    reasonableGroundsOther: null | boolean;  
+    prescribedTest: null | boolean;
+    prescribedTestDate: null | boolean;
+    prescribedTestTime: null | boolean;
+    prescribedNoTestReason: null | boolean;    
+    prohibitionType: null | boolean;    
+    alcoholTest: null | boolean;
+    asdExpiryDate: null | boolean;
+    asdResult: null | boolean;
+    BacResult: null | boolean;   
+    drugsTest: null | boolean;
+    approvedDrugScreeningEquipment: null | boolean;
 }

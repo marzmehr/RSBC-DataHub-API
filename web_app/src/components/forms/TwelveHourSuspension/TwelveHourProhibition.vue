@@ -1,40 +1,39 @@
 <template>
-  <b-card header-tag="header" bg-variant="light" border-variant="primary" class="mx-auto p-0">
-	<b-card-header header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
-		<h4>Notice of 12 Hour Licence Suspension</h4>      
-	</b-card-header>
-	<b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
-        <b-row class="pt-2 pb-0 text-danger border-light">            
-            <div class="ml-auto mr-2 h4">{{id}}</div>      
-        </b-row>
+    <b-card header-tag="header" bg-variant="light" border-variant="primary" class="mx-auto p-0">
+        <b-card-header header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
+            <h4>Notice of 12 Hour Licence Suspension</h4>      
+        </b-card-header>
+        <b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
+            <b-row class="pt-2 pb-0 text-danger border-light">            
+                <div class="ml-auto mr-2 h4">{{id}}</div>      
+            </b-row>
+            
+            <drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
+            <vehicle-information-card :vehicleInfo="twelveHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
+            <vehicle-disposition-card :vdInfo="twelveHourData" :vdState="fieldStates" @recheckStates="recheckStates()"/>
+            <prohibition-information-card :prohibitionInfo="twelveHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
+            <officer-details-card :officerInfo="twelveHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
+
+        </b-card>
+        <!-- <form-container title="Notice of 12 Hour Licence Suspension" :form_object="formObject" >
+            
+            
+            <b-card title="Generate PDF for Printing">
+                <div class="d-flex justify-content-between">
         
-		<drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
-		<vehicle-information-card :vehicleInfo="twelveHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
-		<vehicle-disposition-card :vdInfo="twelveHourData" :vdState="fieldStates" @recheckStates="recheckStates()"/>
-		<!-- <prohibition-information-card :prohibitionInfo="twelveHourFormData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"></prohibition-information-card>
-		<officer-details-card :officerInfo="twelveHourFormData" :officerState="fieldStates" @recheckStates="recheckStates()"></officer-details-card>
-         -->
+                    <print-documents				
+                    :show_certificate="isCertificateOfServiceEnabled(getPath)"
+                    :path="getPath"
+                    :form_object="getCurrentlyEditedForm"
+                    :validate="validate"
+                    :variants="variants">
+                    Print All Copies
+                </print-documents>
+                </div>
+            </b-card>
 
-	</b-card>
-	<!-- <form-container title="Notice of 12 Hour Licence Suspension" :form_object="formObject" >
-		
-		
-		<b-card title="Generate PDF for Printing">
-			<div class="d-flex justify-content-between">
-	
-				<print-documents				
-				:show_certificate="isCertificateOfServiceEnabled(getPath)"
-				:path="getPath"
-				:form_object="getCurrentlyEditedForm"
-				:validate="validate"
-				:variants="variants">
-				Print All Copies
-			</print-documents>
-			</div>
-		</b-card>
-
-	</form-container> -->
-  </b-card>
+        </form-container> -->
+    </b-card>
 </template>
 
 <script lang="ts">
@@ -42,12 +41,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import DriversInformationCard from "@/components/forms/TwelveHourSuspension/DriversInformationCard.vue";
-import OfficerDetailsCard from "@/components/forms/OfficerDetailsCard.vue";
+import OfficerDetailsCard from "@/components/forms/TwelveHourSuspension/OfficerDetailsCard.vue";
 import VehicleInformationCard from "@/components/forms/TwelveHourSuspension/VehicleInformationCard.vue";
 import PrintDocuments from "../PrintDocuments.vue";
 import ProhibitionInformationCard from "@/components/forms/TwelveHourSuspension/ProhibitionInformationCard.vue";
 import VehicleDispositionCard from "@/components/forms/TwelveHourSuspension/VehicleDispositionCard.vue";
-
 
 import { twelveHourFormDataInfoType, twelveHourFormJsonInfoType, twelveHourFormStatesInfoType } from '@/types/Forms/MV2906';
 import { cityInfoType, currentlyEditingFormObjectInfoType, formsInfoType, impoundLotOperatorsInfoType } from '@/types/Common';
@@ -85,8 +83,6 @@ export default class TwelveHourProhibition extends Vue {
 
 	@mv2906State.Action
     public UpdateMV2906Info!: (newMV2906Info: twelveHourFormJsonInfoType) => void
-
-
 	
 	name = '12Hour'; 
 	updatedInfo = 0;
@@ -154,8 +150,8 @@ export default class TwelveHourProhibition extends Vue {
         
         twelveHourData.prohibitionType='';
            
-        twelveHourData.vehicleImpounded=false; 
-        twelveHourData.impountLot= {} as impoundLotOperatorsInfoType;
+        twelveHourData.vehicleImpounded=null; 
+        twelveHourData.impoundLot= {} as impoundLotOperatorsInfoType;
         twelveHourData.locationOfKeys='';
         twelveHourData.notImpoundingReason='';
         twelveHourData.releasedDate='';
@@ -197,13 +193,28 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourFormStates.officerName=null
         twelveHourFormStates.plateProvince=null    
         twelveHourFormStates.plateNumber=null         
-        twelveHourFormStates.nscProvince=null 
+        twelveHourFormStates.puj_code=null 
         twelveHourFormStates.nscNumber=null 
         twelveHourFormStates.registrationNumber=null 
         twelveHourFormStates.vehicleYear=null
         twelveHourFormStates.vehicleMake=null 
-        twelveHourFormStates.vehicleColor=null
-        twelveHourFormStates.province=null
+        twelveHourFormStates.vehicleColor=null   
+        twelveHourFormStates.vehicleImpounded=null    
+        twelveHourFormStates.locationOfKeys=null 
+        twelveHourFormStates.impoundLotName=null 
+        twelveHourFormStates.impoundLotAddress=null 
+        twelveHourFormStates.impoundLotCity=null 
+        twelveHourFormStates.impoundLotPhone=null 
+        twelveHourFormStates.notImpoundingReason=null    
+        twelveHourFormStates.vehicleReleasedTo=null    
+        twelveHourFormStates.releasedDate=null 
+        twelveHourFormStates.releasedTime=null 
+        twelveHourFormStates.prohibitionType=null 
+        twelveHourFormStates.offenceAddress=null 
+        twelveHourFormStates.offenceCity=null 
+        twelveHourFormStates.agencyFileNumber=null 
+        twelveHourFormStates.prohibitionStartDate=null 
+        twelveHourFormStates.prohibitionStartTime=null      
         twelveHourFormStates.submitted=null    
 
         this.fieldStates = twelveHourFormStates;

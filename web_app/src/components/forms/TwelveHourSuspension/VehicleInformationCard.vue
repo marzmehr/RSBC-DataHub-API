@@ -97,7 +97,7 @@
 								v-for="colour,inx in vehicleColours" 
 								:key="'color-code-'+colour.code+inx"
 								:value="colour">
-									{{colour.displayName}}
+									{{colour.display_name}}
 							</b-form-select-option>    
 					</b-form-select>                                 
 				</b-col>
@@ -106,10 +106,10 @@
 				<b-col cols="3">
 					<label class="ml-1 m-0 p-0"> NSC Prov / State </label>
 					<b-form-select	
-						v-model="vehicleInfo.nscProvince"
+						v-model="vehicleInfo.puj_code"
 						:disabled="formPrinted"
 						@change="update"
-						:state="vehicleState.nscProvince"						
+						:state="vehicleState.puj_code"						
 						placeholder="Search for a Province or State"
 						style="display: block;">
 							<b-form-select-option
@@ -148,15 +148,12 @@
 
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { namespace } from "vuex-class";
-import moment from 'moment-timezone';
 
 import "@/store/modules/common";
 const commonState = namespace("Common");
 
 import "@/store/modules/forms/mv2906";
 const mv2906State = namespace("MV2906");
-
-import rsiStore from "@/store";
 
 import { jurisdictionInfoType, provinceInfoType, vehicleColourInfoType, vehicleInfoType, vehicleStyleInfoType } from '@/types/Common';
 import { twelveHourFormStatesInfoType, twelveHourFormDataInfoType, twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
@@ -210,7 +207,7 @@ export default class VehicleInformationCard extends Vue {
 
 	mounted() { 
         this.dataReady = false;
-		this.formPrinted = Boolean(this.mv2906Info.printedTimestamp);
+		this.formPrinted = Boolean(this.mv2906Info.printed_timestamp);
         this.extractFields();
         this.dataReady = true;
     }
@@ -225,7 +222,7 @@ export default class VehicleInformationCard extends Vue {
 		this.searchingLookup = true;
 		lookupPlateFromICBC([this.mv2906Info.data.plateNumber, this.path ])
 			.then(() => {
-				const data = this.$store.state.forms['12Hour'][this.mv2906Info.form_id]
+				const data = this.$store.state.forms['12Hour'][this.mv2906Info.form_id] //TODO: get this 'data' from ICBC
 				this.updateFormFields(data);
 				this.searchingLookup = false;
 			})
@@ -237,13 +234,13 @@ export default class VehicleInformationCard extends Vue {
 	}
 
 	public updateFormFields(data: any){
-		this.vehicleInfo.driversNumber = data.number;		
-        this.vehicleInfo.address = data['address']['street'];
-        this.vehicleInfo.driverCity = data['address']['city'];
-        this.vehicleInfo.driverPostalCode = data['address']['postalCode'];
-        this.vehicleInfo.dob = data['dob'];
-        this.vehicleInfo.givenName = data['name']['given'];
-        this.vehicleInfo.lastName = data['name']['surname'];		
+		this.vehicleInfo.vehicleYear = data['vehicleModelYear'];		
+        this.vehicleInfo.vehicleColor = [{code: data['vehicleColour'], display_name: data['vehicleColour'], colour_class: data['vehicleColour']}];
+		//TODO: fix color info fields
+		this.vehicleInfo.vehicleMake = {
+			"md": data['vehicleMake'], 
+			"mk": data['vehicleModel'], 
+			"search": data['vehicleMake'] + " - " + data['vehicleModel']};
 	}
 
 	public update(){     

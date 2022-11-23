@@ -38,7 +38,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import {getFormTypeCount} from "@/utils/forms"
-import PrintDocuments from "@/components/forms/PrintDocuments";
+import PrintDocuments from "@/components/forms/PrintDocuments.vue";
 import {deleteSpecificForm} from "@/utils/forms"
 import { twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 

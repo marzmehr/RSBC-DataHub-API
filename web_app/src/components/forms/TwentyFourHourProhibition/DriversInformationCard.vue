@@ -1,163 +1,410 @@
 <template>
-	<form-card title="Driver's Information">
-		<form-row>
-		<driver-licence-number id="drivers_number" :path="path"  :rules="bcdlNumberRules">Driver's Licence Number</driver-licence-number>
-		<jurisdiction-field id="drivers_licence_jurisdiction" :path=path fg_class="col-sm-3">Prov / State / International</jurisdiction-field>
-		</form-row>
-		<form-row>
-		<text-field id="last_name" :path=path fg_class="col-sm-4" placeholder="Last Name" rules="required|max:20">Last Name</text-field>
-		<text-field id="first_name" :path=path fg_class="col-sm-4" placeholder="Given Names" rules="max:20">Given Names</text-field>
-		<dob-field id="dob" :path=path fg_class="col-sm-4">Date of Birth</dob-field>
-		</form-row>
-		<form-row>
-		<text-field id="address1" :path=path fg_class="col-sm-12" placeholder="Address" rules="required|max:25">Address</text-field>
-		</form-row>
-		<form-row>
-		<text-field id="city" :path=path fg_class="col-sm-6" rules="required|max:15">City</text-field>
-		<province-field id="province" :path=path fg_class="col-sm-2" rules="required">Prov / State</province-field>
-		<text-field id="postal" :path=path fg_class="col-sm-4">Postal / Zip</text-field>
-		</form-row>
+	<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
+		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
+			<b>Driver's Information</b>      
+		</b-card-header>
+		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
 
-		<b-card header-tag="header" bg-variant="gov-accent-grey" border-variant="light" class="mx-auto">
-			<b-card-header header-bg-variant="light" header-border-variant="secondary" header-text-variant="dark">            
-				<b>Driver's Information</b>      
-			</b-card-header>
-			<b-card border-variant="light" bg-variant="light" class="my-2">
-
-				<b-row>
-					<b-col class="pr-2" cols="2">
-						<label class="ml-1 m-0 p-0"> Driver's Licence Number</label>
-						<b-form-input
-							placeholder="Driver's Licence Number">
-						</b-form-input>                                
-					</b-col>
-					<b-col class="p-0 pt-1" cols="1">
-						<b-button 
-							class="bg-primary text-white mt-4"
-							style="opacity:1;"
-							@click="triggerDriversLookup">
-							<span style="font-size: 0.875rem;">ICBC Prefill</span>
-						</b-button>  
-					</b-col>
-					<b-col class="p-0 pt-1" cols="1">
-						<b-button 
-							class="bg-primary text-white mt-4"
-							style="opacity:1;"
-							@click="launchDlScanner">
-							<span style="font-size: 0.875rem;">Scan DL</span>
-						</b-button>  
-					</b-col>
-					<b-col cols="2">
-						<label class="ml-1 m-0 p-0"> Prov / State / International </label>
-						<b-form-select							
-							placeholder="Search for a Jurisdiction"
-							style="display: block;">
-								<b-form-select-option
-									v-for="jurisdiction in jurisdictions" 
-									:key="jurisdiction.objectCd"
-									:value="jurisdiction">
-										{{jurisdiction.objectDsc}}
-								</b-form-select-option>    
-						</b-form-select>                          
-					</b-col>
-				</b-row>
-				<b-row>
-					<b-col >
-						<label class="ml-1 m-0 p-0"> Last Name <span class="text-danger">*</span></label>
-						<b-form-input>
-						</b-form-input>                                
-					</b-col>
-					<b-col >
-						<label class="ml-1 m-0 p-0"> Given Names </label>
-						<b-form-input>
-						</b-form-input>  
-					</b-col>
-					<b-col >
-						<label class="ml-1 m-0 p-0"> Date of Birth <span class="text-secondary" style="font-size: 9pt;">YYYYMMDD</span>{{age}}</label>
-						<b-form-input
-							@change="validateDate"
-							type="date"
-							placeholder="YYYYMMDD">
-						</b-form-input>                                 
-					</b-col>
-				</b-row>
-				<b-row class="px-4">					
-					<label class="ml-1 m-0 p-0"> Address <span class="text-danger">*</span></label>
-					<b-form-input>
-					</b-form-input>
-				</b-row>
-				<b-row>
-					<b-col cols="6" >
-						<label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
-						<b-form-input>
-						</b-form-input>                                
-					</b-col>
-					<b-col cols="2">
-						<label class="ml-1 m-0 p-0"> Prov / State <span class="text-danger">*</span></label>
-						<b-form-select							
-							placeholder="Search for a Province or State"
-							style="display: block;">
-								<b-form-select-option
-									v-for="province in provinces" 
-									:key="province.objectCd"
-									:value="province">
-										{{province.objectDsc}}
-								</b-form-select-option>    
-						</b-form-select>   
-					</b-col>
-					<b-col >
-						<label class="ml-1 m-0 p-0"> Postal / Zip</label>
-						<b-form-input>
-						</b-form-input>                                 
-					</b-col>
-				</b-row>	
-				<div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
-			</b-card>
-
-			<b-modal v-model="showScannerMessage" id="bv-modal-scanner" header-class="bg-warning text-light">            
-				<template v-slot:modal-title>					               
-					<h2 class="mb-0 text-light"> Driver's Licence Scanner </h2>                                 
-				</template>
-				<div v-if="scannerOpened">
-					<div>Please scan the BC Driver's licence</div>
-					<br />
-					<b-spinner></b-spinner>
-
-				</div>
-				<div class="alert-warning pt-2 pb-2" v-if=" ! scannerOpened">
-					<div>Requesting access to the scanner</div>
-					<div class="small">
-						{{ scannerMessage }}
-					</div>
-				</div>
-				<template v-slot:modal-footer>
+			<b-row>
+				<b-col class="pr-1" cols="3">
+					<b-form-group>
+					<label class="m-0 p-0"> Driver's Licence Number</label>
+					<b-form-input
+						v-model="driverInfo.driversNumber"
+						:disabled="formPrinted"
+                        :state="driverState.driversNumber"
+						@input="update"
+						placeholder="Driver's Licence Number">
+					</b-form-input> 
+					</b-form-group>                             
+				</b-col>
+				<b-col class="p-0 pt-1" cols="1">
 					<b-button 
-						variant="primary" 
-						@click="closeScannner()">
-						Cancel
-					</b-button>
-				</template>            
-				<template v-slot:modal-header-close>                 
-					<b-button variant="outline-warning" class="text-light closeButton" @click="$bvModal.hide('bv-modal-scanner')"
-					>&times;</b-button>
-				</template>
-			</b-modal>   
-		
-
+						class="bg-primary text-white"
+						style="opacity:1; float:left; margin-top:1.42rem;"
+						:disabled="formPrinted || !displayIcbcLicenceLookup"
+						@click="triggerDriversLookup">
+						<spinner color="#FFF" v-if="searchingLookup" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
+						<span style="font-size: 0.875rem;" v-else>ICBC Prefill</span>
+					</b-button>  
+				</b-col>
+				<b-col class="p-0 pt-1" cols="1">
+					<b-button 
+						class="bg-primary text-white"
+						style="opacity:1; float:right; margin-top:1.42rem;"
+						@click="launchDlScanner">
+						<spinner color="#FFF" v-if="searchingDl" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
+						<span style="font-size: 0.875rem;" v-else>Scan DL</span>
+					</b-button>  
+				</b-col>
+				<b-col cols="3" class=" pl-1">
+					<label class="ml-0 m-0 p-0"> Prov / State / International </label>
+					<b-form-select	
+						v-model="driverInfo.driversLicenceJurisdiction"
+						@change="update"
+						:disabled="formPrinted"
+						:state="driverState.driversLicenceJurisdiction"						
+						placeholder="Search for a Jurisdiction"
+						style=" ">
+							<b-form-select-option
+								v-for="jurisdiction,inx in jurisdictions" 
+								:key="'dr-jurisdiction-'+jurisdiction.objectCd+inx"
+								:value="jurisdiction">
+									{{jurisdiction.objectDsc}}
+							</b-form-select-option>    
+					</b-form-select>                          
+				</b-col>
+			</b-row>
+			<b-row>
+				<b-col >
+					<label class="ml-1 m-0 p-0"> Last Name <span class="text-danger">*</span></label>
+					<b-form-input
+						placeholder="Last Name"
+						v-model="driverInfo.lastName"
+						:disabled="formPrinted"
+						@input="update"
+						:state="driverState.lastName">
+					</b-form-input>                                
+				</b-col>
+				<b-col >
+					<label class="ml-1 m-0 p-0"> Given Names </label>
+					<b-form-input
+						placeholder="Given Names"
+						v-model="driverInfo.givenName"
+						:disabled="formPrinted"
+						@input="update"
+						:state="driverState.givenName">
+					</b-form-input>  
+				</b-col>
+				<b-col >
+					<label class="ml-1 m-0 p-0"> Date of Birth <span class="text-muted" style="font-size: 9pt;">YYYYMMDD ({{age}} yrs)</span></label>
+					
+					<b-input-group class="mb-3">
+						<b-form-input
+							:key="updateDate"
+							id="dob"
+							v-model="driverInfo.dob"
+							type="text"
+							@input="validateDate(false)"
+							:disabled="formPrinted"
+							:state="driverState.dob"
+							placeholder="YYYYMMDD"
+							autocomplete="off"
+						></b-form-input>
+						<b-input-group-append>
+							<b-form-datepicker
+								v-model="dob"
+								:disabled="formPrinted"
+								button-only
+								right
+								:allowed-dates="allowedDates"
+								locale="en-US"
+								aria-controls="dob"
+								@context="validateDate(true)"
+							></b-form-datepicker>
+						</b-input-group-append>
+					</b-input-group> 
+					<div v-if="dateError" style="font-size:10pt;" class="text-danger text-left m-0 mt-n3 p-0">{{dateError}}</div>                             
+				</b-col>
+			</b-row>
+			<b-row>
+				<b-col>					
+					<label class="ml-1 m-0 p-0"> Address <span class="text-danger">*</span></label>
+					<b-form-input
+						placeholder="Address"
+						:disabled="formPrinted"
+						v-model="driverInfo.address"
+						@input="update"
+						:state="driverState.address">
+					</b-form-input>
+				</b-col>				
+			</b-row>
+			<b-row>
+				<b-col cols="6" >
+					<label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
+					<b-form-input						
+						v-model="driverInfo.driverCity"						
+						@input="update"
+						:disabled="formPrinted"
+						:state="driverState.driverCity">
+					</b-form-input>                                
+				</b-col>
+				<b-col cols="2">
+					<label class="ml-1 m-0 p-0"> Prov / State <span class="text-danger">*</span></label>
+					<b-form-select	
+						v-model="driverInfo.driverProvince"
+						:disabled="formPrinted"
+						@change="update"
+						:state="driverState.driverProvince"							
+						placeholder="Search for a Province or State"
+						style="display: block;">
+							<b-form-select-option
+								v-for="province,inx in provinces" 
+								:key="'dr-province-'+province.objectCd+inx"
+								:value="province">
+									{{province.objectDsc}}
+							</b-form-select-option>    
+					</b-form-select>   
+				</b-col>
+				<b-col >
+					<label class="ml-1 m-0 p-0"> Postal / Zip</label>
+					<b-form-input						
+						v-model="driverInfo.driverPostalCode"						
+						@input="update"
+						:disabled="formPrinted"
+						:state="driverState.driverPostalCode">
+					</b-form-input> 
+					<div
+                        v-if="(driverState.driverPostalCode != null)" 
+                        style="font-size: 9.5pt; " 
+                        class="text-left text-danger m-0 p-0">
+                        Invalid Postal Code <i>(For CANADA format is A1A 1A1)</i>
+                    </div>                                  
+				</b-col>
+			</b-row>
+			<div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
 		</b-card>
-			
-	</form-card>
+
+		<b-modal v-model="showScannerMessage" id="bv-modal-scanner" header-class="bg-warning text-light">            
+			<template v-slot:modal-title>					               
+				<h2 class="mb-0 text-light"> Driver's Licence Scanner </h2>                                 
+			</template>
+			<div v-if="scannerOpened">
+				<div>Please scan the BC Driver's licence</div>
+				<br />
+				<b-spinner></b-spinner>
+
+			</div>
+			<div class="alert-warning pt-2 pb-2" v-if=" ! scannerOpened">
+				<div>Requesting access to the scanner</div>
+				<div class="small">
+					{{ scannerMessage }}
+				</div>
+			</div>
+			<template v-slot:modal-footer>
+				<b-button 
+					variant="primary" 
+					@click="closeScannner()">
+					Cancel
+				</b-button>
+			</template>            
+			<template v-slot:modal-header-close>                 
+				<b-button variant="outline-warning" class="text-light closeButton" @click="$bvModal.hide('bv-modal-scanner')"
+				>&times;</b-button>
+			</template>
+		</b-modal>   
+
+	</b-card>		
 </template>
 
-<script>
-import CardsCommon from "@/components/forms/CardsCommon";
-export default {
-  name: "DriversInformationCard",
-  mixins: [CardsCommon],
+<script lang="ts">
+
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
+import moment from 'moment-timezone';
+
+import "@/store/modules/common";
+const commonState = namespace("Common");
+
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
+
+import rsiStore from "@/store";
+
+import { jurisdictionInfoType, provinceInfoType } from '@/types/Common';
+import { twentyFourHourFormStatesInfoType, twentyFourHourFormDataInfoType, twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
+import Spinner from "@/components/utils/Spinner.vue";
+import {lookupDriverFromICBC} from "@/utils/icbc";
+import {lookupDriverProvince} from "@/utils/lookups";
+import dlScanner from "@/helpers/dlScanner";
+
+@Component({
+    components: {           
+        Spinner
+    }        
+}) 
+export default class DriversInformationCard extends Vue {   
+
+	@commonState.State
+    public jurisdictions: jurisdictionInfoType[];
+
+	@commonState.State
+    public provinces: provinceInfoType[];
+	
+	@mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;
+	
+	@Prop({required: true})
+    driverInfo!: twentyFourHourFormDataInfoType;
+	
+	@Prop({required: true})
+	driverState!: twentyFourHourFormStatesInfoType;
+
+	dataReady = false;
+	dob=''
+	age = 0;
+	error = '';
+	path = '';
+	showScannerMessage = false;
+	scannerOpened = false;
+	scannerMessage = '';
+	searchingLookup = false;
+	searchingDl = false;
+	formPrinted = false;	
+	dateError=''
+	updateDate=0;
+
+	mounted() { 
+		this.dataReady = false;				        
+		this.formPrinted = Boolean(this.mv2634Info.printed_timestamp);
+        this.extractFields();
+        this.dataReady = true;
+    }
+
+	public extractFields(){
+		this.age = 0;
+		this.path = 'forms/' + this.mv2634Info.form_type + '/' + this.mv2634Info.form_id + '/data'
+	}
+
+	public triggerDriversLookup(){
+		console.log("inside triggerDriversLookup()")
+		this.error = ''
+		this.searchingLookup = true;
+		lookupDriverFromICBC([this.path, this.mv2634Info.data.driversNumber])
+			.then(() => {
+				const data = this.$store.state.forms['12Hour'][this.mv2634Info.form_id]
+				this.updateFormFields(data);
+				this.searchingLookup = false;
+			})
+			.catch( error => {
+				console.log("error", error)
+				this.searchingLookup = false;
+				this.error = error.description;
+			})
+	}
+
+	public updateFormFields(data: any){
+		this.driverInfo.driversNumber = data.number;		
+        this.driverInfo.address = data['address']['street'];
+        this.driverInfo.driverCity = data['address']['city'];
+        this.driverInfo.driverPostalCode = data['address']['postalCode'];
+        this.driverInfo.dob = data['dob'];
+        this.driverInfo.givenName = data['name']['given'];
+        this.driverInfo.lastName = data['name']['surname'];	
+		this.update()	
+	}
+
+	public handledScannedBarCode(event) {
+		const { data, device, reportId } = event;
+		dlScanner.readFromScanner(device, reportId, data)
+		.then( dlData => {
+			rsiStore.commit("populateDriverFromBarCode", dlData)
+			this.updateFormFields(dlData)
+			return dlData['address']['province']
+		})
+		.then( provinceCode => {
+			lookupDriverProvince([this.path, provinceCode])
+		})
+		.then( () => {
+			this.$bvModal.hide('dl-scanner')
+		})
+	}
+
+	async launchDlScanner() {
+      console.log('inside launchDlScanner')
+      this.$bvModal.show('dl-scanner')
+
+      const scanner = await dlScanner.openScanner();
+
+      scanner.addEventListener("inputreport", this.handledScannedBarCode);
+
+      this.scannerOpened = !!scanner.opened;
+
+    }
+
+	public closeScannner(){
+		this.showScannerMessage = false;
+	}
+
+	public update(){     
+        this.recheckStates()		
+    }
+
+	public recheckStates(){
+        this.$emit('recheckStates')
+    }
+
+	get displayIcbcLicenceLookup(){
+
+        return this.driverInfo?.driversLicenceJurisdiction?.objectCd == "BC" && this.$store.state.isUserAuthorized;
+    }
+
+	public validateDate(datePicker?){
+		if(datePicker){			
+			let dob=this.dob.replace('-','')
+			dob=dob.replace('-','')
+			this.driverInfo.dob=dob
+			this.updateDate++;
+		}
+		
+		if(!this.driverInfo.dob) return
+
+		if(!Number(this.driverInfo?.dob)||this.driverInfo?.dob?.length!=8){
+			this.dateError="The selected date is invalid!"
+			this.driverState.dob=false
+		}
+		else{ 
+						
+			const date = moment(this.driverInfo.dob)
+			const currentDate = moment() 
+			const age = currentDate.diff(date, 'years')
+			this.age = age? age : 0
+			
+			if(!date.isValid()){
+				this.dateError="The selected date is invalid!"
+				this.driverState.dob=false
+			}
+			else if(currentDate.format("YYYYMMDD")<this.driverInfo.dob){
+				this.dateError="The selected date is in the future!"
+				this.driverState.dob=false
+			}
+			else if(this.age<10 || this.age>120){
+				this.dateError="Driver must be between 10 and 120 years old!"
+				this.driverState.dob=false
+			}
+			else{ 
+				this.dateError=""
+				if(!datePicker){
+					const year = this.driverInfo.dob.slice(0,4)
+					const month = this.driverInfo.dob.slice(4,6)
+					const day = this.driverInfo.dob.slice(6)
+					this.dob = year+'-'+month+'-'+day
+				}
+				this.driverState.dob=null
+			}
+		}
+		this.update();
+	}
+
+	public allowedDates(date){
+        const day = moment().startOf('day').format('YYYY-MM-DD');           
+        return (date < day);           
+    }
+ 
 }
 </script>
 
 <style scoped lang="scss">
+
+	input.is-invalid {
+		background: #ebc417;
+	}
+	select.is-invalid {
+		background: #ebc417;
+		option {
+			background: #FFF;
+		}
+	}
 
 	.fade-out {
 		animation: fadeOut ease 8s;

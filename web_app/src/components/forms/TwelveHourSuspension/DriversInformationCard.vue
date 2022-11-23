@@ -276,7 +276,7 @@ export default class DriversInformationCard extends Vue {
 
 	mounted() { 
 		this.dataReady = false;				        
-		this.formPrinted = Boolean(this.mv2906Info.printedTimestamp);
+		this.formPrinted = Boolean(this.mv2906Info.printed_timestamp);
         this.extractFields();
         this.dataReady = true;
     }

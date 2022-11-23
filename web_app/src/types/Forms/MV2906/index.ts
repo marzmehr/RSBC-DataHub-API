@@ -8,7 +8,7 @@ export interface twelveHourFormDataInfoType {
     lastName: string; //last_name: string;
     dob: string;
     driversLicenceJurisdiction: jurisdictionInfoType; //drivers_licence_jurisdiction: jurisdictionInfoType;
-    address: string// address1: string;    
+    address: string; // address1: string;    
     driverPhoneNumber?: string; //driver_phone?: string;
     driverCity: string; //city: string;
     prohibitionType: string; //Drugs || Alcohol //prohibition_type_12hr_drugs?: any; //prohibition_type_12hr_alcohol?: any;
@@ -24,7 +24,7 @@ export interface twelveHourFormDataInfoType {
     vehicleColor: vehicleColourInfoType[]; //vehicle_color: vehicleColourInfoType[];
     
     vehicleImpounded: boolean; 
-    impountLot?: impoundLotOperatorsInfoType;
+    impoundLot?: impoundLotOperatorsInfoType;
     locationOfKeys?: string; // With vehicle￼|| With driver
     notImpoundingReason?: string; //Released to other driver || Left at roadside
     releasedDate?: string;
@@ -102,28 +102,27 @@ export interface twelveHourFormStatesInfoType {
     officerName: null | boolean;
     plateProvince: null | boolean;    
     plateNumber: null | boolean;
-    nscProvince: null | boolean; 
+    puj_code: null | boolean; 
     nscNumber: null | boolean; 
     registrationNumber: null | boolean; 
     vehicleYear: null | boolean;
     vehicleMake: null | boolean; 
     vehicleColor: null | boolean;
-    vehicleTowed: null | boolean;    
-    keysOnVehicle: null | boolean;
-    impountLotName: null | boolean;
+    vehicleImpounded: null | boolean;    
+    locationOfKeys: null | boolean;
+    impoundLotName: null | boolean;
     impoundLotAddress: null | boolean;
     impoundLotCity: null | boolean;
     impoundLotPhone: null | boolean;
-    notTowingReasonOtherDriver: null | boolean;
-    otherDriverName: null | boolean;
+    notImpoundingReason: null | boolean;    
+    vehicleReleasedTo: null | boolean;    
     releasedDate: null | boolean;
     releasedTime: null | boolean;
-    prohibitionAlcohol: null | boolean;
+    prohibitionType: null | boolean;
     offenceAddress: null | boolean;
     offenceCity: null | boolean;
     agencyFileNumber: null | boolean;
-    offenceDate: null | boolean;
-    offenceTime: null | boolean;    
-    province: null | boolean;
+    prohibitionStartDate: null | boolean;
+    prohibitionStartTime: null | boolean;
     submitted: null | boolean;    
 }
