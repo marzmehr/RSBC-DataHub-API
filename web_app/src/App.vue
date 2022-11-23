@@ -24,7 +24,7 @@
         </div>
         <not-logged-in-banner v-if="isDisplayNotLoggedInBannerInfo"></not-logged-in-banner>
         <update-available></update-available>
-        <div class="card-body">
+        <div id="router-container" class="card-body">
           <offline-banner v-if="! $store.state.Common.isOnline"></offline-banner>
           <router-view></router-view>
           <debug-component></debug-component>
