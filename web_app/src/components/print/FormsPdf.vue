@@ -5,13 +5,13 @@
         </b-card>
 
         <div v-if="form24">
-            <form24h-layout  v-for="(value, inx) in ['DRIVER COPY','POLICE COPY','SEND TO ICBC']" v-bind:key="inx" :formType="value"  />      
+            <form24h-layout  v-for="(value, inx) in ['DRIVER COPY','POLICE COPY','SEND TO ICBC']" v-bind:key="inx" :copyType="value"  />      
         </div>
         <div v-if="form12">
-            <form12h-layout  v-for="(value, inx) in ['DRIVER COPY','POLICE COPY','SEND TO ICBC']"  v-bind:key="inx" :formType="value"  />
+            <form12h-layout  v-for="(value, inx) in ['DRIVER COPY','POLICE COPY','SEND TO ICBC']"  v-bind:key="inx" :copyType="value"  />
         </div>
         <div v-if="formVI">
-            <form-vi-layout  v-for="(value, inx) in ['DRIVER COPY', 'DRIVER INFO', 'ILO COPY', 'POLICE/SUPERINTENDENT COPY', 'SUPERINTENDENT/POLICE COPY']"  v-bind:key="inx" :formType="value"  />
+            <form-vi-layout  v-for="(value, inx) in ['DRIVER COPY', 'DRIVER INFO', 'ILO COPY', 'POLICE/SUPERINTENDENT COPY', 'SUPERINTENDENT/POLICE COPY']"  v-bind:key="inx" :copyType="value"  />
         </div>
 
     </div>
@@ -26,6 +26,13 @@ import FormViLayout from "./layoutsFormVI/FormViLayout.vue"
 
 import {tellApiFormIsPrinted} from "@/utils/forms"
 
+import { namespace } from "vuex-class";
+import "@/store/modules/common";
+const commonState = namespace("Common");
+
+import { currentlyEditingFormObjectInfoType } from '@/types/Common';
+
+
 @Component({
     components:{       
         Form24hLayout,
@@ -34,6 +41,9 @@ import {tellApiFormIsPrinted} from "@/utils/forms"
     }
 })
 export default class FormsPdf extends Vue {
+
+    @commonState.State
+    public currently_editing_form_object: currentlyEditingFormObjectInfoType;
     
     dataReady=false;
     form12=false;
@@ -41,10 +51,11 @@ export default class FormsPdf extends Vue {
     formVI=false;
 
     mounted(){
-        this.dataReady=false;
-        this.form12=false;
-        this.form24=true;
-        this.formVI=false;
+        this.dataReady=false;       
+        const formType = this.currently_editing_form_object.form_type
+        this.form12=(formType=="12Hour");
+        this.form24=(formType=="24Hour");
+        this.formVI=(formType=="VI");
         this.dataReady=true;
     }
 

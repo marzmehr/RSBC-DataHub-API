@@ -16,7 +16,7 @@
                     </td>                           
                 </tr>
                 <tr style="height:0.5rem;  line-height:0.5rem; border-top:0px solid;">
-                    <th class="answer2 text-center" colspan="85"> {{formType}} </th>
+                    <th class="answer2 text-center" colspan="85"> {{copyType}} </th>
                 </tr>
                 <tr style="height:0.5rem;  line-height:0.5rem; border-top:0px solid;">
                     <th class="text-left" colspan="90" /> 
@@ -40,7 +40,7 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 export default class FormViTable9 extends Vue {
 
     @Prop({required:true})
-    formType!: string;
+    copyType!: string;
 
     dataReady = false;
     src =""

@@ -19,7 +19,7 @@
                 </tr>              
                 <tr class="height-0-75" style="height:1.75rem; line-height:0.95rem;">
                     <td class="" style="" colspan="70">MV2634 (102018)</td>                                                            
-                    <td class="answer" style="font-size:8pt" colspan="30">{{formType}}</td>
+                    <td class="answer" style="font-size:8pt" colspan="30">{{copyType}}</td>
                 </tr>
             </table>
         </div>
@@ -39,7 +39,7 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 export default class Form24hTable8 extends Vue {
 
     @Prop({required:true})
-    formType!: string;
+    copyType!: string;
 
     // @Prop({required:true})
     // result!: form20DataInfoType;

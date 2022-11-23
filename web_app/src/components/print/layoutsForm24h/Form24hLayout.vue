@@ -1,5 +1,5 @@
 <template>
-    <b-card v-if="dataReady" :id="pageId"  bg-variant="info" class="pdf-container bg-white svg-wrapper" no-body>
+    <b-card v-if="dataReady" :name="pageId"  bg-variant="info" class="pdf-container bg-white svg-wrapper" no-body>
         <div style="font-size:1pt;color:#FFF;"><b>i</b></div>
             <div class="row mx-0">
                 <div class="col  ml-0">                
@@ -10,11 +10,11 @@
                     <form24h-table5 />
                     <form24h-table6 />
                     <form24h-table7 />
-                    <form24h-table8 :formType="formType"/>
+                    <form24h-table8 :copyType="copyType"/>
                 </div>
 
                 <div class="col ml-0">
-                    <div v-if="formType=='DRIVER COPY'">
+                    <div v-if="copyType=='DRIVER COPY'">
                         <form24-notice />
                     </div>
                     <div v-else>
@@ -67,7 +67,7 @@ import FormOfficerReport3 from "./FormOfficerReports/FormOfficerReport3.vue"
 export default class Form24hLayout extends Vue {
     
     @Prop({required:true})
-    formType!: string;
+    copyType!: string;
 
     dataReady = false;
     pageId='';
@@ -75,10 +75,10 @@ export default class Form24hLayout extends Vue {
     mounted(){
         this.dataReady = false;
 
-        if(this.formType.includes('ICBC')){
+        if(this.copyType.includes('ICBC')){
             this.pageId="print"
         }else{
-            this.pageId=this.formType.replace(' ','').toLowerCase()
+            this.pageId=this.copyType.replace(' ','').toLowerCase()
         }
 
         // this.extractInfo();

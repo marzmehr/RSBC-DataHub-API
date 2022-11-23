@@ -2,7 +2,7 @@
     <b-card v-if="dataReady" :name="pageId"  bg-variant="info" class="pdf-container bg-white svg-wrapper" no-body>
         <div style="font-size:1pt;color:#FFF;"><b>i</b></div>
 
-            <div v-if="formType=='SUPERINTENDENT/POLICE COPY'" class="mx-0">
+            <div v-if="copyType=='SUPERINTENDENT/POLICE COPY'" class="mx-0">
                 <div class="col ml-0"> 
                     <form-rts-table0 />
                     <form-rts-table1 />
@@ -10,11 +10,11 @@
                     <form-rts-table3 />
                     <form-rts-table4 />
                     <form-rts-table5 />
-                    <form-rts-table6 :formType="formType"/>
+                    <form-rts-table6 :copyType="copyType"/>
                 </div>
             </div>
 
-            <div  v-else-if="formType=='DRIVER INFO'" class=" mx-0">
+            <div  v-else-if="copyType=='DRIVER INFO'" class=" mx-0">
                 <div class="col  ml-0"> 
                     <form-vi-notice />
                 </div>
@@ -31,7 +31,7 @@
                     <form-vi-table6 />
                     <form-vi-table7 />
                     <form-vi-table8 />
-                    <form-vi-table9 :formType="formType"/>
+                    <form-vi-table9 :copyType="copyType"/>
                 </div>
             </div>
 
@@ -97,7 +97,7 @@ import FormRtsTable6 from "./FormRtsTables/FormRtsTable6.vue"
 export default class FormViLayout extends Vue {
     
     @Prop({required:true})
-    formType!: string;
+    copyType!: string;
 
     dataReady = false;
     pageId='';
@@ -105,10 +105,10 @@ export default class FormViLayout extends Vue {
     mounted(){
         this.dataReady = false;
 
-        if(this.formType.includes('ICBC') || this.formType.includes('SUPERINTENDENT')){
+        if(this.copyType.includes('ICBC') || this.copyType.includes('SUPERINTENDENT')){
             this.pageId="print"
         }else{
-            this.pageId=this.formType.replace(' ','').toLowerCase()
+            this.pageId=this.copyType.replace(' ','').toLowerCase()
         }
 
         // this.extractInfo();

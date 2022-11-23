@@ -3,7 +3,7 @@
         <div class="row lineheight0-25" style="font-size:11pt; margin:0rem 0 0 0;   line-height:1rem;"><b>NOTICE OF 12-HOUR </b></div>
         <div class="row lineheight0-25" style="font-size:11pt; margin:0rem 0 0 0;   line-height:1rem;"><b>LICENCE SUSPENSION</b></div>
         <div class="row lineheight0-25 margin-top-0" style="margin:0.5rem 0 0 0; line-height:1rem;">
-            <div class="answer text-left" style="font-size:11pt; width:67%;">JZ-100088 </div>
+            <div class="answer text-left" style="font-size:11pt; width:67%;">JZ-100088</div>
             <div style="font-size:6pt; width:33%;transform:translate(0,6px);">MICROFILM NO.</div>
         </div>
         
@@ -25,7 +25,7 @@
                 </tr>
                 <tr style="height:0.95rem;line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer"    style="" colspan="49">BAD</td> 
+                    <td class="answer"    style="" colspan="49">{{formData.surname}}</td> 
                     <td class="answer" style="" colspan="49">GUY</td>                                                           
                 </tr>
 <!-- <ROW2> -->
@@ -136,33 +136,25 @@ export default class Form12hTable1 extends Vue {
     dataReady = false;
     driver=['D','R','I','V','E','R']
 
+    formData
+
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        this.formData = {
+            surname:''
+        }
 
-    //     const index = this.result.objectingParties.indexOf('Other')
 
-    //     if (index != -1){
 
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
+      
            
-    // }
+    }
 
     
 }

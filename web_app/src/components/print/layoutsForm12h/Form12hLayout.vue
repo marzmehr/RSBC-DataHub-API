@@ -1,5 +1,5 @@
 <template>
-    <b-card v-if="dataReady" :id="pageId"  bg-variant="white" class="pdf-container bg-white svg-wrapper" no-body>
+    <b-card v-if="dataReady" :name="pageId"  bg-variant="white" class="pdf-container bg-white svg-wrapper" no-body>
         <div style="font-size:1pt;color:#FFF;"><b>i</b></div>
         <div class="row mx-0">
             <div class="col  ml-0">                
@@ -8,7 +8,7 @@
                 <form12h-table3 />
                 <form12h-table4 />
                 <form12h-table5 />
-                <form12h-table6 :formType="formType"/>
+                <form12h-table6 :copyType="copyType"/>
             </div>
 
             <div class="col ml-0">                
@@ -40,14 +40,13 @@ import Form12Notice from "./Form12Notice.vue"
         Form12hTable4,
         Form12hTable5,
         Form12hTable6,
-        Form12Notice,
-        
+        Form12Notice,        
     }
 })
 export default class Form12hLayout extends Vue {
     
     @Prop({required:true})
-    formType!: string;
+    copyType!: string;
 
     dataReady = false;
     pageId=''
@@ -56,10 +55,10 @@ export default class Form12hLayout extends Vue {
         this.dataReady = false;
         
 
-        if(this.formType.includes('ICBC')){
+        if(this.copyType.includes('ICBC')){
             this.pageId="print"
         }else{
-            this.pageId=this.formType.replace(' ','').toLowerCase()
+            this.pageId=this.copyType.replace(' ','').toLowerCase()
         }
 
         // this.extractInfo();

@@ -15,6 +15,8 @@
             <officer-details-card :officerInfo="twelveHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
 
         </b-card>
+        <b-button @click="navigateToPrintPage"> Print All Copies
+        </b-button>
         <!-- <form-container title="Notice of 12 Hour Licence Suspension" :form_object="formObject" >
             
             
@@ -251,6 +253,14 @@ export default class TwelveHourProhibition extends Vue {
         return true;            
     }
 
+    public navigateToPrintPage(){
+        const form_id = this.currently_editing_form_object.form_id
+        const form_type = this.currently_editing_form_object.form_type
+        this.$router.push({   
+            name: 'print',
+            params: { id: form_id, form_type: form_type}
+        })
+    }
 
 }
 </script>
