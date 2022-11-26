@@ -17,7 +17,7 @@
                 </tr>
                 <tr style="height:0.95rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="98">1000 ST, VAN, BC, V1R 1R1</td>
+                    <td class="answer" style="" colspan="98">{{formData.offenceAddress}}</td>
                     <td class="" style="" colspan="2" />
                 </tr>
 <!-- <ROW2> -->
@@ -29,9 +29,9 @@
                 </tr>
                 <tr style="height:0.95rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="70">ADMINISTRATOR</td>
+                    <td class="answer" style="" colspan="70">{{formData.officerName}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="29">0000</td>
+                    <td class="answer" style="" colspan="29">{{formData.badgeNumber}}</td>
                 </tr>
 <!-- <ROW3> -->
                 <tr style="height:0.25rem; line-height:0.75rem; border-top:1px solid;">
@@ -42,9 +42,9 @@
                 </tr>
                 <tr style="height:0.95rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="60">ROADSAFETY</td>
+                    <td class="answer" style="" colspan="60">{{formData.agencyName}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="39">7689</td>
+                    <td class="answer" style="" colspan="39">{{formData.agencyFileNumber}}</td>
                 </tr>
 
             </table>
@@ -52,10 +52,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2906";
+const mv2906State = namespace("MV2906");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 
 @Component({
     components:{       
@@ -63,42 +67,40 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
     }
 })
 export default class Form12hTable3 extends Vue {
-
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    
+    @mv2906State.State
+    public mv2906Info: twelveHourFormJsonInfoType;   
 
     dataReady = false;
-
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form12 = this.mv2906Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            offenceAddress: '',
+            officerName:'',
+            badgeNumber: '',
+            agencyName: '',
+            agencyFileNumber: ''            
+        }
 
-    //     if (index != -1){
+        const lineAddress = form12.offenceAddress?form12.offenceAddress.toUpperCase()+', ':'';
+        const city = form12.offenceCity?.objectDsc?form12.offenceCity.objectDsc.toUpperCase():'';
 
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
-    
+        this.formData.offenceAddress = lineAddress + city;
+        this.formData.officerName = form12.officer_name?form12.officer_name.toUpperCase():'';
+        this.formData.badgeNumber = form12.badge_number?form12.badge_number:'';
+        this.formData.agencyName = form12.agency?form12.agency.toUpperCase():'';
+        this.formData.agencyFileNumber = form12.agencyFileNumber?form12.agencyFileNumber.toUpperCase():'';
+    }
 }
 
 </script>

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import Vue from 'vue'
 
 Vue.filter('verifyPhone', function(phone){	
@@ -25,6 +26,22 @@ Vue.filter('findInvalidFields',function(){
 		const el = document.getElementsByClassName('is-invalid')
 		if(el[0]) el[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start'});
 	})
+})
+
+Vue.filter('format-date-dash', function(date){
+	if(date)
+		return date.substr(0,4) + '-' + date.substr(4,2) + '-' + date.substr(6,2);
+	else
+		return '';
+})
+
+Vue.filter('extract-date', function(date){
+
+	if(date){
+        const inputDate = moment(date)
+        return {day: inputDate.format('Do'), month: inputDate.format('MMMM'), year: inputDate.format('YYYY')};       }
+	else
+		return {day: '', month: '', year: ''}
 })
 
 Vue.filter('printPdf', function(html, form_type){

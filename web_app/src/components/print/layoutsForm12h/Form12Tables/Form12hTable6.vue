@@ -1,5 +1,5 @@
 <template>
-    <div v-if="dataReady">
+    <div>
 
         <div class="row margin-top-n0-40" style="font-size:5.9pt; margin:0.15rem 0 0 0;">
 
@@ -21,53 +21,12 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 
-import CheckBox from "../../pdfUtil/CheckBox.vue";
-
-@Component({
-    components:{       
-        CheckBox           
-    }
-})
+@Component
 export default class Form12hTable6 extends Vue {
 
     @Prop({required:true})
     copyType!: string;
-
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
-
-    dataReady = false;
-
-
-    mounted(){
-        this.dataReady = false;
-        // this.extractInfo();
-        this.dataReady = true;
-    }
-
-    // public extractInfo(){
-
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
-
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
-    
+   
 }
 
 </script>
