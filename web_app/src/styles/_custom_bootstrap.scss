@@ -88,6 +88,7 @@ $inactive:  #cccccc !default;
 $approved: #28d8a3 !default; 
 $card_detail: rgb(221, 239, 246);
 $time:  #cccccc;
+$timelight:  #d8d8d8;
 
 
 
@@ -108,7 +109,8 @@ $colors: map-merge(
     "white":      $white,
     "gray":       $gray-600,
     "gray-dark":  $gray-800,
-    "time":       $time
+    "time":       $time,
+    "timelight":  $timelight
   ),
   $colors
 );
@@ -143,10 +145,12 @@ $theme-colors: map-merge(
     "select":     $select,
     "orange":     $orange,
     "time":       $time,
+    "timelight":  $timelight,
     "card_detail": $card_detail,
     "approved"   :$approved,
     "bcgov_blue" :$gov-blue,
     "bcgov_navy" :$gov-navy-blue,
+    "bcgov_gray" :$gov-accent-grey,
   ),
   $theme-colors
 );

@@ -147,8 +147,13 @@ export const mutations = {
         Vue.set(state, "keycloak", keycloak_object)
     },
 
+    // setFormAsPrinted(state, payload) {
+    //     const root = state.forms[payload.form_object.form_type][payload.form_object.form_id]
+    //     Vue.set(root, "printed_timestamp", payload.timestamp)
+    // },
+
     setFormAsPrinted(state, payload) {
-        const root = state.forms[payload.form_object.form_type][payload.form_object.form_id]
+        const root = state.forms[payload.form_type][payload.form_id]
         Vue.set(root, "printed_timestamp", payload.timestamp)
     },
 

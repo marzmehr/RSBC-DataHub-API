@@ -20,6 +20,13 @@ Vue.filter('verifyPostCode', function(postcode, stateCd){
         return postcodeFormatUSA.test(postcode?.trim())
 })
 
+Vue.filter('findInvalidFields',function(){
+	Vue.nextTick(()=>{
+		const el = document.getElementsByClassName('is-invalid')
+		if(el[0]) el[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start'});
+	})
+})
+
 Vue.filter('printPdf', function(html, form_type){
     const pageSize = (form_type=='12Hour'||form_type=='24Hour')?`11in  8.5in` : `8.5in 11in`
 
