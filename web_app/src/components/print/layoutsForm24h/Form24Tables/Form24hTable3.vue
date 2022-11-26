@@ -17,7 +17,7 @@
                 </tr>
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="98">1000 ST, VAN, BC, V1R 1R1</td>
+                    <td class="answer" style="" colspan="98">{{formData.offenceAddress}}</td>
                     <td class="" style="" colspan="2" />
                 </tr>
 <!-- <ROW2> -->
@@ -29,11 +29,11 @@
                 </tr>
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="70">ADMINISTRATOR</td>
+                    <td class="answer" style="" colspan="70">{{formData.officerName}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="29">0000</td>
+                    <td class="answer" style="" colspan="29">{{formData.badgeNumber}}</td>
                 </tr>
-<!-- <ROW3> -->
+<!-- <ROW2> -->
                 <tr style="height:0.25rem; line-height:0.5rem; border-top:1px solid;">
                     <td class="" style="" colspan="1" />
                     <td class="" style="" colspan="60">POLICE AGANCY OR RCMP UNIT</td>
@@ -42,9 +42,9 @@
                 </tr>
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="60">ROADSAFETY</td>
+                    <td class="answer" style="" colspan="60">{{formData.agencyName}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="39">7689</td>
+                    <td class="answer" style="" colspan="39">{{formData.agencyFileNumber}}</td>
                 </tr>
 
             </table>
@@ -52,10 +52,15 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
+
 
 @Component({
     components:{       
@@ -64,40 +69,40 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form24hTable3 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form24 = this.mv2634Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            offenceAddress: '',
+            officerName:'',
+            badgeNumber: '',
+            agencyName: '',
+            agencyFileNumber: ''            
+        }
 
-    //     if (index != -1){
+        const lineAddress = form24.offenceAddress?form24.offenceAddress.toUpperCase()+', ':'';
+        const city = form24.offenceCity?.objectDsc?form24.offenceCity.objectDsc.toUpperCase():'';
 
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        this.formData.offenceAddress = lineAddress + city;
+        this.formData.officerName = form24.officer_name?form24.officer_name.toUpperCase():'';
+        this.formData.badgeNumber = form24.badge_number?form24.badge_number:'';
+        this.formData.agencyName = form24.agency?form24.agency.toUpperCase():'';
+        this.formData.agencyFileNumber = form24.agencyFileNumber?form24.agencyFileNumber.toUpperCase():'';
+    }
     
 }
 

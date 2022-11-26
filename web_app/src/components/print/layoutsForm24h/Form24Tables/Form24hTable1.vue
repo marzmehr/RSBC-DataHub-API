@@ -3,7 +3,7 @@
         <div class="row lineheight0-0 margin-top-1" style="font-size:10pt; margin:0rem 0 0 0;   line-height:1rem;"><b>NOTICE OF 24-HOUR PROHIBITION</b></div>
         <div class="row lineheight0-15" style="font-size:10pt; margin:0rem 0 0 0;   line-height:1rem;"><b>AND REPORT TO ICBC</b></div>
         <div class="row lineheight0-15 margin-top-0" style="margin:0.5rem 0 0 0; line-height:1rem;">
-            <div class="answer text-left" style="font-size:10pt; width:67%;">VZ-100088 </div>
+            <div class="answer text-left" style="font-size:10pt; width:67%;">{{formData.formId}}</div>
             <div style="font-size:6pt; width:33%;transform:translate(0,6px);">MICROFILM NO.</div>
         </div>
         
@@ -25,8 +25,8 @@
                 </tr>
                 <tr style="height:0.85rem;line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer"    style="" colspan="49">BAD</td> 
-                    <td class="answer" style="" colspan="49">GUY</td>                                                           
+                    <td class="answer"    style="" colspan="49">{{formData.surName}}</td> 
+                    <td class="answer" style="" colspan="49">{{formData.givenName}}</td>                                                           
                 </tr>
 <!-- <ROW2> -->
                 <tr style="height:0.25rem;  line-height:0.5rem; border-top:1px solid;">
@@ -41,11 +41,11 @@
                 <tr style="height:0.8rem; line-height:0.65rem;">
                     <td class="bg-dark text-white m-0 p-0 "  style="line-height:0.5rem;" colspan="1"><b>R I</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="48">2342345</td>
+                    <td class="answer" style="" colspan="48">{{formData.dlNumber}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="20">QC</td> 
+                    <td class="answer" style="" colspan="20">{{formData.jurisdiction}}</td> 
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="28">19900101</td>                                                
+                    <td class="answer" style="" colspan="28">{{formData.dob}}</td>                                                
                 </tr>
 <!-- <ROW3> -->
                 <tr style="height:0.25rem; line-height:0.5rem; border-top:1px solid;">
@@ -59,10 +59,10 @@
                 <tr style="height:0.8rem; line-height:0.65rem;">
                     <td class="bg-dark text-white m-0 p-0 "  style="line-height:0.5rem;" colspan="1"><b>E R</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="38">1000 LA FANTE AVE</td> 
-                    <td class="answer" style="" colspan="23">MONTREAL</td> 
-                    <td class="answer" style="" colspan="18">QC</td>
-                    <td class="answer" style="" colspan="19">Q1Q 1Q1</td>                                               
+                    <td class="answer" style="" colspan="38">{{formData.address}}</td> 
+                    <td class="answer" style="" colspan="23">{{formData.city}}</td> 
+                    <td class="answer" style="" colspan="18">{{formData.province}}</td>
+                    <td class="answer" style="" colspan="19">{{formData.postalCode}}</td>                                               
                 </tr>
 <!-- <ROW4> -->
                 <tr style="height:1.2rem; line-height:0.5rem; border-top:1px solid;">
@@ -74,7 +74,7 @@
                             shiftmark="-2px,0px"                                   
                             checkColor="#2134AB"
                             boxSize="1.5em"
-                            :check="true"
+                            :check="formData.alcohol"
                             checkFontSize="16pt"                                     
                             text="" /> 
                     </td>
@@ -86,7 +86,7 @@
                             shiftmark="-2px,0px"                                   
                             checkColor="#2134AB"
                             boxSize="1.5em" 
-                            :check="true"
+                            :check="formData.drugs"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -99,10 +99,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
 
 @Component({
     components:{       
@@ -111,39 +115,53 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form24hTable1 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
-    driver=['D','R','I','V','E','R']
+
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form24 = this.mv2634Info.data;
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            formId: '',
+            surName:'',
+            givenName: '',
+            jurisdiction: '',
+            dlNumber: '',
+            province: '',
+            dob: '',
+            address: '',
+            city: '',
+            postalCode: '',
+            alcohol: false,
+            drugs: false
+        }
 
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
+        this.formData.formId = this.mv2634Info.form_id?this.mv2634Info.form_id.toUpperCase():'';
+        this.formData.surName = form24.lastName?form24.lastName.toUpperCase():'';
+        this.formData.givenName = form24.givenName?form24.givenName.toUpperCase():'';
+        this.formData.jurisdiction = form24.driversLicenceJurisdiction.objectCd?form24.driversLicenceJurisdiction.objectCd.toUpperCase():'';
+        this.formData.dlNumber = form24.driversNumber?form24.driversNumber.toUpperCase():'';
+        this.formData.province = form24.driverProvince.objectCd?form24.driverProvince.objectCd.toUpperCase():'';
+        this.formData.dob = form24.dob?form24.dob:'';
+        this.formData.address = form24.address?form24.address.toUpperCase():'';
+        this.formData.city = form24.driverCity?form24.driverCity.toUpperCase():'';
+        this.formData.postalCode = form24.driverPostalCode?form24.driverPostalCode.toUpperCase():'';
+        
+        this.formData.alcohol = form24.prohibitionType && form24.prohibitionType == 'Alcohol';  
+        this.formData.drugs = form24.prohibitionType && form24.prohibitionType == 'Drugs';    
            
-    // }
+    }
 
     
 }
