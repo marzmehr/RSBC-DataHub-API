@@ -21,6 +21,13 @@ Vue.filter('verifyPostCode', function(postcode, stateCd){
         return postcodeFormatUSA.test(postcode?.trim())
 })
 
+Vue.filter('findInvalidFields',function(){
+	Vue.nextTick(()=>{
+		const el = document.getElementsByClassName('is-invalid')
+		if(el[0]) el[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start'});
+	})
+})
+
 Vue.filter('format-date-dash', function(date){
 	if(date)
 		return date.substr(0,4) + '-' + date.substr(4,2) + '-' + date.substr(6,2);
