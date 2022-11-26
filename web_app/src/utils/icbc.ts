@@ -41,7 +41,7 @@ export async function lookupDriverFromICBC([pathString, dlNumber]) {
             .then(response => response.json())
             .then(data => {
                 console.log("ICBC driver data", data)
-                if ("error" in data) {
+                if (data.error) {
                     reject("message" in data['error'] ? {"description": data['error'].message }: {"description": "No valid response"})
                 } else {
                     const provinceCode = data['party']['addresses'][0]['region']
@@ -73,7 +73,7 @@ export async function lookupPlateFromICBC([plateNumber, path]) {
                 .then(response => response.json())
                 .then(data => {
                     console.log("data", data)
-                    if ("error" in data) {
+                    if (data.error) {
                         reject("description" in data['error'] ? {"description": data['error'].description }: {"description": "No valid response"})
                     } else {
                         findVehicleByFuzzySearch(data)

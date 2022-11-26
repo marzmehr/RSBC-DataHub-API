@@ -35,7 +35,8 @@
 			<officer-details-card :officerInfo="twentyFourHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
 
 		</b-card>
-
+		<b-button @click="navigateToPrintPage"> Print All Copies
+        </b-button>
   </b-card>
 
 </template>
@@ -300,6 +301,15 @@ export default class TwentyFourHourProhibition extends Vue {
         }       
 
         return true;            
+    }
+
+	public navigateToPrintPage(){
+        const form_id = this.currently_editing_form_object.form_id
+        const form_type = this.currently_editing_form_object.form_type
+        this.$router.push({   
+            name: 'print',
+            params: { id: form_id, form_type: form_type}
+        })
     }
 
 

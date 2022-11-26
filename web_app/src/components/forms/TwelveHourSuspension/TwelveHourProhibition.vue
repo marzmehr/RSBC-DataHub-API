@@ -1,7 +1,7 @@
 <template>
     <b-card header-tag="header" bg-variant="light" border-variant="primary" class="mx-auto p-0">
-        <b-card-header header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
-            <h4>Notice of 12 Hour Licence Suspension</h4>      
+        <b-card-header class="h2" header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
+            Notice of 12 Hour Licence Suspension
         </b-card-header>
         <b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
             <b-row class="pt-2 pb-0 text-danger border-light">            
@@ -9,30 +9,17 @@
             </b-row>
             
             <drivers-information-card :driverInfo="twelveHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
-            <vehicle-information-card :vehicleInfo="twelveHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
-            <vehicle-disposition-card :vdInfo="twelveHourData" :vdState="fieldStates" @recheckStates="recheckStates()"/>
-            <prohibition-information-card :prohibitionInfo="twelveHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
-            <officer-details-card :officerInfo="twelveHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
+            <vehicle-information-card class="mt-5" :vehicleInfo="twelveHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
+            <vehicle-disposition-card class="mt-5" :vdInfo="twelveHourData" :vdState="fieldStates" @recheckStates="recheckStates()"/>
+            <prohibition-information-card class="mt-5" :prohibitionInfo="twelveHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
+            <officer-details-card class="mt-5" :officerInfo="twelveHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
 
         </b-card>
-        <!-- <form-container title="Notice of 12 Hour Licence Suspension" :form_object="formObject" >
-            
-            
-            <b-card title="Generate PDF for Printing">
-                <div class="d-flex justify-content-between">
+       
+        <b-card class="mt-5">
+            <b-button @click="navigateToPrintPage" variant="primary"><b style="font-size:15pt">Print All Copies</b> </b-button>
+        </b-card>
         
-                    <print-documents				
-                    :show_certificate="isCertificateOfServiceEnabled(getPath)"
-                    :path="getPath"
-                    :form_object="getCurrentlyEditedForm"
-                    :validate="validate"
-                    :variants="variants">
-                    Print All Copies
-                </print-documents>
-                </div>
-            </b-card>
-
-        </form-container> -->
     </b-card>
 </template>
 
@@ -236,21 +223,81 @@ export default class TwelveHourProhibition extends Vue {
 
 	public checkStates(){
         const data = this.twelveHourFormData.data
-                
-        this.fieldStates.driverPhoneNumber = Vue.filter('verifyPhone')( data.driverPhoneNumber)? null:false;
+        
+        //__Driver's Information
+        this.fieldStates.lastName = data.lastName? null:false;
+        this.fieldStates.address = data.address? null:false;
+        this.fieldStates.driverCity = data.driverCity? null:false;
         this.fieldStates.driverProvince = data.driverProvince?.objectCd? null:false;
-        this.fieldStates.driverPostalCode = Vue.filter('verifyPostCode')(data.driverPostalCode, data.driverProvince?.objectCd)? null:false;      
+
+        if(data.driverPhoneNumber) 
+            this.fieldStates.driverPhoneNumber = Vue.filter('verifyPhone')( data.driverPhoneNumber)? null:false;
+        else 
+            this.fieldStates.driverPhoneNumber = null;
+        
+        if(data.driverPostalCode)
+            this.fieldStates.driverPostalCode = Vue.filter('verifyPostCode')(data.driverPostalCode, data.driverProvince?.objectCd)? null:false;      
+        else 
+            this.fieldStates.driverPostalCode = null;
+        //__Vehicle Disposition
+
+        this.fieldStates.vehicleImpounded = data.vehicleImpounded==null? false : null;
+        //Impounded
+        this.fieldStates.locationOfKeys = data.vehicleImpounded==true && !data.locationOfKeys? false: null;         
+        this.fieldStates.impoundLotName = data.vehicleImpounded==true && !data.impoundLot?.name ? false: null;
+        this.fieldStates.impoundLotAddress = data.vehicleImpounded==true && !data.impoundLot?.lot_address ? false : null;
+        this.fieldStates.impoundLotCity = data.vehicleImpounded==true && !data.impoundLot?.city ? false : null;
+        this.fieldStates.impoundLotPhone = data.vehicleImpounded==true && !data.impoundLot?.phone ? false : null;
+        //NotImpounded
+
+        this.fieldStates.notImpoundingReason = data.vehicleImpounded==false && !data.notImpoundingReason ? false: null;
+        
+        this.fieldStates.vehicleReleasedTo = data.vehicleImpounded==false && data.notImpoundingReason=='Released to other driver' && !data.vehicleReleasedTo ? false: null;
+                        
+        if(data.vehicleImpounded==true || data.notImpoundingReason!='Released to other driver')
+            this.fieldStates.releasedDate = null;
+        else if(!data.releasedDate)
+            this.fieldStates.releasedDate = false;
+        
+        if(data.vehicleImpounded==true || data.notImpoundingReason!='Released to other driver')
+            this.fieldStates.releasedTime = null;
+        else if(!data.releasedTime)
+            this.fieldStates.releasedTime = false;
+        
+        //__Prohibition
+        this.fieldStates.prohibitionType = data.prohibitionType==''? false: null;
+        this.fieldStates.offenceAddress = data.offenceAddress? null : false;
+        this.fieldStates.offenceCity = data.offenceCity?.objectCd? null : false;
+        this.fieldStates.agencyFileNumber = data.agencyFileNumber? null : false;
+
+        if(!data.prohibitionStartDate) this.fieldStates.prohibitionStartDate = false;
+        if(!data.prohibitionStartTime) this.fieldStates.prohibitionStartTime = false;
+
+
+        //__Officer
+        this.fieldStates.agency = data.agency? null : false;
+
 
         for(const field of Object.keys(this.fieldStates)){
             if(this.fieldStates[field]==false){
-                // Vue.filter('findInvalidFields')()
+                Vue.filter('findInvalidFields')()
                 return false
             }                
         }       
-
+        this.$store.commit("updateFormInRoot",this.twelveHourFormData)
         return true;            
     }
 
+    public navigateToPrintPage(){
+        if(this.checkStates()){
+            const form_id = this.currently_editing_form_object.form_id
+            const form_type = this.currently_editing_form_object.form_type
+            this.$router.push({   
+                name: 'print',
+                params: { id: form_id, form_type: form_type}
+            })
+        }
+    }
 
 }
 </script>

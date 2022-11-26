@@ -1,3 +1,4 @@
+import moment from 'moment';
 import Vue from 'vue'
 
 Vue.filter('verifyPhone', function(phone){	
@@ -20,8 +21,31 @@ Vue.filter('verifyPostCode', function(postcode, stateCd){
         return postcodeFormatUSA.test(postcode?.trim())
 })
 
-Vue.filter('printPdf', function(html){
-    
+Vue.filter('findInvalidFields',function(){
+	Vue.nextTick(()=>{
+		const el = document.getElementsByClassName('is-invalid')
+		if(el[0]) el[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start'});
+	})
+})
+
+Vue.filter('format-date-dash', function(date){
+	if(date)
+		return date.substr(0,4) + '-' + date.substr(4,2) + '-' + date.substr(6,2);
+	else
+		return '';
+})
+
+Vue.filter('extract-date', function(date){
+
+	if(date){
+        const inputDate = moment(date)
+        return {day: inputDate.format('Do'), month: inputDate.format('MMMM'), year: inputDate.format('YYYY')};       }
+	else
+		return {day: '', month: '', year: ''}
+})
+
+Vue.filter('printPdf', function(html, form_type){
+    const pageSize = (form_type=='12Hour'||form_type=='24Hour')?`11in  8.5in` : `8.5in 11in`
 
     const body = 
         `<!DOCTYPE html>
@@ -31,38 +55,19 @@ Vue.filter('printPdf', function(html){
         <title>Court Of Appeal</title>`+
         `<style>`+
             `@page {
-                size: 11in  8.5in  !important;
+                size: `+ pageSize + ` !important;                         
                 margin: 0.4in 0.2in 0.2in 0.2in !important;
-                font-size: 5pt !important;				
+                font-size: 7pt !important;				
             }`+
-            `@media print{               
-                .pdf-container {
-                    padding: 0px !important; 
-                    margin-right: 0 !important;
-                    margin-left: 0 !important;
-                    width: 100% !important;
-                    max-width: 980px !important;
-                    min-width: 980px !important;
-                    font-size: 10pt !important;
-                    font-family: BCSans;
-                    color: #313132 !important;
-                }
+            `@media print{                                               
             }`+
             `@page label{font-size: 9pt;}
-            .pdf-container {
-                padding: 0px !important; 
-                margin-right: 0 !important;
-                margin-left: 0 !important;
-                width: 100% !important;
-                max-width: 980px !important;
-                min-width: 980px !important;
-                font-size: 10pt !important;
-                font-family: BCSans;
-                color: #313132 !important;
-            }
-            .answer { color: rgb(3, 19, 165); font-size: 7pt; font-weight: 600;}
+            .pdf-none{ display: none !important; }
+            .answer { color: rgb(3, 19, 165) !important; font-size: 7pt; font-weight: 600 !important;}
+            .answer2 { color: rgb(3, 19, 165) !important; font-size: 10pt; font-weight: 600 !important; padding-left:0.25rem; }
             `+                       
             `
+            
             body{				
                 font-family: BCSans;
             }

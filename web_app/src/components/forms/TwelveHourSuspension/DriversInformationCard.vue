@@ -1,15 +1,16 @@
 <template>	
 	<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
-		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
+		<b-card-header class="text-left h3" header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Driver's Information</b>      
 		</b-card-header>
 		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
 
 			<b-row>
-				<b-col class="pr-1" cols="3">
+				<b-col class="pr-1 text-left" cols="3">
 					<b-form-group>
 					<label class="m-0 p-0"> Driver's Licence Number</label>
 					<b-form-input
+						size="lg"
 						v-model="driverInfo.driversNumber"
 						:disabled="formPrinted"
                         :state="driverState.driversNumber"
@@ -20,45 +21,44 @@
 				</b-col>
 				<b-col class="p-0 pt-1" cols="1">
 					<b-button 
+						size="lg"
 						class="bg-primary text-white"
-						style="opacity:1; float:left; margin-top:1.42rem;"
+						style="opacity:1; float:left; margin-top:1.7rem;"
 						:disabled="formPrinted || !displayIcbcLicenceLookup"
 						@click="triggerDriversLookup">
 						<spinner color="#FFF" v-if="searchingLookup" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
-						<span style="font-size: 0.875rem;" v-else>ICBC Prefill</span>
+						<span style="font-size: 14pt;" v-else>ICBC Prefill</span>
 					</b-button>  
 				</b-col>
 				<b-col class="p-0 pt-1" cols="1">
 					<b-button 
+						size="lg"
 						class="bg-primary text-white"
-						style="opacity:1; float:right; margin-top:1.42rem;"
+						style="opacity:1; float:right; margin-top:1.7rem;"
 						@click="launchDlScanner">
 						<spinner color="#FFF" v-if="searchingDl" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
-						<span style="font-size: 0.875rem;" v-else>Scan DL</span>
+						<span style="font-size: 14pt;" v-else>Scan DL</span>
 					</b-button>  
 				</b-col>
-				<b-col cols="3" class=" pl-1">
+				<b-col cols="3" class="text-left pl-1">
 					<label class="ml-0 m-0 p-0"> Prov / State / International </label>
-					<b-form-select	
-						v-model="driverInfo.driversLicenceJurisdiction"
-						@change="update"
-						:disabled="formPrinted"
-						:state="driverState.driversLicenceJurisdiction"						
-						placeholder="Search for a Jurisdiction"
-						style=" ">
-							<b-form-select-option
-								v-for="jurisdiction,inx in jurisdictions" 
-								:key="'dr-jurisdiction-'+jurisdiction.objectCd+inx"
-								:value="jurisdiction">
-									{{jurisdiction.objectDsc}}
-							</b-form-select-option>    
-					</b-form-select>                          
+					<input-search-form
+                        :data="driverInfo"
+                        dataField="driversLicenceJurisdiction"
+                        :optionList="jurisdictions"
+                        optionLabelField="objectDsc"
+                        :error="driverState.driversLicenceJurisdiction==false?'Please select one!':''"
+                        :disabled="formPrinted"
+                        placeholder="Search for a Jurisdiction"
+                        @update="update"
+                    />                     
 				</b-col>
 			</b-row>
-			<b-row>
-				<b-col >
+			<b-row class="text-left">
+				<b-col>
 					<label class="ml-1 m-0 p-0"> Last Name <span class="text-danger">*</span></label>
 					<b-form-input
+						size="lg"
 						placeholder="Last Name"
 						v-model="driverInfo.lastName"
 						:disabled="formPrinted"
@@ -69,6 +69,7 @@
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Given Names </label>
 					<b-form-input
+						size="lg"
 						placeholder="Given Names"
 						v-model="driverInfo.givenName"
 						:disabled="formPrinted"
@@ -77,10 +78,11 @@
 					</b-form-input>  
 				</b-col>
 				<b-col >
-					<label class="ml-1 m-0 p-0"> Date of Birth <span class="text-muted" style="font-size: 9pt;">YYYYMMDD ({{age}} yrs)</span></label>
+					<label class="ml-1 m-0 p-0"> Date of Birth <span class="text-muted" style="font-size: 12pt;">YYYYMMDD ({{age}} yrs)</span></label>
 					
 					<b-input-group class="mb-3">
 						<b-form-input
+							size="lg"
 							:key="updateDate"
 							id="dob"
 							v-model="driverInfo.dob"
@@ -107,10 +109,11 @@
 					<div v-if="dateError" style="font-size:10pt;" class="text-danger text-left m-0 mt-n3 p-0">{{dateError}}</div>                             
 				</b-col>
 			</b-row>
-			<b-row>
+			<b-row class="text-left">
 				<b-col cols="8">					
 					<label class="ml-1 m-0 p-0"> Address <span class="text-danger">*</span></label>
 					<b-form-input
+						size="lg"
 						placeholder="Address"
 						:disabled="formPrinted"
 						v-model="driverInfo.address"
@@ -120,7 +123,8 @@
 				</b-col>
 				<b-col>
 					<label class="ml-1 m-0 p-0"> Phone </label>
-					<b-form-input						
+					<b-form-input
+						size="lg"						
 						v-model="driverInfo.driverPhoneNumber"						
 						:formatter="editPhoneNumber"
 						:disabled="formPrinted"
@@ -135,36 +139,34 @@
 
 				</b-col>
 			</b-row>
-			<b-row>
-				<b-col cols="6" >
+			<b-row class="text-left">
+				<b-col cols="5" >
 					<label class="ml-1 m-0 p-0"> City <span class="text-danger">*</span></label>
-					<b-form-input						
+					<b-form-input
+						size="lg"						
 						v-model="driverInfo.driverCity"						
 						@input="update"
 						:disabled="formPrinted"
 						:state="driverState.driverCity">
 					</b-form-input>                                
 				</b-col>
-				<b-col cols="2">
+				<b-col cols="3">
 					<label class="ml-1 m-0 p-0"> Prov / State <span class="text-danger">*</span></label>
-					<b-form-select	
-						v-model="driverInfo.driverProvince"
-						:disabled="formPrinted"
-						@change="update"
-						:state="driverState.driverProvince"							
-						placeholder="Search for a Province or State"
-						style="display: block;">
-							<b-form-select-option
-								v-for="province,inx in provinces" 
-								:key="'dr-province-'+province.objectCd+inx"
-								:value="province">
-									{{province.objectDsc}}
-							</b-form-select-option>    
-					</b-form-select>   
+					<input-search-form
+                        :data="driverInfo"
+                        dataField="driverProvince"
+                        :optionList="provinces"
+                        optionLabelField="objectDsc"
+                        :error="driverState.driverProvince==false?'Please select one!':''"
+                        :disabled="formPrinted"
+                        placeholder="Search for a Province or State"
+                        @update="update"
+                    />                    
 				</b-col>
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Postal / Zip</label>
-					<b-form-input						
+					<b-form-input
+						size="lg"						
 						v-model="driverInfo.driverPostalCode"						
 						@input="update"
 						:disabled="formPrinted"
@@ -172,9 +174,9 @@
 					</b-form-input> 
 					<div
                         v-if="(driverState.driverPostalCode != null)" 
-                        style="font-size: 9.5pt; " 
+                        style="font-size: 8.5pt; " 
                         class="text-left text-danger m-0 p-0">
-                        Invalid Postal Code <i>(For CANADA format is A1A 1A1)</i>
+                        Invalid Postal Code regarding to Prov/State <i>(For CANADA format is A1A 1A1)</i>
                     </div>                                  
 				</b-col>
 			</b-row>
@@ -230,6 +232,8 @@ const mv2906State = namespace("MV2906");
 
 import rsiStore from "@/store";
 
+import InputSearchForm from '@/components/utils/InputSearchForm.vue'
+
 import { jurisdictionInfoType, provinceInfoType } from '@/types/Common';
 import { twelveHourFormStatesInfoType, twelveHourFormDataInfoType, twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 import Spinner from "@/components/utils/Spinner.vue";
@@ -239,7 +243,8 @@ import dlScanner from "@/helpers/dlScanner";
 
 @Component({
     components: {           
-        Spinner
+        Spinner,
+		InputSearchForm
     }        
 }) 
 export default class DriversInformationCard extends Vue {   
@@ -427,15 +432,19 @@ export default class DriversInformationCard extends Vue {
 
 <style scoped lang="scss">
 
+	label{
+		font-size: 16pt;
+	}
+
 	input.is-invalid {
 		background: #ebc417;
 	}
-	select.is-invalid {
-		background: #ebc417;
-		option {
-			background: #FFF;
-		}
-	}
+	// select.is-invalid {
+	// 	background: #ebc417;
+	// 	option {
+	// 		background: #FFF;
+	// 	}
+	// }
 
 	.fade-out {
 		animation: fadeOut ease 8s;

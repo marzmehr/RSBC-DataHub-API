@@ -1,14 +1,16 @@
 <template>
     <b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
-		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
+		<b-card-header class="text-left h3" header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Prohibition</b>      
 		</b-card-header>
 		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
 
-            <b-row>   
+            <b-row class="text-left">   
                 <b-col cols="4"> 
-                    <label class="ml-1 m-0 p-0"> Type of Prohibition (select one) <span class="text-danger">*</span></label>
-                    <b-form-radio-group 
+                    <label class="m-0 mb-2 p-0"> Type of Prohibition (select one) <span class="text-danger">*</span></label>
+                    <b-form-radio-group
+                        :class="(prohibitionState.prohibitionType==null)?'':'border border-danger is-invalid'"
+                        size="lg"
                         stacked
                         v-model="prohibitionInfo.prohibitionType"                    
                         :options="prohibitionTypeOptions"
@@ -19,10 +21,11 @@
                 </b-col>                
             </b-row>
             
-            <b-row class="mx-3">
+            <b-row class="text-left">
                 <b-col cols="8">
                     <label class="ml-1 m-0 p-0"> Intersection or Address of Offence <span class="text-danger">*</span></label>
                     <b-form-input
+                        size="lg"
                         v-model="prohibitionInfo.offenceAddress"
                         :disabled="formPrinted"
                         @input="update"
@@ -31,25 +34,24 @@
                 </b-col>
 				<b-col >                   
                     <label class="ml-1 m-0 p-0">City<span class="text-danger">*</span></label>
-                    <b-form-select	
-                        v-model="prohibitionInfo.offenceCity"
+                    <input-search-form
+                        :data="prohibitionInfo"
+                        dataField="offenceCity"
+                        :optionList="cities"
+                        optionLabelField="objectDsc"
+                        :error="prohibitionState.offenceCity==false?'Please select one!':''"
                         :disabled="formPrinted"
-                        @change="update"
-                        style="display: block;">
-                            <b-form-select-option
-                                v-for="city,inx in cities" 
-                                :key="'offence-city-'+city.objectCd+inx"
-                                :value="city">
-                                    {{city.objectDsc}}
-                            </b-form-select-option>    
-                    </b-form-select> 
+                        placeholder="Search for a BC city or town name"
+                        @update="update"
+                    />                  
                 </b-col>
             </b-row>                
 
-            <b-row class="mx-3">
+            <b-row class="text-left">
                 <b-col cols="3">
                     <label class="ml-1 m-0 p-0"> Agency File Number <span class="text-danger">*</span></label>
-                    <b-form-input                        
+                    <b-form-input 
+                        size="lg"                 
                         v-model="prohibitionInfo.agencyFileNumber"
                         :disabled="formPrinted"
                         @input="update"
@@ -58,17 +60,18 @@
                 </b-col> 
                 <b-col >
                     <label 
-                        class="ml-1 m-0 p-0"> Date of Driving - <span style="font-size: 9pt;">care or control</span>  
+                        class="ml-1 m-0 p-0"> Date of Driving - <span style="font-size: 15pt;">care or control</span>  
                         <span class="text-danger">*</span>
-                        <span class="text-muted" style="font-size: 9pt;"> YYYYMMDD</span>
+                        <span class="text-muted" style="font-size: 14pt;"> YYYYMMDD</span>
                     </label>
                     <b-input-group class="mb-3">
                         <b-form-input
+                            size="lg"
                             :key="updateDate"
                             id="prohibition-state-date"
                             v-model="prohibitionInfo.prohibitionStartDate"
                             type="text"
-                            @input="validateDate(false)"
+                            @input="validateDate(false,false)"
                             :disabled="formPrinted"
                             :state="prohibitionState.prohibitionStartDate"
                             placeholder="YYYYMMDD"
@@ -83,7 +86,7 @@
                                 :allowed-dates="allowedDates"
                                 locale="en-US"
                                 aria-controls="prohibitionStartDate"
-                                @context="validateDate(true)"
+                                @context="validateDate(true,false)"
                             ></b-form-datepicker>
                         </b-input-group-append>
                     </b-input-group>   
@@ -91,17 +94,19 @@
                 </b-col>
                 <b-col>					
                     <label 
-                        class="ml-1 m-0 p-0"> Time of Driving - <span style="font-size: 9pt;">care or control</span>
+                        class="ml-1 m-0 p-0"> Time of Driving - <span style="font-size: 15pt;">care or control</span>
                         <span class="text-danger">*</span>
-                        <span class="text-muted" style="font-size: 9pt;"> HHMM in Pacific Time</span>
+                        <span class="text-muted" style="font-size: 14pt;"> HHMM in Pacific Time</span>
                     </label>
                     <b-form-input
+                        size="lg"
                         placeholder="HHMM"
                         v-model="prohibitionInfo.prohibitionStartTime"
                         :disabled="formPrinted"
-                        @input="update"
+                        @input="validateDate(false, true)"
                         :state="prohibitionState.prohibitionStartTime">
-                    </b-form-input>                             
+                    </b-form-input>
+                    <div v-if="timeError" style="font-size:10pt;" class="text-danger text-left m-0 mt-0 p-0">{{timeError}}</div>                            
                 </b-col>
             </b-row>
 		</b-card>
@@ -116,6 +121,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { namespace } from "vuex-class";
 import moment from 'moment-timezone';
 
+import InputSearchForm from '@/components/utils/InputSearchForm.vue'
+
 import "@/store/modules/common";
 const commonState = namespace("Common");
 
@@ -128,7 +135,8 @@ import Spinner from "@/components/utils/Spinner.vue";
 
 @Component({
     components: {           
-        Spinner
+        Spinner,
+        InputSearchForm
     }        
 }) 
 export default class ProhibitionInformationCard extends Vue {   
@@ -149,6 +157,7 @@ export default class ProhibitionInformationCard extends Vue {
     updateDate=0;
     prohibitionStartDate = '';
     dateError = '';
+    timeError = '';
 	error = '';
 	path = '';
 	formPrinted = false;    
@@ -172,13 +181,31 @@ export default class ProhibitionInformationCard extends Vue {
         this.$emit('recheckStates')
     }
 
-	public validateDate(datePicker?){
+	public validateDate(datePicker, timeInput){
 		if(datePicker){			
 			let prohibitionStartDate=this.prohibitionStartDate.replace('-','')
 			prohibitionStartDate=prohibitionStartDate.replace('-','')
 			this.prohibitionInfo.prohibitionStartDate=prohibitionStartDate
 			this.updateDate++;
 		}
+
+        let prbTime='0000'
+        
+        const timeFormat = /^([0-1][0-9]|2[0-3])[0-5][0-9]$/
+        if( !Number(this.prohibitionInfo?.prohibitionStartTime) ||
+            this.prohibitionInfo?.prohibitionStartTime?.length!=4 ||
+            timeFormat.test(this.prohibitionInfo?.prohibitionStartTime)==false
+        ){
+            if(timeInput){
+                this.timeError="The input time is invalid!"
+                this.prohibitionState.prohibitionStartTime=false                
+            }
+        }else{
+            this.timeError=""
+            this.prohibitionState.prohibitionStartTime=null;
+            prbTime=this.prohibitionInfo.prohibitionStartTime
+        }
+        
 		
 		if(!this.prohibitionInfo.prohibitionStartDate) return
 
@@ -190,14 +217,17 @@ export default class ProhibitionInformationCard extends Vue {
 						
 			const date = moment(this.prohibitionInfo.prohibitionStartDate)
 			const currentDate = moment() 
-			
+			// console.log(currentDate.format("YYYYMMDDHHmm"))
+            const prbDateTime = this.prohibitionInfo.prohibitionStartDate+prbTime
+            // console.log(prbDateTime)
 			
 			if(!date.isValid()){
 				this.dateError="The selected date is invalid!"
 				this.prohibitionState.prohibitionStartDate=false
 			}
-			else if(currentDate.format("YYYYMMDD")<this.prohibitionInfo.prohibitionStartDate){
-				this.dateError="The selected date is in the future!"
+			else if(currentDate.format("YYYYMMDDHHmm")<prbDateTime){
+				this.dateError="The selected date/time is in the future!"
+                this.timeError="The selected date/time is in the future!"
 				this.prohibitionState.prohibitionStartDate=false
 			}			
 			else{ 
@@ -211,6 +241,7 @@ export default class ProhibitionInformationCard extends Vue {
 				this.prohibitionState.prohibitionStartDate=null
 			}
 		}
+
 		this.update();
 	}
 
@@ -223,8 +254,14 @@ export default class ProhibitionInformationCard extends Vue {
 </script>
 
 
-
-
 <style scoped>
+    
+    input.is-invalid {
+		background: #ebc417;
+	}
+
+    label{
+        font-size: 16pt;
+    }
 
 </style>
