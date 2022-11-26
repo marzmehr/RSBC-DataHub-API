@@ -23,7 +23,7 @@
                             shiftmark="-1px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.5em" 
-                            :check="true"
+                            :check="formData.returnDlInPerson"
                             checkFontSize="12pt"
                             text="" />
                     </td>
@@ -35,7 +35,7 @@
                             shiftmark="-1px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.5em" 
-                            :check="true"
+                            :check="formData.returnDlByMail"
                             checkFontSize="12pt"
                             text="" />
                     </td>
@@ -44,7 +44,7 @@
 
                 <tr style="height:0.95rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="border-right:1px solid #151515;" colspan="49">2020-01-01 10:15</td>
+                    <td class="answer" style="border-right:1px solid #151515;" colspan="49">{{formData.returnDlDateTime}}</td>
                 </tr>
 
 <!-- <ROW2> -->
@@ -56,9 +56,9 @@
                 </tr>
                 <tr style="height:0.95rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="border-right:1px solid #151515;" colspan="49">Administrator</td>
+                    <td class="answer" style="border-right:1px solid #151515;" colspan="49">{{formData.returnDlOfficer}}</td>
                     <td class="" style="" colspan="1" />                    
-                    <td class="answer" style="" colspan="49">ADMIN</td>                    
+                    <td class="answer" style="" colspan="49">{{formData.returnDlAcknowledge}}</td>                    
                 </tr>
 
             </table>
@@ -66,10 +66,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2906";
+const mv2906State = namespace("MV2906");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 
 @Component({
     components:{       
@@ -78,40 +82,29 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form12hTable5 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+   @mv2906State.State
+    public mv2906Info: twelveHourFormJsonInfoType;   
 
     dataReady = false;
-
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
-
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        this.formData = {
+            returnDlInPerson: false,
+            returnDlByMail: false,
+            returnDlDateTime:'',
+            returnDlOfficer: '',
+            returnDlAcknowledge: ''            
+        }
+       
+    } 
     
 }
 

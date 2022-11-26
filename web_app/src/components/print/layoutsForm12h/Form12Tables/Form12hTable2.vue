@@ -43,13 +43,13 @@
 <!-- <ROW3> --> 
                 <tr style="height:1.0rem;line-height:0.75rem;">
                     <td class="" style="border-bottom:1px solid white;" colspan="3" />
-                    <td class="text-center answer" style="border-bottom:1px solid #151515;" colspan="12">10:00</td>
+                    <td class="text-center answer" style="border-bottom:1px solid #151515;" colspan="12">{{formData.suspensionTime}}</td>
                     <td class="text-center"  style="border-bottom:1px solid white;" colspan="18">hours on the</td>
-                    <td class="text-center answer" style="border-bottom:1px solid #151515;" colspan="10">25</td>
+                    <td class="text-center answer" style="border-bottom:1px solid #151515;" colspan="10">{{formData.suspensionDay}}</td>
                     <td class="text-center"  style="border-bottom:1px solid white;" colspan="12">day of </td>
-                    <td class="text-center answer" style="border-bottom:1px solid #151515;" colspan="24">NOVEMBER</td>
+                    <td class="text-center answer" style="border-bottom:1px solid #151515;" colspan="24">{{formData.suspensionMonth}}</td>
                     <td class="text-center"  style="border-bottom:1px solid white;" colspan="8">year </td>
-                    <td class="text-center answer" style="border-bottom:1px solid #151515;" colspan="10">2022</td>
+                    <td class="text-center answer" style="border-bottom:1px solid #151515;" colspan="10">{{formData.suspensionYear}}</td>
                     <td class=""  style="border-bottom:1px solid white;" colspan="3"></td>
                 </tr>
                 <tr style="height:1.5rem;line-height:0.75rem;">
@@ -67,10 +67,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2906";
+const mv2906State = namespace("MV2906");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 
 @Component({
     components:{       
@@ -79,40 +83,41 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form12hTable2 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2906State.State
+    public mv2906Info: twelveHourFormJsonInfoType;   
 
     dataReady = false;
-
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form12 = this.mv2906Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            suspensionTime: '',
+            suspensionDay:'',
+            suspensionMonth: '',
+            suspensionYear: ''            
+        }
 
-    //     if (index != -1){
+        if (form12.prohibitionStartTime){
+            this.formData.suspensionTime = 
+                form12.prohibitionStartTime.substr(0,2)+ ':' + form12.prohibitionStartTime.substr(2,2);
+        }
 
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        if (form12.prohibitionStartDate){
+            this.formData.suspensionDay = Vue.filter('extract-date')( form12.prohibitionStartDate).day.toUpperCase();
+            this.formData.suspensionMonth = Vue.filter('extract-date')( form12.prohibitionStartDate).month.toUpperCase();
+            this.formData.suspensionYear = Vue.filter('extract-date')( form12.prohibitionStartDate).year;
+        }
+        
+    }
     
 }
 

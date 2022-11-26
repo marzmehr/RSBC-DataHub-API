@@ -1,5 +1,5 @@
 <template>
-    <div v-if="dataReady" class="text-center important-notice" style="">
+    <div class="text-center important-notice" style="">
 
 <!-- IMPORTANT NOTICE    -->
         <div style="font-size:14pt; font-weight:bold; line-height:2rem; margin-top:0.25rem;">IMPORTANT NOTICE</div>
@@ -29,51 +29,11 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 
-import CheckBox from "../pdfUtil/CheckBox.vue";
-
-@Component({
-    components:{       
-        CheckBox           
-    }
-})
+@Component
 export default class Form12Notice extends Vue {
-
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
-
-    dataReady = false;
-    driver=['D','R','I','V','E','R']
-
-    mounted(){
-        this.dataReady = false;
-        // this.extractInfo();
-        this.dataReady = true;
-    }
-
-    // public extractInfo(){
-
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
-
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
 
     
 }

@@ -3,7 +3,7 @@
         <div class="row lineheight0-25" style="font-size:11pt; margin:0rem 0 0 0;   line-height:1rem;"><b>NOTICE OF 12-HOUR </b></div>
         <div class="row lineheight0-25" style="font-size:11pt; margin:0rem 0 0 0;   line-height:1rem;"><b>LICENCE SUSPENSION</b></div>
         <div class="row lineheight0-25 margin-top-0" style="margin:0.5rem 0 0 0; line-height:1rem;">
-            <div class="answer text-left" style="font-size:11pt; width:67%;">JZ-100088</div>
+            <div class="answer text-left" style="font-size:11pt; width:67%;">{{formData.formId}}</div>
             <div style="font-size:6pt; width:33%;transform:translate(0,6px);">MICROFILM NO.</div>
         </div>
         
@@ -25,8 +25,8 @@
                 </tr>
                 <tr style="height:0.95rem;line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer"    style="" colspan="49">{{formData.surname}}</td> 
-                    <td class="answer" style="" colspan="49">GUY</td>                                                           
+                    <td class="answer"    style="" colspan="49">{{formData.surName}}</td> 
+                    <td class="answer" style="" colspan="49">{{formData.givenName}}</td>                                                           
                 </tr>
 <!-- <ROW2> -->
                 <tr style="height:0.25rem;  line-height:0.75rem; border-top:1px solid;">
@@ -41,11 +41,11 @@
                 <tr style="height:0.95rem; line-height:0.65rem;">
                     <td class="bg-dark text-white m-0 p-0 "  style="line-height:0.5rem;" colspan="1"><b>R I</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="48">2342345</td>
+                    <td class="answer" style="" colspan="48">{{formData.dlNumber}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer text-center" style="font-size:12pt;" colspan="20">BC</td> 
+                    <td class="answer text-center" style="font-size:12pt;" colspan="20">{{formData.province}}</td> 
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="28">19900101</td>                                                
+                    <td class="answer" style="" colspan="28">{{formData.dob}}</td>                                                
                 </tr>
 <!-- <ROW3> -->
                 <tr style="height:0.25rem; line-height:0.75rem; border-top:1px solid;">
@@ -58,9 +58,9 @@
                 <tr style="height:0.95rem; line-height:0.65rem;">
                     <td class="bg-dark text-white m-0 p-0 "  style="line-height:0.5rem;" colspan="1"><b>E R</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="48">1000 LA FANTE AVE</td> 
-                    <td class="answer" style="" colspan="30">MONTREAL</td> 
-                    <td class="answer" style="" colspan="20">Q1Q 1Q1</td>                                               
+                    <td class="answer" style="" colspan="48">{{formData.address}}</td> 
+                    <td class="answer" style="" colspan="30">{{formData.city}}</td> 
+                    <td class="answer" style="" colspan="20">{{formData.postalCode}}</td>                                               
                 </tr>
 
 <!-- <ROW4> -->
@@ -74,13 +74,13 @@
                 </tr>
                 <tr style="height:0.95rem; line-height:0.65rem;">                    
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="48">2342345</td>
+                    <td class="answer" style="" colspan="48">{{formData.phoneNumber}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="5">B</td> 
+                    <td class="answer" style="" colspan="5">{{formData.pujCode}}</td> 
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
                     <td class="answer" style="" colspan="5">C</td> 
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="38">19900101</td>                                                
+                    <td class="answer" style="" colspan="38">{{formData.nscNumber}}</td>                                                
                 </tr>
 
 <!-- <ROW5> -->
@@ -93,7 +93,7 @@
                             shiftmark="-2px,0px"                                   
                             checkColor="#2134AB"
                             boxSize="1.5em"
-                            :check="true"
+                            :check="formData.alcohol"
                             checkFontSize="16pt"                                     
                             text="" /> 
                     </td>
@@ -105,7 +105,7 @@
                             shiftmark="-2px,0px"                                   
                             checkColor="#2134AB"
                             boxSize="1.5em" 
-                            :check="true"
+                            :check="formData.drugs"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -118,10 +118,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2906";
+const mv2906State = namespace("MV2906");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 
 @Component({
     components:{       
@@ -130,13 +134,12 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form12hTable1 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2906State.State
+    public mv2906Info: twelveHourFormJsonInfoType;   
 
     dataReady = false;
-    driver=['D','R','I','V','E','R']
 
-    formData
+    formData;
 
     mounted(){
         this.dataReady = false;
@@ -146,16 +149,41 @@ export default class Form12hTable1 extends Vue {
 
     public extractInfo(){
 
+        const form12 = this.mv2906Info.data
+
         this.formData = {
-            surname:''
+            formId: '',
+            surName:'',
+            givenName: '',
+            dlNumber: '',
+            province: '',
+            dob: '',
+            address: '',
+            city: '',
+            postalCode: '',
+            phoneNumber: '',
+            pujCode: '',
+            nscNumber: '',
+            alcohol: false,
+            drugs: false
         }
 
-
-
-      
+        this.formData.formId = this.mv2906Info.form_id?this.mv2906Info.form_id.toUpperCase():'';
+        this.formData.surName = form12.lastName?form12.lastName.toUpperCase():'';
+        this.formData.givenName = form12.givenName?form12.givenName.toUpperCase():'';
+        this.formData.dlNumber = form12.driversNumber?form12.driversNumber.toUpperCase():'';
+        this.formData.province = form12.driverProvince.objectCd?form12.driverProvince.objectCd.toUpperCase():'';
+        this.formData.dob = form12.dob?form12.dob:'';
+        this.formData.address = form12.address?form12.address.toUpperCase():'';
+        this.formData.city = form12.driverCity?form12.driverCity.toUpperCase():'';
+        this.formData.postalCode = form12.driverPostalCode?form12.driverPostalCode.toUpperCase():'';
+        this.formData.phoneNumber = form12.driverPhoneNumber?form12.driverPhoneNumber:'';
+        this.formData.pujCode = form12.puj_code?.objectCd?form12.puj_code.objectCd.toUpperCase():'';
+        this.formData.nscNumber = form12.nscNumber?form12.nscNumber.toUpperCase():'';
+        this.formData.alcohol = form12.prohibitionType && form12.prohibitionType == 'Alcohol';  
+        this.formData.drugs = form12.prohibitionType && form12.prohibitionType == 'Drugs';    
            
     }
-
     
 }
 
