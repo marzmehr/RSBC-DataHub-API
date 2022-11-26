@@ -51,15 +51,15 @@
                 <tr style="height:0.25rem; line-height:0.75rem; border-top:1px solid;">
                     <td class="bg-dark text-white m-0 p-0 "  style="" colspan="1"><b>V </b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="" style="" colspan="48">ADDRESS (STREET)</td>
-                    <td class="" style="" colspan="30">CITY/MUNICIPALITY</td>                     
+                    <td class="" style="" colspan="43">ADDRESS (STREET)</td>
+                    <td class="" style="" colspan="35">CITY/MUNICIPALITY</td>                     
                     <td class="" style="" colspan="20">POSTAL CODE</td>                                                          
                 </tr>
                 <tr style="height:0.95rem; line-height:0.65rem;">
                     <td class="bg-dark text-white m-0 p-0 "  style="line-height:0.5rem;" colspan="1"><b>E R</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="48">{{formData.address}}</td> 
-                    <td class="answer" style="" colspan="30">{{formData.city}}</td> 
+                    <td class="answer" style="" colspan="43">{{formData.address}}</td> 
+                    <td class="answer" style="" colspan="35">{{formData.city}}</td> 
                     <td class="answer" style="" colspan="20">{{formData.postalCode}}</td>                                               
                 </tr>
 
@@ -76,9 +76,7 @@
                     <td class="" style="" colspan="1" />
                     <td class="answer" style="" colspan="48">{{formData.phoneNumber}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="5">{{formData.pujCode}}</td> 
-                    <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="5">C</td> 
+                    <td class="answer" style="" colspan="11">{{formData.pujCode}}</td> 
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
                     <td class="answer" style="" colspan="38">{{formData.nscNumber}}</td>                                                
                 </tr>
@@ -168,14 +166,18 @@ export default class Form12hTable1 extends Vue {
             drugs: false
         }
 
-        this.formData.formId = this.mv2906Info.form_id?this.mv2906Info.form_id.toUpperCase():'';
-        this.formData.surName = form12.lastName?form12.lastName.toUpperCase():'';
-        this.formData.givenName = form12.givenName?form12.givenName.toUpperCase():'';
-        this.formData.dlNumber = form12.driversNumber?form12.driversNumber.toUpperCase():'';
-        this.formData.province = form12.driverProvince.objectCd?form12.driverProvince.objectCd.toUpperCase():'';
-        this.formData.dob = form12.dob?form12.dob:'';
-        this.formData.address = form12.address?form12.address.toUpperCase():'';
-        this.formData.city = form12.driverCity?form12.driverCity.toUpperCase():'';
+        this.formData.formId = this.mv2906Info.form_id? this.mv2906Info.form_id.toUpperCase():'';
+        this.formData.surName = form12.lastName? form12.lastName.toUpperCase():'';
+        this.formData.givenName = form12.givenName? form12.givenName.toUpperCase():'';
+        this.formData.dlNumber = form12.driversNumber? form12.driversNumber.toUpperCase():'';
+        this.formData.province = form12.driversLicenceJurisdiction?.objectCd? form12.driversLicenceJurisdiction.objectCd.toUpperCase():'';
+        this.formData.dob = form12.dob? form12.dob:'';
+        this.formData.address = form12.address? form12.address.toUpperCase():'';
+        
+        let city = form12.driverCity? form12.driverCity.toUpperCase():'';
+        city = form12.driverProvince?.objectCd? (city+', '+form12.driverProvince?.objectCd.toUpperCase()): city;
+        this.formData.city = city
+
         this.formData.postalCode = form12.driverPostalCode?form12.driverPostalCode.toUpperCase():'';
         this.formData.phoneNumber = form12.driverPhoneNumber?form12.driverPhoneNumber:'';
         this.formData.pujCode = form12.puj_code?.objectCd?form12.puj_code.objectCd.toUpperCase():'';
