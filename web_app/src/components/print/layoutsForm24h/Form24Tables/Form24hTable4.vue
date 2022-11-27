@@ -132,10 +132,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
 
 @Component({
     components:{       
@@ -144,16 +148,84 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form24hTable4 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
+    }
+
+    public extractInfo(){
+
+        const form12 = this.mv2634Info.data
+
+        this.formData = {
+            vehicleYear: '',
+            vehicleMake:'',
+            vehicleModel: '',
+            vehicleColor: '',
+            plateProvince: '',
+            plate: '',
+            pujCode: '',
+            nscNumber: '',
+            locationOfKeys: '',
+            locationOfVehicle: '',
+            vehicleReleasedTo: '',
+            dateReleased: '',
+            timeReleased: ''            
+        }
+
+        let vehicleLocationInfo = '';
+        let vehicleReleasedTo = '';
+        let locationOfKeys = '';
+        let dateReleased = '';
+        let timeReleased = '';
+        
+        if (form12.vehicleImpounded){
+            const lineAddress = form12.impoundLot?.lot_address?form12.impoundLot.lot_address.toUpperCase()+', ':'';
+            const city = form12.impoundLot?.city?form12.impoundLot.city.toUpperCase()+ ', ':'';
+            const phone = form12.impoundLot?.phone?form12.impoundLot.phone:'';
+            vehicleLocationInfo = lineAddress + city + phone;
+            vehicleReleasedTo = form12.impoundLot?.name?form12.impoundLot.name.toUpperCase():'';
+            locationOfKeys = form12.locationOfKeys?form12.locationOfKeys.toUpperCase():'';
+            dateReleased = '';
+            timeReleased = '';
+        } else {
+            if (form12.notImpoundingReason == 'Left at roadside'){
+                vehicleLocationInfo = 'LEFT AT ROADSIDE'
+                vehicleReleasedTo = '';
+                locationOfKeys = '';
+                dateReleased = '';
+                timeReleased = '';
+            } else {
+                vehicleLocationInfo = ''
+                vehicleReleasedTo = form12.vehicleReleasedTo?form12.vehicleReleasedTo.toUpperCase():'';
+                locationOfKeys = '';
+                dateReleased = Vue.filter('format-date-dash')(form12.releasedDate);
+                timeReleased = form12.releasedTime.substr(0,2)+ ':' + form12.releasedTime.substr(2,2);
+            }
+            
+        }
+
+        const colorList = form12.vehicleColor?form12.vehicleColor.map( o => o.code):[];
+    
+        this.formData.vehicleYear = form12.vehicleYear?form12.vehicleYear.toUpperCase():'';
+        this.formData.vehicleMake = form12.vehicleMake?.mk?form12.vehicleMake.mk.toUpperCase():'';
+        this.formData.vehicleModel = form12.vehicleMake?.md?form12.vehicleMake.md.toUpperCase():'';
+        this.formData.vehicleColor = colorList.length>0?colorList.toString():'';
+        this.formData.plateProvince = form12.plateProvince?.objectCd?form12.plateProvince.objectCd.toUpperCase():'';
+        this.formData.plate = form12.plateNumber?form12.plateNumber.toUpperCase():'';
+        this.formData.locationOfKeys = locationOfKeys?locationOfKeys:'';
+        this.formData.locationOfVehicle = vehicleLocationInfo?vehicleLocationInfo:'';
+        this.formData.vehicleReleasedTo = vehicleReleasedTo?vehicleReleasedTo:'';
+        this.formData.dateReleased = dateReleased?dateReleased:'';
+        this.formData.timeReleased = timeReleased?timeReleased:''; 
     }
 
     // public extractInfo(){
@@ -167,7 +239,9 @@ export default class Form24hTable4 extends Vue {
     //     const index = this.result.objectingParties.indexOf('Other')
 
     //     if (index != -1){
-
+// this.formData.pujCode = form24.puj_code?.objectCd?form24.puj_code.objectCd.toUpperCase():'';
+        // this.formData.nscNumber = form24.nscNumber?form24.nscNumber.toUpperCase():'';
+        
     //         const partiesList = this.result.objectingParties.splice(index, 1);
     //         partiesList.push(this.result.objectingPartiesOther);
     //         this.parties = partiesList.join(', ');
