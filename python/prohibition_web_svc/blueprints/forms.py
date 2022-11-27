@@ -114,6 +114,7 @@ def update(form_type, form_id):
                     {"try": http_responses.server_error_response, "fail": []},
                 ]},
                 {"try": icbc_middleware.get_icbc_payload, "fail":[]},
+                # For ICBC uncomment next line, for local backend comment next line.
                 {"try": ingestor_middleware.send_to_ingestor, "fail":[]},
                 {"try": http_responses.successful_update_response, "fail": []}
             ],

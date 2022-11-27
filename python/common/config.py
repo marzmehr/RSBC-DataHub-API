@@ -43,6 +43,8 @@ class Config:
     # This number is used in the validation schema to determine which payload version are accepted
     PAYLOAD_VERSION_NUMBER              = "1.5"
 
+    PDF_SERVICE_URL                     = os.getenv('PDF_SERVICE_URL','http://localhost:5001')
+
     # Splunk settings
     OPENSHIFT_PLATE                     = os.getenv('OPENSHIFT_PLATE', "be78d6")
     SPLUNK_HOST                         = os.getenv('SPLUNK_HOST', 'http://localhost')
