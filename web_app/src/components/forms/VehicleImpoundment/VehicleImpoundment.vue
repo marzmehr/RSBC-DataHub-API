@@ -37,6 +37,9 @@
 			<officer-details-card :officerInfo="viData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
 
 		</b-card>
+		<b-card class="mt-5">
+            <b-button @click="navigateToPrintPage" variant="primary"><b style="font-size:15pt">Print All Copies</b> </b-button>
+        </b-card>
 
 	</b-card>
 	
@@ -288,6 +291,17 @@ export default class VehicleImpoundment extends Vue {
         }       
 
         return true;            
+    }
+
+	public navigateToPrintPage(){
+        if(this.checkStates()){
+            const form_id = this.currently_editing_form_object.form_id
+            const form_type = this.currently_editing_form_object.form_type
+            this.$router.push({   
+                name: 'print',
+                params: { id: form_id, form_type: form_type}
+            })
+        }
     }
 
 

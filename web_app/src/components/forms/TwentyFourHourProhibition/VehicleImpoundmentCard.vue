@@ -1,6 +1,6 @@
 <template>
 	<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
-		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
+		<b-card-header  class="text-left h3" header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Vehicle Impoundment or Disposition</b>      
 		</b-card-header>
 		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">

@@ -292,10 +292,10 @@ export default class DriversInformationCard extends Vue {
 	errorDismissCountDown=0
 
 	mounted() { 
-		this.dataReady = false;	
-		this.checkIcbcLicenceLookupAllowed()			        
+		this.dataReady = false;						        
 		this.formPrinted = Boolean(this.mv2906Info.printed_timestamp);
         this.extractFields();
+		this.checkIcbcLicenceLookupAllowed()
         this.dataReady = true;
     }
 
@@ -318,7 +318,7 @@ export default class DriversInformationCard extends Vue {
 				console.log("error", error)
 				this.searchingLookup = false;
 				this.error = error.description;
-				this.errorDismissCountDown=5;
+				this.errorDismissCountDown=3;
 			})
 	}
 

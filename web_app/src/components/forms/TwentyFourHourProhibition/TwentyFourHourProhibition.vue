@@ -1,20 +1,7 @@
 <template>
-  <!-- 
-       
-        <form-card title="Generate PDF for Printing">
-          <div class="d-flex">
-            <print-documents
-              v-for="(document, index) in getDocumentsToPrint(name)" v-bind:key="index"
-              :form_object="getCurrentlyEditedFormInfo"
-              :validate="validate"
-              :variants="document.variants">
-              {{ document.name }}
-            </print-documents>
-          </div>
-        </form-card> -->
 	<b-card header-tag="header" bg-variant="light" border-variant="primary" class="mx-auto p-0">
-		<b-card-header header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
-			<h4>Notice of 24 Hour Licence Prohibition</h4>      
+		<b-card-header class="h2" header-bg-variant="secondary" header-border-variant="dark" header-text-variant="white">            
+			Notice of 24 Hour Licence Prohibition      
 		</b-card-header>
 		<b-card no-body v-if="dataReady" border-variant="light" bg-variant="light" class="my-0 mx-auto p-0" :key="'m12-'+updatedInfo">
 			<b-row class="pt-2 pb-0 text-danger border-light">            
@@ -22,21 +9,22 @@
 			</b-row>
 			
 			<drivers-information-card :driverInfo="twentyFourHourData" :driverState="fieldStates" @recheckStates="recheckStates()" />
-			<vehicle-information-card :vehicleInfo="twentyFourHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
-			<vehicle-owner-card :ownerInfo="twentyFourHourData" :ownerState="fieldStates" @recheckStates="recheckStates()"/>
-			<vehicle-impoundment-card :viInfo="twentyFourHourData" :viState="fieldStates" @recheckStates="recheckStates()"/>
-			<prohibition-information-card :prohibitionInfo="twentyFourHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
-			<reasonable-grounds-card :rgInfo="twentyFourHourData" :rgState="fieldStates" @recheckStates="recheckStates()"/>		
+			<vehicle-information-card class="mt-5" :vehicleInfo="twentyFourHourData" :vehicleState="fieldStates" @recheckStates="recheckStates()"/>
+			<vehicle-owner-card class="mt-5" :ownerInfo="twentyFourHourData" :ownerState="fieldStates" @recheckStates="recheckStates()"/>
+			<vehicle-impoundment-card class="mt-5" :viInfo="twentyFourHourData" :viState="fieldStates" @recheckStates="recheckStates()"/>
+			<prohibition-information-card class="mt-5" :prohibitionInfo="twentyFourHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
+			<reasonable-grounds-card class="mt-5" :rgInfo="twentyFourHourData" :rgState="fieldStates" @recheckStates="recheckStates()"/>		
 			<test-administered-card
 				v-if="twentyFourHourData.prescribedTest" 
 				:taInfo="twentyFourHourData" 
 				:taState="fieldStates"
 				@recheckStates="recheckStates()"/>
-			<officer-details-card :officerInfo="twentyFourHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
+			<officer-details-card class="mt-5" :officerInfo="twentyFourHourData" :officerState="fieldStates" @recheckStates="recheckStates()"/>
 
 		</b-card>
-		<b-button @click="navigateToPrintPage"> Print All Copies
-        </b-button>
+		<b-card class="mt-5">
+            <b-button @click="navigateToPrintPage" variant="primary"><b style="font-size:15pt">Print All Copies</b> </b-button>
+        </b-card>
   </b-card>
 
 </template>

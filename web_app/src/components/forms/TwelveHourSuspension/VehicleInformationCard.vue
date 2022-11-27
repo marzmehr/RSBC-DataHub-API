@@ -206,10 +206,10 @@ export default class VehicleInformationCard extends Vue {
     errorDismissCountDown=0
 
     mounted() { 
-        this.dataReady = false;
-        this.checkIcbcPlateLookupAllowed()
+        this.dataReady = false;        
         this.formPrinted = Boolean(this.mv2906Info.printed_timestamp);
         this.extractFields();
+        this.checkIcbcPlateLookupAllowed()
         this.dataReady = true;
     }
 
