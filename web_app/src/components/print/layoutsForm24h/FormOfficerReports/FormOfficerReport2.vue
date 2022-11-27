@@ -41,7 +41,7 @@
                             text="" />
                     </td>
                     <td class="" style="" colspan="25">No</td>
-                    <td class="" style="" colspan="29"> </td>                                               
+                    <td class="answer" style="" colspan="29"> {{formData.reasonNoTest}}</td>                                               
                 </tr>
 
                 <tr style="height:1.5rem;  line-height:1.5rem;">
@@ -217,6 +217,7 @@ export default class FormOfficerReport2 extends Vue {
 
         this.formData = {
             testPrescribed: false,
+            reasonNoTest: '',
             fstTest: false,           
             asdExpiryDate: '',
             alcoholOver99: false,
@@ -225,6 +226,7 @@ export default class FormOfficerReport2 extends Vue {
             approvedInstrumentType: '',
             alcoholBac: false,
             prescribedPhysicalTest: false,
+            prescribedPhysicalTestType: '',
             alcoholBacResult: '',
             drugsProhibition: false,            
             testDateTime: '',            
@@ -234,7 +236,8 @@ export default class FormOfficerReport2 extends Vue {
 
         if (form24.prescribedTest){
 
-            this.formData.testPrescribed = true;     
+            this.formData.testPrescribed = true; 
+            this.formData.reasonNoTest = '';    
 
             if (form24.prohibitionType && form24.prohibitionType == 'Alcohol'){
 
@@ -252,13 +255,14 @@ export default class FormOfficerReport2 extends Vue {
                     this.formData.approvedInstrumentTest = false;
                     this.formData.approvedInstrumentType = '';
                     this.formData.prescribedPhysicalTest = false;
+                    this.formData.prescribedPhysicalTestType = '';
                     this.formData.alcoholBac = false;
                     this.formData.alcoholBacResult = '';
                     this.formData.asdExpiryDate = form24.asd?.expiryDate?Vue.filter('format-date-dash')(form24.asd.expiryDate):'';
                     this.formData.alcoholOver99 = form24.asd?.result?(form24.asd.result == 'over'):false;
                     this.formData.alcoholUnder99 = form24.asd?.result?(form24.asd.result == 'under'):false;
 
-                } else if (alcoholTest == 'Approved Instrument'){//
+                } else if (alcoholTest == 'Approved Instrument'){
 
                     this.formData.fstTest = false;
                     this.formData.approvedInstrumentTest = true;
@@ -266,11 +270,12 @@ export default class FormOfficerReport2 extends Vue {
                     this.formData.alcoholBac = true;
                     this.formData.alcoholBacResult = form24.BacResult?form24.BacResult + ' MG%':'';
                     this.formData.prescribedPhysicalTest = false;
+                    this.formData.prescribedPhysicalTestType = '';
                     this.formData.asdExpiryDate = '';
                     this.formData.alcoholOver99 = false;
                     this.formData.alcoholUnder99 = false;
 
-                } else if (alcoholTest == 'Prescribed Physical Coordination Test (SFST)'){//
+                } else if (alcoholTest == 'Prescribed Physical Coordination Test (SFST)'){
 
                     this.formData.fstTest = false;
                     this.formData.approvedInstrumentTest = false;
@@ -283,19 +288,17 @@ export default class FormOfficerReport2 extends Vue {
                     this.formData.alcoholOver99 = false;
                     this.formData.alcoholUnder99 = false;
 
-                } else {//
-                
+                } else {                    
+                    this.formData.fstTest = false;
                     this.formData.asdExpiryDate = '';
                     this.formData.alcoholOver99 = false;
                     this.formData.alcoholUnder99 = false;
-                    this.formData.fstTest = false;
                     this.formData.approvedInstrumentTest = false;
                     this.formData.approvedInstrumentType = '';
                     this.formData.prescribedPhysicalTest = false;
                     this.formData.prescribedPhysicalTestType = '';
                     this.formData.alcoholBac = false;
                     this.formData.alcoholBacResult = '';
-                    this.formData.testDateTime = '';
                 }            
                 
 
@@ -315,8 +318,7 @@ export default class FormOfficerReport2 extends Vue {
                 if (drugTest == 'Approved Drug Screening Equipment'){
 
                     this.formData.prescribedPhysicalTest = false;
-                    this.formData.prescribedPhysicalTestType = '';
-                    
+                    this.formData.prescribedPhysicalTestType = '';                    
 
                     this.formData.approvedInstrumentTest = true;
                     this.formData.approvedInstrumentType = 'ADSE';
@@ -326,31 +328,47 @@ export default class FormOfficerReport2 extends Vue {
                     } else {
                         this.formData.drugResults = drugResults.toString().toUpperCase();
                     }
-                    this.formData.drugTestAffected = drugResults.length>0;                    
+                    this.formData.drugTestAffected = true;                    
+                } else if (drugTest == 'Prescribed Physical Coordination Test (SFST)'){
+                    
+                    this.formData.prescribedPhysicalTest = true;
+                    this.formData.prescribedPhysicalTestType = 'SFST';
+                    this.formData.approvedInstrumentTest = false;
+                    this.formData.approvedInstrumentType = '';
+                    this.formData.drugResults = '';                   
+                    this.formData.drugTestAffected = true;
+
+                } else if (drugTest == 'Prescribed Physical Coordination Test (DRE)'){
+                    
+                    this.formData.prescribedPhysicalTest = true;
+                    this.formData.prescribedPhysicalTestType = 'DRE';
+                    this.formData.approvedInstrumentTest = false;
+                    this.formData.approvedInstrumentType = '';
+                    this.formData.drugResults = '';                   
+                    this.formData.drugTestAffected = true;
+
                 } else {
 
                     this.formData.approvedInstrumentTest = false;
-                    this.formData.approvedInstrumentType = '';// 
+                    this.formData.approvedInstrumentType = ''; 
                     this.formData.prescribedPhysicalTest = false;
-                    this.formData.prescribedPhysicalTestType = ''; //'SFST'/'DRE'
-                    this.formData.alcoholBac = false;
-                    this.formData.alcoholBacResult = '';
-                    this.formData.testDateTime = '';
-                    ///
+                    this.formData.prescribedPhysicalTestType = '';
+                    this.formData.drugResults = '';                   
+                    this.formData.drugTestAffected = false; 
+                } 
 
-                }
-                                 
-                
-
-            } else {//todo: determine what should happen
-                this.resetTestFields();
-                this.formData.testPrescribed = false; 
-
+            } else {
+                this.resetTestFields();                
+                this.formData.reasonNoTest = form24.prescribedNoTestReason?form24.prescribedNoTestReason.toUpperCase():'';
             }
                   
 
         } else {
-            this.resetTestFields();          
+            this.resetTestFields();
+            this.formData.reasonNoTest = form24.prescribedNoTestReason?form24.prescribedNoTestReason.toUpperCase():'';  
+            if (form24.prohibitionType){
+                this.formData.drugTestAffected = form24.prohibitionType == 'Drugs';
+            }     
 
         }
 
@@ -365,9 +383,7 @@ export default class FormOfficerReport2 extends Vue {
         } else {
             this.formData.testDateTime = '';
         }
-    }
-
-                
+    }                
     
     public resetTestFields(){
 
