@@ -19,9 +19,9 @@
                 </tr>
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="50">KEY BOARD</td>
+                    <td class="answer" style="" colspan="50">{{formData.locationOfKeys}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="50">VANCOUVER IMPOUND LOT 32</td>
+                    <td class="answer" style="" colspan="50">{{formData.locationOfVehicle}}</td>
                 </tr>
 <!-- <ROW2> -->
                 <tr style="height:0.25rem; line-height:0.5rem; border-top:1px solid;">
@@ -34,11 +34,11 @@
                 </tr>
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="27"></td>
+                    <td class="answer" style="" colspan="27">{{formData.vehicleReleasedTo}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="43">0000</td>
+                    <td class="answer" style="" colspan="43"></td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="29">0000</td>
+                    <td class="answer" style="" colspan="29">{{formData.dateReleased}} {{formData.timeReleased}}</td>
                 </tr>
 
             </table>
@@ -46,10 +46,15 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
+
 
 @Component({
     components:{       
@@ -58,39 +63,68 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form24hTable6 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form24 = this.mv2634Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            vehicleImpounded: false,                     
+            locationOfKeys: '',
+            locationOfVehicle: '',
+            vehicleReleasedTo: '',
+            dateReleased: '',
+            timeReleased: ''            
+        }
 
-    //     if (index != -1){
+        let vehicleLocationInfo = '';
+        let vehicleReleasedTo = '';
+        let locationOfKeys = '';
+        let dateReleased = '';
+        let timeReleased = '';
+        
+        if (form24.vehicleImpounded){
+            vehicleLocationInfo = 'IMPOUNDED';            
+            locationOfKeys = form24.locationOfKeys?form24.locationOfKeys.toUpperCase():'';
+            vehicleReleasedTo = '';
+            dateReleased = '';
+            timeReleased = '';
+        } else {
+            if (form24.notImpoundingReason == 'Left at roadside'){
+                vehicleLocationInfo = 'LEFT AT ROADSIDE'
+                vehicleReleasedTo = '';
+                locationOfKeys = '';
+                dateReleased = '';
+                timeReleased = '';
+            } else if (form24.notImpoundingReason == 'Released to other driver'){
+                vehicleLocationInfo = ''
+                vehicleReleasedTo = form24.vehicleReleasedTo?form24.vehicleReleasedTo.toUpperCase():'';
+                locationOfKeys = '';
+                dateReleased = Vue.filter('format-date-dash')(form24.releasedDate);
+                timeReleased = form24.releasedTime.substr(0,2)+ ':' + form24.releasedTime.substr(2,2);
+            }
+            
+        }
 
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
+        this.formData.vehicleImpounded = form24.vehicleImpounded;
+        this.formData.locationOfKeys = locationOfKeys?locationOfKeys:'';
+        this.formData.locationOfVehicle = vehicleLocationInfo?vehicleLocationInfo:'';
+        this.formData.vehicleReleasedTo = vehicleReleasedTo?vehicleReleasedTo:'';
+        this.formData.dateReleased = dateReleased?dateReleased:'';
+        this.formData.timeReleased = timeReleased?timeReleased:''; 
+    }
 
     
 }

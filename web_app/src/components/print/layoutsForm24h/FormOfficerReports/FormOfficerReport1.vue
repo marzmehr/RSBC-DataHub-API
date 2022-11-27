@@ -25,7 +25,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.reasonableGrounds.includes('Witnessed by officer')"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -36,7 +36,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.reasonableGrounds.includes('Admission by driver')"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -53,7 +53,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.reasonableGrounds.includes('Independent witness')"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -64,12 +64,17 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.reasonableGrounds.includes('Other')"
                             checkFontSize="16pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="25">Other</td>
                     <td class="" style="" colspan="6"> </td>                                               
+                </tr>
+                <tr style="height:0.5rem;  line-height:1rem; border-top:0px solid;">
+                    <td class="" style="" colspan="8"></td>
+                    <td class="answer" style="" colspan="35"><div v-if="formData.videoSurveillance">VIDEO SURVEILLANCE</div></td>
+                    <td class="answer" style="" colspan="25">{{formData.other}}</td>
                 </tr>
                 <tr style="height:2rem; line-height:1rem;" ></tr>
                 <!-- <tr style="height:0.5rem; line-height:1rem;">
@@ -95,10 +100,15 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
+
 
 @Component({
     components:{       
@@ -107,40 +117,37 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class FormOfficerReport1 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
-    driver=['D','R','I','V','E','R']
+
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form24 = this.mv2634Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            reasonableGrounds: [],
+            other: '',            
+            videoSurveillance: false                      
+        }
 
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        this.formData.reasonableGrounds = form24.reasonableGrounds?form24.reasonableGrounds:[];
+        if (this.formData.reasonableGrounds.includes('Other')){
+            this.formData.other = form24.reasonableGroundsOther?form24.reasonableGroundsOther:'';
+        } else {
+            this.formData.other = '';
+        }
+        this.formData.videoSurveillance = this.formData.reasonableGrounds.includes('Video surveillance');        
+    } 
     
 }
 

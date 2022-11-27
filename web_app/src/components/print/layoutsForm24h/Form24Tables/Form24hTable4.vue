@@ -23,8 +23,8 @@
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="bg-dark text-white"  style="" colspan="2"><b>W</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer"    style="" colspan="50">SOME</td> 
-                    <td class="answer" style="" colspan="50">GUY</td>                                                           
+                    <td class="answer"    style="" colspan="50">{{formData.ownerLastName}}</td> 
+                    <td class="answer" style="" colspan="50">{{formData.ownerFirstName}}</td>                                                           
                 </tr>
 <!-- <ROW2> -->
                 <tr style="height:0.25rem; line-height:0.5rem; border-top:1px solid;">
@@ -40,12 +40,12 @@
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="bg-dark text-white"  style="line-height:0.5rem;" colspan="2"><b>E R</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="35">800 Hornby St</td> 
-                    <td class="answer" style="" colspan="29">PRINCE GEORGE</td>
+                    <td class="answer" style="" colspan="35">{{formData.ownerAddress}}</td> 
+                    <td class="answer" style="" colspan="29">{{formData.ownerCity}}</td>
                     <td class=""  style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="15">BC</td>
+                    <td class="answer" style="" colspan="15">{{formData.ownerProvince}}</td>
                     <td class=""  style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="19">V1R 1R1</td>                                               
+                    <td class="answer" style="" colspan="19">{{formData.ownerPostalCode}}</td>                                               
                 </tr>
 <!-- <ROW3> -->                
                 <tr style="height:0.25rem;  line-height:0.5rem; border-top:1px solid;">
@@ -66,17 +66,17 @@
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="bg-dark text-white"  style="line-height:0.5rem;" colspan="2"><b>V E</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="18">ABC DEF</td>
+                    <td class="answer" style="" colspan="18">{{formData.plate}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="11">BC</td>
+                    <td class="answer" style="" colspan="11">{{formData.plateProvince}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="7">2022</td>
+                    <td class="answer" style="" colspan="7">{{formData.plateYear}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="18">823477346</td>
+                    <td class="answer" style="" colspan="18">{{formData.valTagNumber}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="24">2346856698</td>
+                    <td class="answer" style="" colspan="24">{{formData.registrationNumber}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="17">TRUCK</td>                                          
+                    <td class="answer" style="" colspan="17">{{formData.vehicleType}}</td>                                          
                 </tr>
 
                 
@@ -99,17 +99,17 @@
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="bg-dark text-white"  style="" colspan="2"><b>I</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="18">OPEL</td>
+                    <td class="answer" style="" colspan="18">{{formData.vehicleMake}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="14">CORSA</td>
+                    <td class="answer" style="" colspan="14">{{formData.vehicleModel}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="7">2022</td>
+                    <td class="answer" style="" colspan="7">{{formData.vehicleYear}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="17">BLK</td>
+                    <td class="answer" style="" colspan="17">{{formData.vehicleColor}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="16">ALTA</td>
+                    <td class="answer" style="" colspan="16">{{formData.pujCode}}</td>
                     <td class="" style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="23">98789798K</td>                                          
+                    <td class="answer" style="" colspan="23">{{formData.nscNumber}}</td>                                          
                 </tr>
 <!-- <ROW5> -->
                 <tr style="height:0.25rem; line-height:0.5rem; border-top:1px solid;">
@@ -122,9 +122,9 @@
                 <tr style="height:0.85rem; line-height:0.65rem;">
                     <td class="bg-dark text-white"  style="line-height:0.5rem;" colspan="2"><b>L E</b></td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer" style="" colspan="59">FF432DSF45</td> 
+                    <td class="answer" style="" colspan="59">{{formData.vinNumber}}</td> 
                     <td class=""  style="border-left:1px solid;" colspan="1"></td>
-                    <td class="answer" style="" colspan="40">(800) 900-1000</td>                                       
+                    <td class="answer" style="" colspan="40">{{formData.ownerPhoneNumber}}</td>                                       
                 </tr>            
 
             </table>
@@ -163,95 +163,62 @@ export default class Form24hTable4 extends Vue {
 
     public extractInfo(){
 
-        const form12 = this.mv2634Info.data
+        const form24 = this.mv2634Info.data
 
         this.formData = {
+            ownerFirstName: '',
+            ownerLastName: '',            
+            ownerAddress: '',
+            ownerCity: '',
+            ownerProvince: '',
+            ownerPostalCode: '',
+            ownerPhoneNumber: '',
             vehicleYear: '',
             vehicleMake:'',
             vehicleModel: '',
+            vehicleType: '',
             vehicleColor: '',
             plateProvince: '',
             plate: '',
+            plateYear: '',
+            valTagNumber: '',
+            registrationNumber: '',
             pujCode: '',
             nscNumber: '',
-            locationOfKeys: '',
-            locationOfVehicle: '',
-            vehicleReleasedTo: '',
-            dateReleased: '',
-            timeReleased: ''            
+            vinNumber: ''                      
         }
 
-        let vehicleLocationInfo = '';
-        let vehicleReleasedTo = '';
-        let locationOfKeys = '';
-        let dateReleased = '';
-        let timeReleased = '';
-        
-        if (form12.vehicleImpounded){
-            const lineAddress = form12.impoundLot?.lot_address?form12.impoundLot.lot_address.toUpperCase()+', ':'';
-            const city = form12.impoundLot?.city?form12.impoundLot.city.toUpperCase()+ ', ':'';
-            const phone = form12.impoundLot?.phone?form12.impoundLot.phone:'';
-            vehicleLocationInfo = lineAddress + city + phone;
-            vehicleReleasedTo = form12.impoundLot?.name?form12.impoundLot.name.toUpperCase():'';
-            locationOfKeys = form12.locationOfKeys?form12.locationOfKeys.toUpperCase():'';
-            dateReleased = '';
-            timeReleased = '';
+        if (form24.ownerOrganization){
+            this.formData.ownerLastName = form24.ownerOrganizationName?form24.ownerOrganizationName.toUpperCase():'';           
+
         } else {
-            if (form12.notImpoundingReason == 'Left at roadside'){
-                vehicleLocationInfo = 'LEFT AT ROADSIDE'
-                vehicleReleasedTo = '';
-                locationOfKeys = '';
-                dateReleased = '';
-                timeReleased = '';
-            } else {
-                vehicleLocationInfo = ''
-                vehicleReleasedTo = form12.vehicleReleasedTo?form12.vehicleReleasedTo.toUpperCase():'';
-                locationOfKeys = '';
-                dateReleased = Vue.filter('format-date-dash')(form12.releasedDate);
-                timeReleased = form12.releasedTime.substr(0,2)+ ':' + form12.releasedTime.substr(2,2);
-            }
-            
+            this.formData.ownerFirstName = form24.ownerFirstName?form24.ownerFirstName.toUpperCase():'';
+            this.formData.ownerLastName = form24.ownerLastName?form24.ownerLastName.toUpperCase():'';
         }
 
-        const colorList = form12.vehicleColor?form12.vehicleColor.map( o => o.code):[];
+        this.formData.ownerAddress = form24.ownerAddress?form24.ownerAddress.toUpperCase():'';
+        this.formData.ownerCity = form24.ownerCity?form24.ownerCity.toUpperCase():'';
+        this.formData.ownerProvince = form24.ownerProvince?.objectCd?form24.ownerProvince.objectCd.toUpperCase():'';
+        this.formData.ownerPostalCode = form24.ownerPostalCode?form24.ownerPostalCode.toUpperCase():'';
+        this.formData.ownerPhoneNumber = form24.ownerPhoneNumber?form24.ownerPhoneNumber.toUpperCase():'';
+       
+        const colorList = form24.vehicleColor?form24.vehicleColor.map( o => o.display_name):[];
     
-        this.formData.vehicleYear = form12.vehicleYear?form12.vehicleYear.toUpperCase():'';
-        this.formData.vehicleMake = form12.vehicleMake?.mk?form12.vehicleMake.mk.toUpperCase():'';
-        this.formData.vehicleModel = form12.vehicleMake?.md?form12.vehicleMake.md.toUpperCase():'';
+        this.formData.vehicleYear = form24.vehicleYear?form24.vehicleYear.toUpperCase():'';
+        this.formData.vehicleMake = form24.vehicleMake?.mk?form24.vehicleMake.mk.toUpperCase():'';
+        this.formData.vehicleModel = form24.vehicleMake?.md?form24.vehicleMake.md.toUpperCase():'';
+        this.formData.vehicleType = form24.vehicleType?.name?form24.vehicleType.name.toUpperCase():'';
         this.formData.vehicleColor = colorList.length>0?colorList.toString():'';
-        this.formData.plateProvince = form12.plateProvince?.objectCd?form12.plateProvince.objectCd.toUpperCase():'';
-        this.formData.plate = form12.plateNumber?form12.plateNumber.toUpperCase():'';
-        this.formData.locationOfKeys = locationOfKeys?locationOfKeys:'';
-        this.formData.locationOfVehicle = vehicleLocationInfo?vehicleLocationInfo:'';
-        this.formData.vehicleReleasedTo = vehicleReleasedTo?vehicleReleasedTo:'';
-        this.formData.dateReleased = dateReleased?dateReleased:'';
-        this.formData.timeReleased = timeReleased?timeReleased:''; 
-    }
-
-    // public extractInfo(){
-
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
-
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-// this.formData.pujCode = form24.puj_code?.objectCd?form24.puj_code.objectCd.toUpperCase():'';
-        // this.formData.nscNumber = form24.nscNumber?form24.nscNumber.toUpperCase():'';
-        
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        this.formData.plateProvince = form24.plateProvince?.objectCd?form24.plateProvince.objectCd.toUpperCase():'';
+        this.formData.plate = form24.plateNumber?form24.plateNumber.toUpperCase():'';
+        this.formData.plateYear = form24.plateYear?form24.plateYear:'';
+        this.formData.pujCode = form24.puj_code?.objectCd?form24.puj_code.objectCd.toUpperCase():'';
+        this.formData.valTagNumber = form24.plateValTag?form24.plateValTag.toUpperCase():'';
+        this.formData.registrationNumber = form24.registrationNumber?form24.registrationNumber.toUpperCase():'';        
+            
+        this.formData.nscNumber = form24.nscNumber?form24.nscNumber.toUpperCase():'';
+        this.formData.vinNumber = form24.vin_number?form24.vin_number.toUpperCase():''; 
+    } 
     
 }
 

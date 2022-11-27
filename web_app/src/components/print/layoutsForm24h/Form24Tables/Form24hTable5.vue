@@ -19,12 +19,12 @@
                             shiftmark="-1px,-2px"                                   
                             checkColor="#2134AB"
                             boxSize="1.3em" 
-                            :check="true"
+                            :check="!formData.vehicleImpounded"
                             checkFontSize="16pt"
                             text="" />
                     </td>                    
                     <td class="" style="" colspan="30">Vehicle not impounded. Explain </td>
-                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="66">LEFT AT ROADSIDE</td>
+                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="66">{{formData.notImpoundedReason}}</td>
                 </tr>
                 <tr style="height:0.2rem;line-height:0.25rem;"> <td></td></tr>
 <!-- <CHECKBOX 2> -->
@@ -35,7 +35,7 @@
                             shiftmark="-1px,-2px"                                   
                             checkColor="#2134AB"
                             boxSize="1.3em" 
-                            :check="true"
+                            :check="formData.vehicleImpounded"
                             checkFontSize="16pt"
                             text="" />
                     </td>                    
@@ -54,14 +54,14 @@
                     <td class="font-8-2"  style="font-size:7.2pt" colspan="46">
                         Prohibition, and is stored at IMPOUND LOT
                     </td>
-                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="51">VANCOUVER TERMINAL</td>                   
+                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="51">{{formData.impoundmentLotName}}</td>                   
                 </tr>
                 <tr style="height:1rem;line-height:0.75rem;">     
-                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="40">1000 TERMINAL AVE</td>
-                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="29">VANCOUVER</td>
+                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="40">{{formData.impoundmentLotAddress}}</td>
+                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="29">{{formData.impoundmentLotCity}}</td>
                     <td class="" style="border-bottom:1px solid #151515;" colspan="6">, BC</td>
                     <td class="" style="" colspan="2"></td>
-                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="24">(800) 900-1000</td>                   
+                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="24">{{formData.impoundmentLotPhone}}</td>                   
                 </tr>
                 <tr style="height:1rem;line-height:0.75rem;font-size:6pt">     
                     <td class="" style="" colspan="40">(ADDRESS)</td>
@@ -86,10 +86,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
 
 @Component({
     components:{       
@@ -98,40 +102,50 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form24hTable5 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form24 = this.mv2634Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        this.formData = {
+            vehicleImpounded: false,
+            notImpoundedReason: '',
+            impoundmentLotName: '',
+            impoundmentLotAddress: '',
+            ImpoundmentLotCity: '',
+            impoundmentLotPhone: ''        
+        }       
+        
+        if (form24.vehicleImpounded){
+            this.formData.vehicleImpounded = true;
+            this.formData.notImpoundedReason = '';
+            this.formData.impoundmentLotName = form24.impoundLot?.name?form24.impoundLot.name.toUpperCase():'';
+            this.formData.impoundmentLotAddress = form24.impoundLot?.lot_address?form24.impoundLot.lot_address.toUpperCase():'';
+            this.formData.impoundmentLotCity = form24.impoundLot?.city?form24.impoundLot.city.toUpperCase():'';
+            this.formData.impoundmentLotPhone = form24.impoundLot?.phone?form24.impoundLot.phone:'';
+        } else {
+            this.formData.vehicleImpounded = false;
+            this.formData.notImpoundedReason = form24.notImpoundingReason?form24.notImpoundingReason.toUpperCase():'';
+            
+            this.formData.impoundmentLotName = '';
+            this.formData.impoundmentLotAddress = '';
+            this.formData.impoundmentLotCity = '';
+            this.formData.impoundmentLotPhone = ''; 
+        }
+        
+    }
     
 }
 

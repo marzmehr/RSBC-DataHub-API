@@ -21,7 +21,7 @@
                             shiftmark="-1px,-3px"                                   
                             checkColor="#2134AB"
                             boxSize="1.2em" 
-                            :check="true"
+                            :check="formData.returnDlInPerson"
                             checkFontSize="12pt"
                             text="" />
                     </td>
@@ -30,30 +30,34 @@
                     <td class="" style="" colspan="40">RECEIPT OF LICENCE ACKNOWLEDGED</td>
                 </tr>
                 <tr style="height:0.85rem; line-height:0.65rem;">
-                    <td class="answer" style="border-right:1px solid #151515;" colspan="25">2020-01-01 10:15</td>
+                    <td class="answer" style="border-right:1px solid #151515;" colspan="25">{{formData.returnDlDateTime}}</td>
                     <td class="" style="" colspan="3">
                         <check-box
                             shiftBox="18px,0px"
                             shiftmark="-1px,-3px"                                   
                             checkColor="#2134AB"
                             boxSize="1.2em" 
-                            :check="true"
+                            :check="formData.returnDlByMail"
                             checkFontSize="12pt"
                             text="" />
                     </td>
                     <td class="" style="border-right:1px solid;" colspan="11">MAIL</td>
-                    <td class="answer" style="border-right:1px solid #151515;" colspan="22">ADMIN</td>
-                    <td class="answer" style="" colspan="40">ACK</td>
+                    <td class="answer" style="border-right:1px solid #151515;" colspan="22">{{formData.returnDlOfficer}}</td>
+                    <td class="answer" style="" colspan="40">{{formData.returnDlAcknowledge}}</td>
                 </tr>
             </table>
         </div>
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
 
 @Component({
     components:{       
@@ -62,39 +66,30 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class Form24hTable7 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
-
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
+        this.formData = {
+            returnDlInPerson: false,
+            returnDlByMail: false,
+            returnDlDateTime:'',
+            returnDlOfficer: '',
+            returnDlAcknowledge: ''            
+        }
+       
+    } 
 
     
 }

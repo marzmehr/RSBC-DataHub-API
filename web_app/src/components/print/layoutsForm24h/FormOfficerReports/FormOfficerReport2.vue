@@ -25,7 +25,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.testPrescribed"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -36,7 +36,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="!formData.testPrescribed"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -60,14 +60,14 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.fstTest"
                             checkFontSize="16pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="30">Alco-Sensor FST</td>
                     
                     <td class="" style="" colspan="22">ASD Expiry Date</td>
-                    <td class="" style="border-bottom:1px solid black;" colspan="40"></td>
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="40">{{formData.asdExpiryDate}}</td>
                                             
                 </tr>
 <!-- <APPROVED INSTRUMENT> -->
@@ -79,12 +79,12 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.approvedInstrumentTest"
                             checkFontSize="16pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="37">Approved Instrument (specify)</td>
-                    <td class="" style="border-bottom:1px solid black;" colspan="55"></td>                                            
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="55">{{formData.approvedInstrumentType}}</td>                                            
                 </tr>
 <!-- <PRESCRIBED> -->
                 <tr style="height:0.5rem;  line-height:1rem;">
@@ -95,11 +95,11 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.prescribedPhysicalTest"
                             checkFontSize="16pt"
                             text="" />
                     </td>
-                    <td class="" style="" colspan="92">Prescribed Physical Coordination Test</td>
+                    <td class="" style="" colspan="92">Prescribed Physical Coordination Test<span style="margin-left: 0.8rem;" class="answer">{{formData.prescribedPhysicalTestType}}</span></td>
                 </tr>
 
 <!-- <Time of test> -->                
@@ -107,7 +107,7 @@
                 <tr style="height:0.85rem;  line-height:0.8rem;">
                     <td class="" style="" colspan="4"></td>                                     
                     <td class="" style="" colspan="16">Time of Test</td>
-                    <td class="" style="border-bottom:1px solid black;" colspan="20"></td> 
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="20">{{formData.testDateTime}}</td> 
                     <td class="" style="" colspan="60"></td>                                          
                 </tr>
                 <tr style="height:0.25rem;  line-height:0.8rem;"></tr>
@@ -124,7 +124,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.alcoholUnder99"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -135,7 +135,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.alcoholOver99"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -146,12 +146,12 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.alcoholBac"
                             checkFontSize="16pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="7">BAC</td>
-                    <td class="" style="border-bottom:1px solid black;" colspan="35"></td>
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="35">{{formData.alcoholBacResult}}</td>
                 </tr>
 
 <!-- <Result: Drug> -->                 
@@ -167,11 +167,13 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.drugTestAffected"
                             checkFontSize="16pt"
                             text="" />
                     </td>
-                    <td class="" style="" colspan="92">Ability to drive affected by a drug</td>
+                    <td class="" style="" colspan="92">Ability to drive affected by a drug 
+                        <span class="answer" style="margin-right: 1rem;">{{formData.drugResults}}</span>
+                    </td>
                 </tr>
 
                 
@@ -180,10 +182,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormDataInfoType, twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
 
 @Component({
     components:{       
@@ -192,39 +198,196 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class FormOfficerReport2 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
-    driver=['D','R','I','V','E','R']
+
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form24 = this.mv2634Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            testPrescribed: false,
+            fstTest: false,           
+            asdExpiryDate: '',
+            alcoholOver99: false,
+            alcoholUnder99: false,
+            approvedInstrumentTest: false,
+            approvedInstrumentType: '',
+            alcoholBac: false,
+            prescribedPhysicalTest: false,
+            alcoholBacResult: '',
+            drugsProhibition: false,            
+            testDateTime: '',            
+            drugTestAffected: false,
+            drugResults: ''                                 
+        }
 
-    //     if (index != -1){
+        if (form24.prescribedTest){
 
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
+            this.formData.testPrescribed = true;     
 
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
+            if (form24.prohibitionType && form24.prohibitionType == 'Alcohol'){
+
+                this.formData.drugTestAffected = false;   
+                this.formData.drugsProhibition = false; 
+                this.formData.drugResults = '';
+
+                this.determineTestDateTime(form24);               
+
+                const alcoholTest = form24.alcoholTest?form24.alcoholTest:''; 
+
+                if (alcoholTest == 'Alco-Sensor FST (ASD)'){
+
+                    this.formData.fstTest = true;
+                    this.formData.approvedInstrumentTest = false;
+                    this.formData.approvedInstrumentType = '';
+                    this.formData.prescribedPhysicalTest = false;
+                    this.formData.alcoholBac = false;
+                    this.formData.alcoholBacResult = '';
+                    this.formData.asdExpiryDate = form24.asd?.expiryDate?Vue.filter('format-date-dash')(form24.asd.expiryDate):'';
+                    this.formData.alcoholOver99 = form24.asd?.result?(form24.asd.result == 'over'):false;
+                    this.formData.alcoholUnder99 = form24.asd?.result?(form24.asd.result == 'under'):false;
+
+                } else if (alcoholTest == 'Approved Instrument'){//
+
+                    this.formData.fstTest = false;
+                    this.formData.approvedInstrumentTest = true;
+                    this.formData.approvedInstrumentType = 'INTOX EC/IR II';
+                    this.formData.alcoholBac = true;
+                    this.formData.alcoholBacResult = form24.BacResult?form24.BacResult + ' MG%':'';
+                    this.formData.prescribedPhysicalTest = false;
+                    this.formData.asdExpiryDate = '';
+                    this.formData.alcoholOver99 = false;
+                    this.formData.alcoholUnder99 = false;
+
+                } else if (alcoholTest == 'Prescribed Physical Coordination Test (SFST)'){//
+
+                    this.formData.fstTest = false;
+                    this.formData.approvedInstrumentTest = false;
+                    this.formData.approvedInstrumentType = ''
+                    this.formData.alcoholBac = false;
+                    this.formData.alcoholBacResult = '';
+                    this.formData.prescribedPhysicalTest = true;
+                    this.formData.prescribedPhysicalTestType = 'SFST';
+                    this.formData.asdExpiryDate = '';
+                    this.formData.alcoholOver99 = false;
+                    this.formData.alcoholUnder99 = false;
+
+                } else {//
+                
+                    this.formData.asdExpiryDate = '';
+                    this.formData.alcoholOver99 = false;
+                    this.formData.alcoholUnder99 = false;
+                    this.formData.fstTest = false;
+                    this.formData.approvedInstrumentTest = false;
+                    this.formData.approvedInstrumentType = '';
+                    this.formData.prescribedPhysicalTest = false;
+                    this.formData.prescribedPhysicalTestType = '';
+                    this.formData.alcoholBac = false;
+                    this.formData.alcoholBacResult = '';
+                    this.formData.testDateTime = '';
+                }            
+                
+
+            } else if (form24.prohibitionType && form24.prohibitionType == 'Drugs') {
+
+                this.formData.fstTest = false;     
+                this.formData.asdExpiryDate = '';                
+                this.formData.alcoholOver99 = false;
+                this.formData.alcoholUnder99 = false;                
+                this.formData.alcoholBac = false;                
+                this.formData.alcoholBacResult = '';
+
+                this.determineTestDateTime(form24);
+
+                const drugTest = form24.drugsTest?form24.drugsTest:'';
+               
+                if (drugTest == 'Approved Drug Screening Equipment'){
+
+                    this.formData.prescribedPhysicalTest = false;
+                    this.formData.prescribedPhysicalTestType = '';
+                    
+
+                    this.formData.approvedInstrumentTest = true;
+                    this.formData.approvedInstrumentType = 'ADSE';
+                    const drugResults = form24.approvedDrugScreeningEquipment?.length>0?form24.approvedDrugScreeningEquipment:[];
+                    if (drugResults.length == 2){
+                        this.formData.drugResults = 'THC AND COCAINE';
+                    } else {
+                        this.formData.drugResults = drugResults.toString().toUpperCase();
+                    }
+                    this.formData.drugTestAffected = drugResults.length>0;                    
+                } else {
+
+                    this.formData.approvedInstrumentTest = false;
+                    this.formData.approvedInstrumentType = '';// 
+                    this.formData.prescribedPhysicalTest = false;
+                    this.formData.prescribedPhysicalTestType = ''; //'SFST'/'DRE'
+                    this.formData.alcoholBac = false;
+                    this.formData.alcoholBacResult = '';
+                    this.formData.testDateTime = '';
+                    ///
+
+                }
+                                 
+                
+
+            } else {//todo: determine what should happen
+                this.resetTestFields();
+                this.formData.testPrescribed = false; 
+
+            }
+                  
+
+        } else {
+            this.resetTestFields();          
+
+        }
+
+        
+    }
+
+    public determineTestDateTime(form24: twentyFourHourFormDataInfoType){
+        if (form24.prescribedTestDate && form24.prescribedTestTime){
+            const testTime = form24.prescribedTestTime.substr(0,2)+ ':' + form24.prescribedTestTime.substr(2,2);        
+            this.formData.testDateTime = Vue.filter('format-date-dash')(form24.prescribedTestDate) + ' ' + testTime;
+
+        } else {
+            this.formData.testDateTime = '';
+        }
+    }
+
+                
+    
+    public resetTestFields(){
+
+        this.formData.testPrescribed = false;
+        this.formData.fstTest = false;     
+        this.formData.asdExpiryDate = '';
+        this.formData.testDateTime = '';
+        this.formData.alcoholOver99 = false;
+        this.formData.alcoholUnder99 = false;
+        this.formData.approvedInstrumentTest = false;
+        this.formData.approvedInstrumentType = '';
+        this.formData.alcoholBac = false;
+        this.formData.prescribedPhysicalTest = false;
+        this.formData.prescribedPhysicalTestType = '';
+        this.formData.alcoholBacResult = '';
+        this.formData.drugsProhibition = false;
+        this.formData.drugTestAffected = false; 
+        this.formData.drugResults = '';
+
+    }
 
     
 }
