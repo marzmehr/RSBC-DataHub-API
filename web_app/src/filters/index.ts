@@ -24,7 +24,11 @@ Vue.filter('verifyPostCode', function(postcode, stateCd){
 Vue.filter('findInvalidFields',function(){
 	Vue.nextTick(()=>{
 		const el = document.getElementsByClassName('is-invalid')
-		if(el[0]) el[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start'});
+       
+		if(el[0]) {
+            const y = el[0].getBoundingClientRect().top + window.pageYOffset -40;
+            window.scrollTo({top: y, behavior: 'smooth'});
+        }
 	})
 })
 
