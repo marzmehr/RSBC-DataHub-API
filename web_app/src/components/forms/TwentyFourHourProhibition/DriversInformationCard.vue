@@ -86,7 +86,7 @@
 					</b-form-input>  
 				</b-col>
 				<b-col >
-					<label class="ml-1 m-0 p-0"> Date of Birth <span class="text-danger">* </span><span class="text-muted" style="font-size: 9pt;">YYYYMMDD ({{age}} yrs)</span></label>
+					<label class="ml-1 m-0 p-0"> Date of Birth <span class="text-danger">* </span><span class="text-muted" style="font-size: 12pt;">YYYYMMDD ({{age}} yrs)</span></label>
 					
 					<b-input-group class="mb-3">
 						<b-form-input
@@ -167,7 +167,7 @@
                         v-if="(driverState.driverPostalCode != null)" 
                         style="font-size: 9.5pt; " 
                         class="text-left text-danger m-0 p-0">
-                        Invalid Postal Code <i>(For CANADA format is A1A 1A1)</i>
+                        Invalid Postal Code for Prov/State <i>(For CANADA the format is A1A 1A1)</i>
                     </div>                                  
 				</b-col>
 			</b-row>

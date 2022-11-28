@@ -1,6 +1,6 @@
 <template>
     <b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
-		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
+		<b-card-header class="text-left h3" header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Test Administered - 
 				<span v-if="taInfo.prohibitionType.length > 0 && taInfo.prohibitionType == 'Alcohol'"> Alcohol 215(2)</span>
 				<span v-else-if="taInfo.prohibitionType.length > 0 && taInfo.prohibitionType == 'Drugs'"> Drugs 215(3)</span>
@@ -8,13 +8,15 @@
 		</b-card-header>
 		<b-card v-if="taInfo.prohibitionType.length > 0 && taInfo.prohibitionType == 'Alcohol'" border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
 
-            <b-row>   
+            <b-row class="text-left">   
                 <b-col cols="6"> 
-                    <label class="ml-1 m-0 p-0"> 
+                    <label class="ml-1 m-0 mb-2 p-0"> 
                         Which test was used?
                     </label>
                     <b-form-radio-group 
+						size="lg"
                         stacked
+						:class="(taState.alcoholTest==null)?'':'border border-danger is-invalid'"
                         v-model="taInfo.alcoholTest"                    
                         :options="alcoholTestOptions"
                         @change="update"
@@ -24,10 +26,11 @@
                 </b-col>                
             </b-row>
 
-			<b-row v-if="taInfo.alcoholTest == 'Approved Instrument'">   
+			<b-row v-if="taInfo.alcoholTest == 'Approved Instrument'" class="text-left">   
                 <b-col cols="4">
                     <label class="ml-1 m-0 p-0"> BAC Result (mg%) <span class="text-danger">*</span></label>
                     <b-form-input
+						size="lg"
                         v-model="taInfo.BacResult"
                         :disabled="formPrinted"
                         @input="update"
@@ -38,15 +41,16 @@
             </b-row>
 			<div v-else-if="taInfo.alcoholTest == 'Alco-Sensor FST (ASD)'">
 
-				<b-row class="mx-3"> 
+				<b-row class="text-left mt-4"> 
 					<b-col cols="4">
 						<label 
 							class="ml-1 m-0 p-0"> ASD expiry date  
 							<span class="text-danger">*</span>
-							<span class="text-muted" style="font-size: 9pt;"> YYYYMMDD</span>
+							<span class="text-muted" style="font-size: 12pt;"> YYYYMMDD</span>
 						</label>
 						<b-input-group class="mb-3">
 							<b-form-input
+								size="lg"
 								:key="updateDate"
 								id="prohibition-state-date"
 								v-model="taInfo.asd.expiryDate"
@@ -73,10 +77,12 @@
 						<div v-if="dateError" style="font-size:10pt;" class="text-danger text-left m-0 mt-n3 p-0">{{dateError}}</div>
 					</b-col>                
 				</b-row>
-				<b-row>   
+				<b-row class="text-left">   
 					<b-col cols="4"> 
 						<label class="ml-1 m-0 p-0"> Result</label>
-						<b-form-radio-group 
+						<b-form-radio-group
+							size="lg"
+							:class="(taState.asdResult==null)?'':'border border-danger is-invalid'"
 							stacked
 							v-model="taInfo.asd.result"                    
 							:options="asdResultOptions"
@@ -92,12 +98,14 @@
 		</b-card>
 		<b-card v-else-if="taInfo.prohibitionType.length > 0 && taInfo.prohibitionType == 'Drugs'" border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
 
-            <b-row>   
+            <b-row class="text-left">   
                 <b-col cols="6"> 
-                    <label class="ml-1 m-0 p-0"> 
+                    <label class="ml-1 m-0 mb-2 p-0"> 
                         Which test was used?
                     </label>
                     <b-form-radio-group 
+						size="lg"
+						:class="(taState.drugsTest==null)?'':'border border-danger is-invalid'"
                         stacked
                         v-model="taInfo.drugsTest"                    
                         :options="drugsTestOptions"
@@ -108,10 +116,11 @@
                 </b-col>                
             </b-row>			
 
-            <b-row v-if="taInfo.drugsTest == 'Approved Drug Screening Equipment' ">   
+            <b-row v-if="taInfo.drugsTest == 'Approved Drug Screening Equipment' " class="text-left mt-4">   
                 <b-col cols="4"> 
-                    <label class="ml-1 m-0 p-0">Test result</label>
-                    <b-form-checkbox-group 
+                    <label class="ml-1 m-0 mb-2 p-0">Test result</label>
+                    <b-form-checkbox-group
+						size="lg" 
                         stacked
                         v-model="taInfo.approvedDrugScreeningEquipment"                    
                         :options="drugsTestResultOptions"
@@ -255,5 +264,11 @@ export default class ReasonableGroundsCard extends Vue {
 
 
 <style scoped>
+	label{
+		font-size: 16pt;
+	}
 
+	input.is-invalid {
+		background: #ebc417;
+	}
 </style>

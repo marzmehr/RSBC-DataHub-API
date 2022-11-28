@@ -2,7 +2,7 @@
     <div v-if="dataReady">
         <div class="lineheight0-25 text-center" style="font-size:11pt; margin:1.75rem 0 0 0;   line-height:1rem;"><b>Officer’s Report</b> (Continued)</div>
         <div class="row lineheight0-25" style="font-size:11pt; margin:0rem 0 0 0;   line-height:1rem;"><b>1) Driver</b></div>
-        <div style="text-align:justify; font-size:9pt; line-height:0.85rem; margin:0 1rem 0 1.5rem; ">
+        <div style="text-align:justify; font-size:8.5pt; line-height:0.85rem; margin:0 1rem 0 1.5rem; ">
             The driver identified on the reverse was operating a motor vehicle or had
             care or control of a motor vehicle for the purposes of section 215(1) of the
             Motor Vehicle Act based upon (provide evidence):
@@ -40,8 +40,8 @@
                             checkFontSize="16pt"
                             text="" />
                     </td>
-                    <td class="" style="" colspan="25">Admission by driver</td>
-                    <td class="" style="" colspan="6"> </td>                                               
+                    <td class="" style="" colspan="30">Admission by driver</td>
+                    <td class="" style="" colspan="1"> </td>                                               
                 </tr>
 
 <!-- <ROW2> -->
@@ -71,12 +71,15 @@
                     <td class="" style="" colspan="25">Other</td>
                     <td class="" style="" colspan="6"> </td>                                               
                 </tr>
-                <tr style="height:0.5rem;  line-height:1rem; border-top:0px solid;">
-                    <td class="" style="" colspan="8"></td>
-                    <td class="answer" style="" colspan="35"><div v-if="formData.videoSurveillance">VIDEO SURVEILLANCE</div></td>
-                    <td class="answer" style="" colspan="25">{{formData.other}}</td>
+                <tr style="height:0.5rem;  line-height:1rem;">
+                    <td class="" style="" colspan="4"></td>                    
+                    <td class="answer" style="" colspan="94">{{formData.other}}</td>
                 </tr>
-                <tr style="height:2rem; line-height:1rem;" ></tr>
+                <tr style="height:0.5rem;  line-height:0.5rem;">
+                    <td class="" style="" colspan="4"></td>
+                    <td class="answer" style="" colspan="94"><div v-if="formData.videoSurveillance">VIDEO SURVEILLANCE</div></td>                    
+                </tr>
+                <!-- <tr style="height:2rem; line-height:1rem;" ></tr> -->
                 <!-- <tr style="height:0.5rem; line-height:1rem;">
                     <td class="" style="" colspan="4"></td>
                     <td class="" style="" colspan="30">Additional Information:</td>

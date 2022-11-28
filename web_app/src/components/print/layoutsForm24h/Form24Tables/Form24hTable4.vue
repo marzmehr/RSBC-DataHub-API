@@ -207,7 +207,7 @@ export default class Form24hTable4 extends Vue {
         this.formData.vehicleYear = form24.vehicleYear?form24.vehicleYear.toUpperCase():'';
         this.formData.vehicleMake = form24.vehicleMake?.mk?form24.vehicleMake.mk.toUpperCase():'';
         this.formData.vehicleModel = form24.vehicleMake?.md?form24.vehicleMake.md.toUpperCase():'';
-        this.formData.vehicleType = form24.vehicleType?.name?form24.vehicleType.name.toUpperCase():'';
+        this.formData.vehicleType = form24.vehicleType?.code?form24.vehicleType.code.toUpperCase():'';
         this.formData.vehicleColor = colorList.length>0?colorList.toString():'';
         this.formData.plateProvince = form24.plateProvince?.objectCd?form24.plateProvince.objectCd.toUpperCase():'';
         this.formData.plate = form24.plateNumber?form24.plateNumber.toUpperCase():'';

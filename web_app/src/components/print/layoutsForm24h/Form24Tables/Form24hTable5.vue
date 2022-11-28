@@ -23,8 +23,8 @@
                             checkFontSize="16pt"
                             text="" />
                     </td>                    
-                    <td class="" style="" colspan="30">Vehicle not impounded. Explain </td>
-                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="66">{{formData.notImpoundedReason}}</td>
+                    <td class="" style="" colspan="32">Vehicle not impounded. Explain </td>
+                    <td class="answer" style="border-bottom:1px solid #151515;" colspan="64">{{formData.notImpoundedReason}}</td>
                 </tr>
                 <tr style="height:0.2rem;line-height:0.25rem;"> <td></td></tr>
 <!-- <CHECKBOX 2> -->
@@ -39,19 +39,19 @@
                             checkFontSize="16pt"
                             text="" />
                     </td>                    
-                    <td class="font-8-3"  style="font-size:7.3pt" colspan="97">
+                    <td class=""  style="font-size:7.2pt" colspan="97">
                         Under the provisions of section 215.4 of the Motor Vehicle Act the vehicle referred to above is 
                     </td>                    
                 </tr>
                 <tr style="height:0.8rem;line-height:0.65rem;">     
                     <td class="" style="" colspan="4"></td>                    
-                    <td class="font-8-3"  style="font-size:7.3pt" colspan="97">
+                    <td class=""  style="font-size:7.3pt" colspan="97">
                         impounded for a period of 24 hours commencing at the time set out in the Notice of Driving                         
                     </td>                    
                 </tr>
                 <tr style="height:0.8rem;line-height:0.65rem;">     
                     <td class="" style="" colspan="4"></td>                    
-                    <td class="font-8-2"  style="font-size:7.2pt" colspan="46">
+                    <td class=""  style="font-size:7.2pt" colspan="46">
                         Prohibition, and is stored at IMPOUND LOT
                     </td>
                     <td class="answer" style="border-bottom:1px solid #151515;" colspan="51">{{formData.impoundmentLotName}}</td>                   

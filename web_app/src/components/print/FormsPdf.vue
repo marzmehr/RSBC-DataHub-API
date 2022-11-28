@@ -34,8 +34,12 @@ const commonState = namespace("Common");
 import "@/store/modules/forms/mv2906";
 const mv2906State = namespace("MV2906");
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
+
 import { currentlyEditingFormObjectInfoType } from '@/types/Common';
 import { twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
 
 
 @Component({
@@ -56,6 +60,9 @@ export default class FormsPdf extends Vue {
     //TODO -may remove
     @mv2906State.Action
     public UpdateMV2906Info!: (newMV2906Info: twelveHourFormJsonInfoType) => void
+
+    @mv2634State.Action
+    public UpdateMV2634Info!: (newMV2634Info: twentyFourHourFormJsonInfoType) => void;
     
     dataReady=false;
     form12=false;
@@ -85,8 +92,12 @@ export default class FormsPdf extends Vue {
                     form_type:form_type,
                     form_id: form_id  
                 })
+                
                 if(form_type=='12Hour')            
                     this.UpdateMV2906Info(formData)
+                else if(form_type=='24Hour')            
+                    this.UpdateMV2634Info(formData)
+
                 this.determinePDFtype()
             }else{
                 console.log('RETRY')

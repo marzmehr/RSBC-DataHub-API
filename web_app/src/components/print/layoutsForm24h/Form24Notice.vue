@@ -137,7 +137,7 @@ export default class Form24Notice extends Vue {
 
 
 .important-notice{
-    font-size: 8.5pt !important;
+    font-size: 7.75pt !important;
     line-height: 0.95rem !important;
 }
 
