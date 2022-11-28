@@ -191,8 +191,8 @@ export interface twentyFourHourFormStatesInfoType {
     prohibitionStartDate: null | boolean;
     prohibitionStartTime: null | boolean;
     agency: null | boolean;
-    badge_number: null | boolean;
-    officer_name: null | boolean;
+    badgeNumber: null | boolean;
+    officerName: null | boolean;
     submitted: null | boolean;
     reasonableGrounds: null | boolean;
     reasonableGroundsOther: null | boolean;  

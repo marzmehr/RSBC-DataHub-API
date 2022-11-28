@@ -35,7 +35,7 @@
 						v-model="vehicleInfo.plateNumber"
 						:disabled="formPrinted"
                         :state="vehicleState.plateNumber"
-						@change="update"
+						@input="update"
 						placeholder="Plate">
 					</b-form-input>                                
 				</b-col>
@@ -75,7 +75,7 @@
 						v-model="vehicleInfo.plateValTag"						
 						:disabled="formPrinted"
                         :state="vehicleState.plateValTag"
-						@change="update">
+						@input="update">
 					</b-form-input>  
 				</b-col>
 				<b-col >
@@ -85,7 +85,7 @@
 						v-model="vehicleInfo.registrationNumber"						
 						:disabled="formPrinted"
                         :state="vehicleState.registrationNumber"
-						@change="update">
+						@input="update">
 					</b-form-input>                                 
 				</b-col>
 			</b-row>
@@ -154,7 +154,7 @@
 						v-model="vehicleInfo.vin_number"						
 						:disabled="formPrinted"
                         :state="vehicleState.vin_number"
-						@change="update">
+						@input="update">
 					</b-form-input>
 					<div 
 						v-if="vehicleInfo.vin_number.length > 20" 
@@ -184,7 +184,7 @@
 						v-model="vehicleInfo.nscNumber"						
 						:disabled="formPrinted"
                         :state="vehicleState.nscNumber"
-						@change="update">
+						@input="update">
 					</b-form-input>
 					<div 
 						v-if="vehicleInfo.nscNumber.length > 14" 

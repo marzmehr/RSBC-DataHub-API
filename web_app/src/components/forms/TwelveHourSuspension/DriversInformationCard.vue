@@ -184,7 +184,7 @@
                         v-if="(driverState.driverPostalCode != null)" 
                         style="font-size: 8.5pt; " 
                         class="text-left text-danger m-0 p-0">
-                        Invalid Postal Code regarding to Prov/State <i>(For CANADA format is A1A 1A1)</i>
+                        Invalid Postal Code for Prov/State <i>(For CANADA the format is A1A 1A1)</i>
                     </div>                                  
 				</b-col>
 			</b-row>
@@ -425,7 +425,7 @@ export default class DriversInformationCard extends Vue {
 		this.update();
 	}
 
-	public editPhoneNumber(value: string, val){
+	public editPhoneNumber(value: string){
 		this.update()
 		if(this.phonePrvValue.slice(-1)=='-' && this.phonePrvValue.length>=value.length) this.phonePrvValue=value.slice(0,-1)
 		else if(isNaN(Number(value.slice(-1))) && value.slice(-1)!='-') this.phonePrvValue= value.slice(0,-1) 

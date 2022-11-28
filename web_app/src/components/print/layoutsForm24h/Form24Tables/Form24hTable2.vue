@@ -14,7 +14,7 @@
                 </tr>
                 <tr style="height:1.0rem;line-height:0.75rem;">
                     <td class="" colspan="100"> 
-                        <div style="margin:0 0.5rem; font-size:8.5pt; text-align:justify;"> 
+                        <div style="margin:0 0.5rem; font-size:8.0pt; text-align:justify;"> 
                             You are prohibited under section 215 of the Motor Vehicle Act from driving a motor
                             vehicle for 24 hours commencing at:                            
                         </div>

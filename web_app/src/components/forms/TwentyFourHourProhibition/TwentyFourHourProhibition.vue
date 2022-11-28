@@ -15,6 +15,7 @@
 			<prohibition-information-card class="mt-5" :prohibitionInfo="twentyFourHourData" :prohibitionState="fieldStates" @recheckStates="recheckStates()"/>
 			<reasonable-grounds-card class="mt-5" :rgInfo="twentyFourHourData" :rgState="fieldStates" @recheckStates="recheckStates()"/>		
 			<test-administered-card
+				class="mt-5"
 				v-if="twentyFourHourData.prescribedTest" 
 				:taInfo="twentyFourHourData" 
 				:taState="fieldStates"
@@ -241,8 +242,8 @@ export default class TwentyFourHourProhibition extends Vue {
 		twentyFourHourFormStates.prohibitionStartDate=null
 		twentyFourHourFormStates.prohibitionStartTime=null
 		twentyFourHourFormStates.agency=null
-		twentyFourHourFormStates.badge_number=null
-		twentyFourHourFormStates.officer_name=null
+		twentyFourHourFormStates.badgeNumber=null
+		twentyFourHourFormStates.officerName=null
 		twentyFourHourFormStates.submitted=null
 		twentyFourHourFormStates.reasonableGrounds=null
 		twentyFourHourFormStates.reasonableGroundsOther=null  
@@ -269,21 +270,107 @@ export default class TwentyFourHourProhibition extends Vue {
         const specialFields = ['dob']
         for(const field of Object.keys(this.fieldStates)){
             if(this.fieldStates[field]==false && !specialFields.includes(field)){
-                this.checkStates()
+                this.checkStates(false)
                 return 
             }
         }  
     }
 
-	public checkStates(){
+	public checkStates(finalCheck){
         const data = this.twentyFourHourFormData.data
-        
+
+
+        //__Driver's Information
+        this.fieldStates.driversNumber = data.driversNumber? null:false;
+        this.fieldStates.lastName = data.lastName? null:false;
+        if(!data.dob) this.fieldStates.dob = false;
+        this.fieldStates.address = data.address? null:false;
+        this.fieldStates.driverCity = data.driverCity? null:false;
         this.fieldStates.driverProvince = data.driverProvince?.objectCd? null:false;
-        this.fieldStates.driverPostalCode = Vue.filter('verifyPostCode')(data.driverPostalCode, data.driverProvince?.objectCd)? null:false;      
+
+		if(data.driverPostalCode)
+            this.fieldStates.driverPostalCode = Vue.filter('verifyPostCode')(data.driverPostalCode, data.driverProvince?.objectCd)? null:false;      
+        else 
+            this.fieldStates.driverPostalCode = null;
+
+		//__Vehicle information
+		this.fieldStates.plateProvince = data.plateProvince?.objectCd? null:false;
+        this.fieldStates.plateNumber = data.plateNumber? null:false;
+
+
+		//__Registered Owner
+        if(data.ownerPhoneNumber) 
+            this.fieldStates.ownerPhoneNumber = Vue.filter('verifyPhone')( data.ownerPhoneNumber)? null:false;
+        else 
+            this.fieldStates.ownerPhoneNumber = null;
+        
+        if(data.ownerPostalCode)
+            this.fieldStates.ownerPostalCode = Vue.filter('verifyPostCode')(data.ownerPostalCode, data.ownerProvince?.objectCd)? null:false;      
+        else 
+            this.fieldStates.ownerPostalCode = null;
+
+        //__Vehicle Impoundment or Disposition
+		this.fieldStates.vehicleImpounded = data.vehicleImpounded==null? false : null;
+
+		//Impounded
+        this.fieldStates.locationOfKeys = data.vehicleImpounded==true && !data.locationOfKeys? false: null;
+        this.fieldStates.impoundLotName = data.vehicleImpounded==true && !data.impoundLot?.name ? false: null;
+        this.fieldStates.impoundLotAddress = data.vehicleImpounded==true && !data.impoundLot?.lot_address ? false : null;
+        this.fieldStates.impoundLotCity = data.vehicleImpounded==true && !data.impoundLot?.city ? false : null;
+        this.fieldStates.impoundLotPhone = data.vehicleImpounded==true && !data.impoundLot?.phone ? false : null;
+        
+		//NotImpounded
+		this.fieldStates.notImpoundingReason = data.vehicleImpounded==false && !data.notImpoundingReason ? false: null;
+        
+        this.fieldStates.vehicleReleasedTo = data.vehicleImpounded==false && data.notImpoundingReason=='Released to other driver' && !data.vehicleReleasedTo ? false: null;
+                        
+        if(data.vehicleImpounded==true || data.notImpoundingReason!='Released to other driver')
+            this.fieldStates.releasedDate = null;
+        else if(!data.releasedDate)
+            this.fieldStates.releasedDate = false;
+        
+        if(data.vehicleImpounded==true || data.notImpoundingReason!='Released to other driver')
+            this.fieldStates.releasedTime = null;
+        else if(!data.releasedTime)
+            this.fieldStates.releasedTime = false;
+
+		//__Prohibition
+        this.fieldStates.prohibitionType = data.prohibitionType==''? false: null;
+        this.fieldStates.offenceAddress = data.offenceAddress? null : false;
+        this.fieldStates.offenceCity = data.offenceCity?.objectCd? null : false;
+        this.fieldStates.agencyFileNumber = data.agencyFileNumber? null : false;
+
+        if(!data.prohibitionStartDate) this.fieldStates.prohibitionStartDate = false;
+        if(!data.prohibitionStartTime) this.fieldStates.prohibitionStartTime = false;
+
+		//__Reasonable Grounds
+		this.fieldStates.reasonableGroundsOther = (data.reasonableGrounds?.includes('Other') && !data.reasonableGroundsOther)? false: null
+		if(data.prescribedTest==true && !data.prescribedTestDate) this.fieldStates.prescribedTestDate = false
+		if(data.prescribedTest==true && !data.prescribedTestTime) this.fieldStates.prescribedTestTime = false
+		if(!data.prescribedTest){
+            this.fieldStates.prescribedTestTime=null;
+            this.fieldStates.prescribedTestDate=null;        
+        }
+
+		//__Test Administered
+		//Alcohol 215(2)
+		this.fieldStates.BacResult = (data.prescribedTest==true &&
+			data.prohibitionType=='Alcohol' &&
+			data.alcoholTest.includes('Approved Instrument') && 
+			!data.BacResult)? false: null;
+
+		this.fieldStates.asdExpiryDate = (data.prescribedTest==true &&
+			data.prohibitionType=='Alcohol' &&
+			data.alcoholTest.includes('Alco-Sensor FST (ASD)') && 
+			!data.asd?.expiryDate)? false: null;
+
+		//__Officer
+        this.fieldStates.agency = data.agency? null : false;
+
 
         for(const field of Object.keys(this.fieldStates)){
             if(this.fieldStates[field]==false){
-                // Vue.filter('findInvalidFields')()
+                if(finalCheck) Vue.filter('findInvalidFields')()
                 return false
             }                
         }       
@@ -292,12 +379,14 @@ export default class TwentyFourHourProhibition extends Vue {
     }
 
 	public navigateToPrintPage(){
-        const form_id = this.currently_editing_form_object.form_id
-        const form_type = this.currently_editing_form_object.form_type
-        this.$router.push({   
-            name: 'print',
-            params: { id: form_id, form_type: form_type}
-        })
+        if(this.checkStates(true)){
+            const form_id = this.currently_editing_form_object.form_id
+            const form_type = this.currently_editing_form_object.form_type
+            this.$router.push({   
+                name: 'print',
+                params: { id: form_id, form_type: form_type}
+            })
+        }
     }
 
 

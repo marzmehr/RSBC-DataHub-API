@@ -1,7 +1,7 @@
 <template>
     <div v-if="dataReady">        
         <div class="row lineheight0-25" style="font-size:11pt; margin:0.75rem 0 0 0;   line-height:1rem;"><b>2) Reasonable Grounds</b></div>
-        <div style="text-align:justify; font-size:9pt; line-height:0.85rem; margin:0 1rem 0 1.5rem; ">
+        <div style="text-align:justify; font-size:8.5pt; line-height:0.85rem; margin:0 1rem 0 1.5rem; ">
             Was a prescribed Approved Screening Device (ASD), Approved Instrument
             or prescribed physical coordination test used to form reasonable grounds
             to believe that the driver’s ability to drive a motor vehicle was affected by
@@ -46,7 +46,7 @@
 
                 <tr style="height:1.5rem;  line-height:1.5rem;">
                      <td class="" style="" colspan="4"></td>
-                    <td class="" style="" colspan="96">
+                    <td class="" style="font-size:8.5pt;" colspan="96">
                         If yes, which test was administered?
                     </td>
                 </tr>
@@ -66,8 +66,8 @@
                     </td>
                     <td class="" style="" colspan="30">Alco-Sensor FST</td>
                     
-                    <td class="" style="" colspan="22">ASD Expiry Date</td>
-                    <td class="answer" style="border-bottom:1px solid black;" colspan="40">{{formData.asdExpiryDate}}</td>
+                    <td class="" style="" colspan="23">ASD Expiry Date</td>
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="39">{{formData.asdExpiryDate}}</td>
                                             
                 </tr>
 <!-- <APPROVED INSTRUMENT> -->
@@ -83,8 +83,8 @@
                             checkFontSize="16pt"
                             text="" />
                     </td>
-                    <td class="" style="" colspan="37">Approved Instrument (specify)</td>
-                    <td class="answer" style="border-bottom:1px solid black;" colspan="55">{{formData.approvedInstrumentType}}</td>                                            
+                    <td class="" style="" colspan="40">Approved Instrument (specify)</td>
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="52">{{formData.approvedInstrumentType}}</td>                                            
                 </tr>
 <!-- <PRESCRIBED> -->
                 <tr style="height:0.5rem;  line-height:1rem;">
