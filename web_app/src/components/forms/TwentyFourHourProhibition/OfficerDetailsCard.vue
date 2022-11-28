@@ -1,33 +1,36 @@
 <template>
 
 	<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
-		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
+		<b-card-header class="text-left h3" header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
 			<b>Officer</b>      
 		</b-card-header>
 		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
 			
-			<b-row>
-				<b-col>
+			<b-row class="text-left">
+				<b-col cols="4">
 					<label class="ml-1 m-0 p-0"> Agency <span class="text-danger">*</span></label>
-					<b-form-input						
+					<b-form-input
+						size="lg"						
 						v-model="officerInfo.agency"
 						:disabled="formPrinted"
 						@input="update"
 						:state="officerState.agency">
 					</b-form-input>                                
 				</b-col>
-				<b-col >
+				<b-col cols="3">
 					<label class="ml-1 m-0 p-0"> Badge # </label>
 					<b-form-input
+						size="lg"
 						v-model="officerInfo.badge_number"
 						:disabled="formPrinted"
 						@input="update"
 						:state="officerState.badgeNumber">
 					</b-form-input>  
 				</b-col>
-				<b-col >
+				<b-col cols="5">
 					<label class="ml-1 m-0 p-0"> Last Name of Peace Officer Serving Prohibition Notice </label>
 					<b-form-input
+						size="lg"
 						v-model="officerInfo.officer_name"
 						:disabled="formPrinted"
 						@input="update"
@@ -104,6 +107,15 @@ export default class OfficerDetailsCard extends Vue {
  
 }
 </script>
+<style scoped>
 
+	label{
+		font-size: 16pt;
+	}
+
+	input.is-invalid {
+		background: #ebc417;
+	}
+</style>
 
 

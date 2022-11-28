@@ -4,11 +4,19 @@
 			<b>Driver's Information</b>      
 		</b-card-header>
 		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
-
+			<b-alert
+				:show="errorDismissCountDown"
+				style="margin:0 0 2rem auto;"
+				dismissible
+				@dismissed="errorDismissCountDown=0"
+				@dismiss-count-down="errorDismissCountDown=$event;"
+				variant="danger"
+                > {{error}}
+            </b-alert>
 			<b-row>
 				<b-col class="pr-1 text-left" cols="3">
 					<b-form-group>
-					<label class="m-0 p-0"> Driver's Licence Number</label>
+					<label class="m-0 p-0"> Driver's Licence Number <span class="text-danger">*</span></label>
 					<b-form-input
 						size="lg"
 						v-model="driverInfo.driversNumber"
@@ -16,14 +24,14 @@
                         :state="driverState.driversNumber"
 						@input="update"
 						placeholder="Driver's Licence Number">
-					</b-form-input> 
+					</b-form-input>					                             
 					</b-form-group>                             
 				</b-col>
 				<b-col class="p-0 pt-1" cols="1">
 					<b-button 
 						size="lg"
 						class="bg-primary text-white"
-						style="opacity:1; float:left; margin-top:1.7rem;"
+						style="float:left; margin-top:1.7rem;"
 						:disabled="formPrinted || !displayIcbcLicenceLookup"
 						@click="triggerDriversLookup">
 						<spinner color="#FFF" v-if="searchingLookup" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
@@ -78,7 +86,7 @@
 					</b-form-input>  
 				</b-col>
 				<b-col >
-					<label class="ml-1 m-0 p-0"> Date of Birth <span class="text-muted" style="font-size: 12pt;">YYYYMMDD ({{age}} yrs)</span></label>
+					<label class="ml-1 m-0 p-0"> Date of Birth <span class="text-danger">* </span><span class="text-muted" style="font-size: 12pt;">YYYYMMDD ({{age}} yrs)</span></label>
 					
 					<b-input-group class="mb-3">
 						<b-form-input
@@ -176,11 +184,13 @@
                         v-if="(driverState.driverPostalCode != null)" 
                         style="font-size: 8.5pt; " 
                         class="text-left text-danger m-0 p-0">
-                        Invalid Postal Code regarding to Prov/State <i>(For CANADA format is A1A 1A1)</i>
+                        Invalid Postal Code for Prov/State <i>(For CANADA the format is A1A 1A1)</i>
                     </div>                                  
 				</b-col>
 			</b-row>
-			<div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
+			
+						
+
 		</b-card>
 
 		<b-modal v-model="showScannerMessage" id="bv-modal-scanner" header-class="bg-warning text-light">            
@@ -278,11 +288,14 @@ export default class DriversInformationCard extends Vue {
 	dateError=''
 	updateDate=0;
 	phonePrvValue=''
+	displayIcbcLicenceLookup=true
+	errorDismissCountDown=0
 
 	mounted() { 
-		this.dataReady = false;				        
+		this.dataReady = false;						        
 		this.formPrinted = Boolean(this.mv2906Info.printed_timestamp);
         this.extractFields();
+		this.checkIcbcLicenceLookupAllowed()
         this.dataReady = true;
     }
 
@@ -305,6 +318,7 @@ export default class DriversInformationCard extends Vue {
 				console.log("error", error)
 				this.searchingLookup = false;
 				this.error = error.description;
+				this.errorDismissCountDown=3;
 			})
 	}
 
@@ -351,7 +365,8 @@ export default class DriversInformationCard extends Vue {
 		this.showScannerMessage = false;
 	}
 
-	public update(){     
+	public update(){ 
+		this.checkIcbcLicenceLookupAllowed() 
         this.recheckStates()		
     }
 
@@ -359,9 +374,8 @@ export default class DriversInformationCard extends Vue {
         this.$emit('recheckStates')
     }
 
-	get displayIcbcLicenceLookup(){
-
-        return this.driverInfo?.driversLicenceJurisdiction?.objectCd == "BC" && this.$store.state.isUserAuthorized;
+	public checkIcbcLicenceLookupAllowed(){
+        this.displayIcbcLicenceLookup = this.driverInfo?.driversLicenceJurisdiction?.objectCd == "BC" && this.$store.state.isUserAuthorized;
     }
 
 	public validateDate(datePicker?){
@@ -411,7 +425,7 @@ export default class DriversInformationCard extends Vue {
 		this.update();
 	}
 
-	public editPhoneNumber(value: string, val){
+	public editPhoneNumber(value: string){
 		this.update()
 		if(this.phonePrvValue.slice(-1)=='-' && this.phonePrvValue.length>=value.length) this.phonePrvValue=value.slice(0,-1)
 		else if(isNaN(Number(value.slice(-1))) && value.slice(-1)!='-') this.phonePrvValue= value.slice(0,-1) 
@@ -445,57 +459,5 @@ export default class DriversInformationCard extends Vue {
 	// 		background: #FFF;
 	// 	}
 	// }
-
-	.fade-out {
-		animation: fadeOut ease 8s;
-		-webkit-animation: fadeOut ease 8s;
-		-moz-animation: fadeOut ease 8s;
-		-o-animation: fadeOut ease 8s;
-		-ms-animation: fadeOut ease 8s;
-	}
-	@keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
-	@-moz-keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
-	@-webkit-keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
-	@-o-keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
-	@-ms-keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
 
 </style>

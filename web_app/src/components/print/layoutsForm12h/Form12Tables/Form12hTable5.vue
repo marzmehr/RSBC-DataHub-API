@@ -82,7 +82,7 @@ import { twelveHourFormJsonInfoType } from '@/types/Forms/MV2906';
 })
 export default class Form12hTable5 extends Vue {
 
-   @mv2906State.State
+    @mv2906State.State
     public mv2906Info: twelveHourFormJsonInfoType;   
 
     dataReady = false;

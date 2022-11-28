@@ -1,22 +1,28 @@
 <template>
 
 	<b-card v-if="dataReady" header-tag="header" bg-variant="gov-accent-grey" border-variant="light" >		
-		<b-card-header header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
-			<b-row><b>Registered Owner</b> 
-			<b-button 
-				class="bg-primary text-white"
-				style="opacity:1; float:right;"
-				:disabled="formPrinted"
-				@click="populateOwnerFromDriver">
-				<spinner color="#FFF" v-if="populatingFromDriver" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
-				<span style="font-size: 0.875rem;" v-else>Fill from driver</span>
-			</b-button>  
+		<b-card-header  class="text-left h3" header-bg-variant="light" header-border-variant="bright" header-text-variant="dark">            
+			<b-row class="my-0 py-0 ">
+				<b-col>
+					<b>Registered Owner</b> 
+				</b-col>
+				<b-col>
+					<b-button 
+						class="bg-primary text-white"
+						style="opacity:1; float:right;"
+						:disabled="formPrinted"
+						@click="populateOwnerFromDriver">
+						<spinner color="#FFF" v-if="populatingFromDriver" style="margin:0; padding: 0; transform:translate(-12px,-22px);"/>
+						<span style="font-size: 13pt;" v-else>Fill from Driver's Information</span>
+					</b-button>
+				</b-col>  
 			</b-row>   
 		</b-card-header>
 		<b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
-			<b-row>
+			<b-row class="text-left">
 				<b-col cols="3">
 					<b-form-checkbox
+						size="lg"
 						v-model="ownerInfo.ownerOrganization"
 						:disabled="formPrinted"
 						@input="update"
@@ -24,10 +30,11 @@
 					</b-form-checkbox>                                
 				</b-col>
 			</b-row>
-			<b-row v-if="ownerInfo.ownerOrganization">
+			<b-row class="text-left" v-if="ownerInfo.ownerOrganization">
 				<b-col >
 					<label class="ml-1 m-0 p-0"> Corporation Name </label>
 					<b-form-input
+						size="lg"
 						placeholder="Corporation Name"
 						v-model="ownerInfo.ownerOrganizationName"
 						:disabled="formPrinted"
@@ -37,10 +44,11 @@
 				</b-col>
 				
 			</b-row>
-			<b-row v-else>
+			<b-row class="text-left" v-else>
 				<b-col>
 					<label class="ml-1 m-0 p-0"> Owner's Last Name </label>
 					<b-form-input
+						size="lg"
 						placeholder="Owner's Last Name"
 						v-model="ownerInfo.ownerLastName"
 						:disabled="formPrinted"
@@ -51,6 +59,7 @@
 				<b-col>
 					<label class="ml-1 m-0 p-0"> Owner's First Name </label>
 					<b-form-input
+						size="lg"
 						placeholder="Owner's First Name"
 						v-model="ownerInfo.ownerFirstName"
 						:disabled="formPrinted"
@@ -59,10 +68,11 @@
 					</b-form-input>  
 				</b-col>
 			</b-row>
-			<b-row>
+			<b-row class="text-left">
 				<b-col>					
 					<label class="ml-1 m-0 p-0"> Address Line </label>
 					<b-form-input
+						size="lg"
 						placeholder="Address Line"
 						:disabled="formPrinted"
 						v-model="ownerInfo.ownerAddress"
@@ -71,36 +81,34 @@
 					</b-form-input>
 				</b-col>				
 			</b-row>
-			<b-row>
-				<b-col cols="6" >
+			<b-row class="text-left">
+				<b-col cols="4" >
 					<label class="ml-1 m-0 p-0"> City </label>
-					<b-form-input						
+					<b-form-input
+						size="lg"						
 						v-model="ownerInfo.ownerCity"						
 						@input="update"
 						:disabled="formPrinted"
 						:state="ownerState.ownerCity">
 					</b-form-input>                                
 				</b-col>
-				<b-col cols="2">
+				<b-col cols="3">
 					<label class="ml-1 m-0 p-0"> Prov / State </label>
-					<b-form-select	
-						v-model="ownerInfo.ownerProvince"
-						:disabled="formPrinted"
-						@change="update"
-						:state="ownerState.ownerProvince"							
-						placeholder="Search for a Province or State"
-						style="display: block;">
-							<b-form-select-option
-								v-for="province,inx in provinces" 
-								:key="'owner-province-'+province.objectCd+inx"
-								:value="province">
-									{{province.objectDsc}}
-							</b-form-select-option>    
-					</b-form-select>   
+					<input-search-form
+                        :data="ownerInfo"
+                        dataField="ownerProvince"
+                        :optionList="provinces"
+                        optionLabelField="objectDsc"
+                        :error="ownerState.ownerProvince==false?'Please select one!':''"
+                        :disabled="formPrinted"
+                        placeholder="Search for a Province or State"
+                        @update="update"
+                    />  
 				</b-col>
-				<b-col >
+				<b-col cols="2" >
 					<label class="ml-1 m-0 p-0"> Postal / Zip</label>
-					<b-form-input						
+					<b-form-input
+						size="lg"						
 						v-model="ownerInfo.ownerPostalCode"						
 						@input="update"
 						:disabled="formPrinted"
@@ -113,9 +121,10 @@
                         Invalid Postal Code <i>(For CANADA format is A1A 1A1)</i>
                     </div>                                  
 				</b-col>
-				<b-col>
+				<b-col cols="3">
 					<label class="ml-1 m-0 p-0"> Phone </label>
-					<b-form-input						
+					<b-form-input
+						size="lg"						
 						v-model="ownerInfo.ownerPhoneNumber"						
 						:formatter="editPhoneNumber"
 						:disabled="formPrinted"
@@ -129,8 +138,7 @@
                     </div> 
 
 				</b-col>
-			</b-row>
-			<div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
+			</b-row>						
 		</b-card> 
 
 	</b-card>	
@@ -153,10 +161,12 @@ const mv2634State = namespace("MV2634");
 import { provinceInfoType } from '@/types/Common';
 import { twentyFourHourFormStatesInfoType, twentyFourHourFormDataInfoType, twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
 import Spinner from "@/components/utils/Spinner.vue";
+import InputSearchForm from '@/components/utils/InputSearchForm.vue'
 
 @Component({
     components: {           
-        Spinner
+        Spinner,
+		InputSearchForm
     }        
 }) 
 export default class VehicleOwnerCard extends Vue {   
@@ -199,7 +209,7 @@ export default class VehicleOwnerCard extends Vue {
 		this.$emit('recheckStates')
 	}
 
-	public editPhoneNumber(value: string, val){
+	public editPhoneNumber(value: string){
 		this.update()
 		if(this.phonePrvValue.slice(-1)=='-' && this.phonePrvValue.length>=value.length) this.phonePrvValue=value.slice(0,-1)
 		else if(isNaN(Number(value.slice(-1))) && value.slice(-1)!='-') this.phonePrvValue= value.slice(0,-1) 
@@ -227,67 +237,11 @@ export default class VehicleOwnerCard extends Vue {
 </script>
 
 <style scoped lang="scss">
+	label{
+		font-size: 16pt;
+	}
 
 	input.is-invalid {
 		background: #ebc417;
 	}
-	select.is-invalid {
-		background: #ebc417;
-		option {
-			background: #FFF;
-		}
-	}
-
-	.fade-out {
-		animation: fadeOut ease 8s;
-		-webkit-animation: fadeOut ease 8s;
-		-moz-animation: fadeOut ease 8s;
-		-o-animation: fadeOut ease 8s;
-		-ms-animation: fadeOut ease 8s;
-	}
-	@keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
-	@-moz-keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
-	@-webkit-keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
-	@-o-keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
-	@-ms-keyframes fadeOut {
-		0% {
-			opacity:1;
-		}
-		100% {
-			opacity:0;
-		}
-	}
-
 </style>

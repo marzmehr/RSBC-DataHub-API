@@ -5,9 +5,18 @@
         </b-card-header>
         
         <b-card border-variant="light" bg-variant="time" text-variant="dark" class="my-0">
+            <b-alert
+				:show="errorDismissCountDown"
+				style="margin:0 0 2rem auto;"
+				dismissible
+				@dismissed="errorDismissCountDown=0"
+				@dismiss-count-down="errorDismissCountDown=$event;"
+				variant="danger"
+                > {{error}}
+            </b-alert>
             <b-row class="text-left">
                 <b-col cols="3" >
-                    <label class="m-0 p-0"> Jurisdiction </label>
+                    <label class="m-0 p-0"> Jurisdiction  <span class="text-danger">*</span> </label>
                     <input-search-form
                         :data="vehicleInfo"
                         dataField="plateProvince"
@@ -20,7 +29,7 @@
                     />                          
                 </b-col>
                 <b-col class="pr-2" cols="4">
-                    <label class="ml-1 m-0 p-0"> Plate Number</label>
+                    <label class="ml-1 m-0 p-0"> Plate Number <span class="text-danger">*</span></label>
                     <b-form-input
                         size="lg"
                         v-model="vehicleInfo.plateNumber"
@@ -34,8 +43,8 @@
                     <b-button 
                         size="lg"
                         class="bg-primary text-white"
-                        style="opacity:1; margin-top:1.7rem;"
-                        :disabled="formPrinted || !displayIcbcPlateLookup"
+                        style="margin-top:1.7rem;"
+                        :disabled="formPrinted || !displayIcbcPlateLookup"                        
                         @click="triggerPlateLookup">
                         <spinner 
                             color="#FFF" 
@@ -122,8 +131,7 @@
                         The NSC number cannot exceed 14 characters.
                     </div>					                             
                 </b-col>
-            </b-row>	
-            <div class="fade-out alert alert-danger mt-4" v-if="error">{{error}}</div>			
+            </b-row>			
         </b-card>
 
     </b-card>
@@ -194,12 +202,14 @@ export default class VehicleInformationCard extends Vue {
     searchingDl = false;
     formPrinted = false;
     vehicleYears = [];
-
+    displayIcbcPlateLookup=true
+    errorDismissCountDown=0
 
     mounted() { 
-        this.dataReady = false;
+        this.dataReady = false;        
         this.formPrinted = Boolean(this.mv2906Info.printed_timestamp);
         this.extractFields();
+        this.checkIcbcPlateLookupAllowed()
         this.dataReady = true;
     }
 
@@ -221,6 +231,7 @@ export default class VehicleInformationCard extends Vue {
                 console.log("error", error)
                 this.searchingLookup = false;
                 this.error = error.description;
+                this.errorDismissCountDown=3
             })
     }
 
@@ -234,7 +245,8 @@ export default class VehicleInformationCard extends Vue {
             "search": data['vehicleMake'] + " - " + data['vehicleModel']};
     }
 
-    public update(){     
+    public update(){  
+        this.checkIcbcPlateLookupAllowed()
         this.recheckStates()
     }
 
@@ -242,8 +254,8 @@ export default class VehicleInformationCard extends Vue {
         this.$emit('recheckStates')
     }
 
-    get displayIcbcPlateLookup(){
-        return this.vehicleInfo.plateProvince.objectCd == "BC" && this.$store.state.isUserAuthorized;
+    public checkIcbcPlateLookupAllowed(){
+        this.displayIcbcPlateLookup = this.vehicleInfo.plateProvince.objectCd == "BC" && this.$store.state.isUserAuthorized;
     }
 
  
@@ -263,58 +275,6 @@ export default class VehicleInformationCard extends Vue {
         background: #ebc417;
         option {
             background: #FFF;
-        }
-    }
-
-    .fade-out {
-        animation: fadeOut ease 8s;
-        -webkit-animation: fadeOut ease 8s;
-        -moz-animation: fadeOut ease 8s;
-        -o-animation: fadeOut ease 8s;
-        -ms-animation: fadeOut ease 8s;
-    }
-    @keyframes fadeOut {
-        0% {
-            opacity:1;
-        }
-        100% {
-            opacity:0;
-        }
-    }
-
-    @-moz-keyframes fadeOut {
-        0% {
-            opacity:1;
-        }
-        100% {
-            opacity:0;
-        }
-    }
-
-    @-webkit-keyframes fadeOut {
-        0% {
-            opacity:1;
-        }
-        100% {
-            opacity:0;
-        }
-    }
-
-    @-o-keyframes fadeOut {
-        0% {
-            opacity:1;
-        }
-        100% {
-            opacity:0;
-        }
-    }
-
-    @-ms-keyframes fadeOut {
-        0% {
-            opacity:1;
-        }
-        100% {
-            opacity:0;
         }
     }
 

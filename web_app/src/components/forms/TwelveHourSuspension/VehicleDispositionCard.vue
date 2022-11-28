@@ -39,16 +39,16 @@
                 <b-card no-body class="bg-timelight border-0">
                     <b-row class="text-left mx-1 mt-0">
                         <b-col>
-                        <label class="m-0 p-0"></label>
-                        <input-search-form-imp-lot
-                            :data="vdInfo"
-                            dataField="impoundLot"
-                            :optionList="impound_lot_operators"
-                            :error="''"
-                            :disabled="formPrinted"
-                            placeholder="Search for an Impound Lot Operator"
-                            @update="update"
-                        />  
+                            <label class="m-0 p-0"></label>
+                            <input-search-form-imp-lot
+                                :data="vdInfo"
+                                dataField="impoundLot"
+                                :optionList="impound_lot_operators"
+                                :error="''"
+                                :disabled="formPrinted"
+                                placeholder="Search for an Impound Lot Operator"
+                                @update="update"
+                            />  
                         </b-col>   
                     </b-row>
 

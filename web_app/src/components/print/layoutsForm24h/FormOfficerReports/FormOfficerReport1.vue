@@ -2,7 +2,7 @@
     <div v-if="dataReady">
         <div class="lineheight0-25 text-center" style="font-size:11pt; margin:1.75rem 0 0 0;   line-height:1rem;"><b>Officer’s Report</b> (Continued)</div>
         <div class="row lineheight0-25" style="font-size:11pt; margin:0rem 0 0 0;   line-height:1rem;"><b>1) Driver</b></div>
-        <div style="text-align:justify; font-size:9pt; line-height:0.85rem; margin:0 1rem 0 1.5rem; ">
+        <div style="text-align:justify; font-size:8.5pt; line-height:0.85rem; margin:0 1rem 0 1.5rem; ">
             The driver identified on the reverse was operating a motor vehicle or had
             care or control of a motor vehicle for the purposes of section 215(1) of the
             Motor Vehicle Act based upon (provide evidence):
@@ -25,7 +25,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.reasonableGrounds.includes('Witnessed by officer')"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -36,12 +36,12 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.reasonableGrounds.includes('Admission by driver')"
                             checkFontSize="16pt"
                             text="" />
                     </td>
-                    <td class="" style="" colspan="25">Admission by driver</td>
-                    <td class="" style="" colspan="6"> </td>                                               
+                    <td class="" style="" colspan="30">Admission by driver</td>
+                    <td class="" style="" colspan="1"> </td>                                               
                 </tr>
 
 <!-- <ROW2> -->
@@ -53,7 +53,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.reasonableGrounds.includes('Independent witness')"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -64,14 +64,22 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.reasonableGrounds.includes('Other')"
                             checkFontSize="16pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="25">Other</td>
                     <td class="" style="" colspan="6"> </td>                                               
                 </tr>
-                <tr style="height:2rem; line-height:1rem;" ></tr>
+                <tr style="height:0.5rem;  line-height:1rem;">
+                    <td class="" style="" colspan="4"></td>                    
+                    <td class="answer" style="" colspan="94">{{formData.other}}</td>
+                </tr>
+                <tr style="height:0.5rem;  line-height:0.5rem;">
+                    <td class="" style="" colspan="4"></td>
+                    <td class="answer" style="" colspan="94"><div v-if="formData.videoSurveillance">VIDEO SURVEILLANCE</div></td>                    
+                </tr>
+                <!-- <tr style="height:2rem; line-height:1rem;" ></tr> -->
                 <!-- <tr style="height:0.5rem; line-height:1rem;">
                     <td class="" style="" colspan="4"></td>
                     <td class="" style="" colspan="30">Additional Information:</td>
@@ -95,10 +103,15 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
+
 
 @Component({
     components:{       
@@ -107,40 +120,37 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class FormOfficerReport1 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
-    driver=['D','R','I','V','E','R']
+
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form24 = this.mv2634Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            reasonableGrounds: [],
+            other: '',            
+            videoSurveillance: false                      
+        }
 
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        this.formData.reasonableGrounds = form24.reasonableGrounds?form24.reasonableGrounds:[];
+        if (this.formData.reasonableGrounds.includes('Other')){
+            this.formData.other = form24.reasonableGroundsOther?form24.reasonableGroundsOther:'';
+        } else {
+            this.formData.other = '';
+        }
+        this.formData.videoSurveillance = this.formData.reasonableGrounds.includes('Video surveillance');        
+    } 
     
 }
 

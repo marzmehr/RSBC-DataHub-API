@@ -1,7 +1,7 @@
 <template>
     <div v-if="dataReady">        
         <div class="row lineheight0-25" style="font-size:11pt; margin:0.75rem 0 0 0;   line-height:1rem;"><b>3) After the Prohibition Served</b></div>
-        <div style="text-align:justify; font-size:9pt; line-height:0.85rem; margin:0 1rem 0 1.5rem; ">
+        <div style="text-align:justify; font-size:8.5pt; line-height:0.85rem; margin:0 1rem 0 1.5rem; ">
             Did the driver request a breath test or prescribed physical coordination test?           
         </div>
        
@@ -22,7 +22,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.testPrescribed"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -33,17 +33,17 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="false"
                             checkFontSize="16pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="25">No</td>
-                    <td class="" style="" colspan="29"> </td>                                               
+                    <td class="" style="" colspan="29">{{formData.reasonNoTest}} </td>                                               
                 </tr>
 
                 <tr style="height:1.5rem;  line-height:1.5rem;">
                      <td class="" style="" colspan="4"></td>
-                    <td class="" style="" colspan="96">
+                    <td class="" style="font-size:8.5pt;" colspan="96">
                         If yes, which test was administered?
                     </td>
                 </tr>
@@ -57,14 +57,14 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.fstTest"
                             checkFontSize="16pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="35">Yes, Alco-Sensor FST</td>
                     
-                    <td class="" style="" colspan="22">ASD Expiry Date</td>
-                    <td class="" style="border-bottom:1px solid black;" colspan="35"></td>
+                    <td class="" style="" colspan="24">ASD Expiry Date</td>
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="33">{{formData.asdExpiryDate}}</td>
                                             
                 </tr>
 <!-- <APPROVED INSTRUMENT> -->
@@ -76,12 +76,12 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.approvedInstrumentTest"
                             checkFontSize="16pt"
                             text="" />
                     </td>
-                    <td class="" style="" colspan="44">Yes, Approved Instrument (specify)</td>
-                    <td class="" style="border-bottom:1px solid black;" colspan="48"></td>                                            
+                    <td class="" style="" colspan="46">Yes, Approved Instrument (specify)</td>
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="46">{{formData.approvedInstrumentType}}</td>                                            
                 </tr>
 <!-- <PRESCRIBED> -->
                 <tr style="height:0.5rem;  line-height:1rem;">
@@ -92,11 +92,11 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.prescribedPhysicalTest"
                             checkFontSize="16pt"
                             text="" />
                     </td>
-                    <td class="" style="" colspan="92">Yes, Prescribed Physical Coordination Test</td>
+                    <td class="" style="" colspan="92">Yes, Prescribed Physical Coordination Test<span style="margin-left: 0.8rem;" class="answer">{{formData.prescribedPhysicalTestType}}</span></td>
                 </tr>
 <!-- <test administrated> -->
                 <tr style="height:0.5rem;  line-height:1rem;">
@@ -107,7 +107,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="false"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -120,7 +120,7 @@
                 <tr style="height:0.85rem;  line-height:0.8rem;">
                     <td class="" style="" colspan="4"></td>                                     
                     <td class="" style="" colspan="16">Time of Test</td>
-                    <td class="" style="border-bottom:1px solid black;" colspan="20"></td> 
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="20">{{formData.testDateTime}}</td> 
                     <td class="" style="" colspan="60"></td>                                          
                 </tr>
                 <tr style="height:0.25rem;  line-height:0.8rem;"></tr>
@@ -137,7 +137,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.alcoholUnder99"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -148,7 +148,7 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.alcoholOver99"
                             checkFontSize="16pt"
                             text="" />
                     </td>
@@ -159,12 +159,12 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.alcoholBac"
                             checkFontSize="16pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="7">BAC</td>
-                    <td class="" style="border-bottom:1px solid black;" colspan="35"></td>
+                    <td class="answer" style="border-bottom:1px solid black;" colspan="35">{{formData.alcoholBacResult}}</td>
                 </tr>
 
 <!-- <Result: Drug> -->                 
@@ -180,11 +180,13 @@
                             shiftmark="0px,-1px"                                   
                             checkColor="#2134AB"
                             boxSize="1.25em" 
-                            :check="true"
+                            :check="formData.drugTestAffected"
                             checkFontSize="16pt"
                             text="" />
                     </td>
-                    <td class="" style="" colspan="92">Ability to drive affected by a drug</td>
+                    <td class="" style="" colspan="92">Ability to drive affected by a drug
+                        <span class="answer" style="margin-right: 1rem;">{{formData.drugResults}}</span>
+                    </td>
                 </tr>
 
                 
@@ -193,10 +195,14 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/mv2634";
+const mv2634State = namespace("MV2634");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
+import { twentyFourHourFormJsonInfoType } from '@/types/Forms/MV2634';
 
 @Component({
     components:{       
@@ -205,40 +211,42 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class FormOfficerReport3 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @mv2634State.State
+    public mv2634Info: twentyFourHourFormJsonInfoType;   
 
     dataReady = false;
-    driver=['D','R','I','V','E','R']
+
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const form24 = this.mv2634Info.data
 
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        this.formData = {
+            testPrescribed: false,
+            reasonNoTest: '',
+            fstTest: false,           
+            asdExpiryDate: '',
+            alcoholOver99: false,
+            alcoholUnder99: false,
+            approvedInstrumentTest: false,
+            approvedInstrumentType: '',
+            alcoholBac: false,
+            prescribedPhysicalTest: false,
+            prescribedPhysicalTestType: '',
+            alcoholBacResult: '',
+            drugsProhibition: false,            
+            testDateTime: '',            
+            drugTestAffected: false,
+            drugResults: ''                                 
+        }
+    }
     
 }
 

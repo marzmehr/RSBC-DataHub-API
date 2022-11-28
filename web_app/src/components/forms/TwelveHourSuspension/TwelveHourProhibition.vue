@@ -215,17 +215,19 @@ export default class TwelveHourProhibition extends Vue {
         const specialFields = ['dob']
         for(const field of Object.keys(this.fieldStates)){
             if(this.fieldStates[field]==false && !specialFields.includes(field)){
-                this.checkStates()
+                this.checkStates(false)
                 return 
             }
         }  
     }
 
-	public checkStates(){
+	public checkStates(finalCheck){
         const data = this.twelveHourFormData.data
         
         //__Driver's Information
+        this.fieldStates.driversNumber = data.driversNumber? null:false;
         this.fieldStates.lastName = data.lastName? null:false;
+        if(!data.dob) this.fieldStates.dob = false;
         this.fieldStates.address = data.address? null:false;
         this.fieldStates.driverCity = data.driverCity? null:false;
         this.fieldStates.driverProvince = data.driverProvince?.objectCd? null:false;
@@ -239,8 +241,13 @@ export default class TwelveHourProhibition extends Vue {
             this.fieldStates.driverPostalCode = Vue.filter('verifyPostCode')(data.driverPostalCode, data.driverProvince?.objectCd)? null:false;      
         else 
             this.fieldStates.driverPostalCode = null;
-        //__Vehicle Disposition
 
+        //__Vehicle Information
+        this.fieldStates.plateProvince = data.plateProvince?.objectCd? null:false;
+        this.fieldStates.plateNumber = data.plateNumber? null:false;
+
+
+        //__Vehicle Disposition
         this.fieldStates.vehicleImpounded = data.vehicleImpounded==null? false : null;
         //Impounded
         this.fieldStates.locationOfKeys = data.vehicleImpounded==true && !data.locationOfKeys? false: null;         
@@ -280,7 +287,7 @@ export default class TwelveHourProhibition extends Vue {
 
         for(const field of Object.keys(this.fieldStates)){
             if(this.fieldStates[field]==false){
-                Vue.filter('findInvalidFields')()
+                if(finalCheck) Vue.filter('findInvalidFields')()
                 return false
             }                
         }       
@@ -289,7 +296,7 @@ export default class TwelveHourProhibition extends Vue {
     }
 
     public navigateToPrintPage(){
-        if(this.checkStates()){
+        if(this.checkStates(true)){
             const form_id = this.currently_editing_form_object.form_id
             const form_type = this.currently_editing_form_object.form_type
             this.$router.push({   
