@@ -19,7 +19,7 @@
                             </tr>
                             <tr style="width:100%;" >
                                 <td >
-                                    <div class="text-center mt-1" style="font-size:14pt;" ><b>VI NO.</b> <span style="color: rgb(3, 19, 165);">22-1000710</span></div>
+                                    <div class="text-center mt-1" style="font-size:14pt;" ><b>VI NO.</b> <span style="color: rgb(3, 19, 165);">{{formData.formId}}</span></div>
                                 </td>
                             </tr>
                         </table>
@@ -50,7 +50,7 @@
                         <underline-form 
                             class="text-center"
                             hint="" 
-                            text="2020/02/02" 
+                            :text="formData.reportDate" 
                             textSize="10pt" 
                             textWeight="600" 
                             textwidth="6rem" 
@@ -62,11 +62,17 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import {srcFile} from '@/images/logo'
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
+
+import {srcFile} from '@/images/logo';
+
+import "@/store/modules/forms/vi";
+const viState = namespace("VI");
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
 import UnderlineForm from "../../pdfUtil/UnderlineForm.vue"
+import { viFormJsonInfoType } from '@/types/Forms/VI';
 
 @Component({
     components:{       
@@ -76,17 +82,19 @@ import UnderlineForm from "../../pdfUtil/UnderlineForm.vue"
 })
 export default class FormRtsTable0 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @viState.State
+    public viInfo: viFormJsonInfoType;   
 
     dataReady = false;
+
+    formData;
     src =""
     serialNo="*1000710*"
 
     mounted(){
         this.dataReady = false; 
         this.src = srcFile;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
@@ -99,27 +107,19 @@ export default class FormRtsTable0 extends Vue {
         console.log(imgSource)
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const viForm = this.viInfo.data;
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {
+            formId: '',
+            reportDate:''           
+        }
 
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
+        this.formData.formId = this.viInfo.form_id?this.viInfo.form_id.toUpperCase():'';        
+        this.formData.reportDate = viForm.impoundedDate?Vue.filter('format-date-dash')(viForm.impoundedDate):'';         
            
-    // }
+    }
 
     
 }

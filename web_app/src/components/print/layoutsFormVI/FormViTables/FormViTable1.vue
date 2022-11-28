@@ -22,11 +22,11 @@
                 <tr class="spacer-low" style="color:#FFF; height:0.15rem; line-height:0.15rem;"><td colspan="100"></td></tr>
                 <tr style="height:1.9rem;  line-height:1rem; border-top:0px solid;">                  
                     <td class="" style="" colspan="4" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="60">GUY, BAD</td> 
+                    <td class="answer2" style="border:1px solid #656565;" colspan="60">{{formData.fullName}}</td> 
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="16">1999/01/01</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="16">{{formData.dob}}</td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="17">GENDER DIVERSE</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="17">{{formData.gender}}</td>
                     <td class="" style="" colspan="1" />                                                           
                 </tr>
                 <tr style="color:#FFF; height:0.15rem; line-height:0.25rem;"><td colspan="100">.</td></tr>
@@ -44,13 +44,13 @@
                 <tr class="spacer-low" style="color:#FFF; height:0.15rem; line-height:0.15rem;"><td colspan="100"></td></tr>
                 <tr style="height:1.9rem;  line-height:1rem; border-top:0px solid;">                    
                     <td class="" style="" colspan="4" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="48">1234567</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="48">{{formData.dlNumber}}</td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="13">BC</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="13">{{formData.province}}</td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="7">5</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="7">{{formData.dlClass}}</td>
                     <td class="" style="" colspan="1" /> 
-                    <td class="answer2" style="border:1px solid #656565;" colspan="12">2022</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="12">{{formData.expiryYear}}</td>
                     <td class="" style="" colspan="13" />                                                       
                 </tr>
                 <tr style="color:#FFF; height:0.5rem; line-height:0.25rem;"><td colspan="100">.</td></tr>
@@ -60,9 +60,13 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/vi";
+const viState = namespace("VI");
 
+import { viFormDataInfoType, viFormJsonInfoType } from '@/types/Forms/VI';
 import CheckBox from "../../pdfUtil/CheckBox.vue";
 
 @Component({
@@ -72,39 +76,47 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class FormViTable1 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @viState.State
+    public viInfo: viFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const viForm = this.viInfo?.data?this.viInfo.data:{} as viFormDataInfoType;
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {            
+            fullName:'',
+            dob: '',
+            gender: '',
+            dlNumber: '',
+            province: '',
+            dlClass: '',
+            expiryYear: ''
+        }
 
-    //     if (index != -1){
+        const surName = viForm.lastName?viForm.lastName.toUpperCase():'';
+        const givenName = viForm.givenName?viForm.givenName.toUpperCase():'';
+        this.formData.fullName = surName + ', ' + givenName;
 
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
+        this.formData.dob = viForm.dob?Vue.filter('format-date-slash')(viForm.dob):'';
+        
+        this.formData.gender = viForm.driver_gender?viForm.driver_gender.toUpperCase():'';
+        this.formData.dlNumber = viForm.driversNumber?viForm.driversNumber.toUpperCase():'';
+        this.formData.province = viForm.driversLicenceJurisdiction.objectCd?viForm.driversLicenceJurisdiction.objectCd.toUpperCase():'';
+        
+        this.formData.dlClass = viForm.dlClass?viForm.dlClass.toUpperCase():'';
+        this.formData.expiryYear = viForm.dlExpiryYear?viForm.dlExpiryYear:'';       
            
-    // }
+    }
 
     
 }

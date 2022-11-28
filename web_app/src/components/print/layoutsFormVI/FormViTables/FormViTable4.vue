@@ -28,17 +28,17 @@
                 <tr class="spacer-low" style="color:#FFF; height:0.15rem; line-height:0.15rem;"><td colspan="100"></td></tr>
                 <tr style="height:1.9rem;  line-height:1rem; border-top:0px solid;">                  
                     <td class="" style="" colspan="4" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="20">GUY123</td> 
+                    <td class="answer2" style="border:1px solid #656565;" colspan="20">{{formData.plateNumber}}</td> 
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="10">BC</td> 
+                    <td class="answer2" style="border:1px solid #656565;" colspan="10">{{formData.plateProvince}}</td> 
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="17">OPEL</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="17">{{formData.make}}</td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="18">CORSA</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="18">{{formData.model}}</td>
                     <td class="" style="" colspan="1" /> 
-                    <td class="answer2" style="border:1px solid #656565;" colspan="8">2020</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="8">{{formData.year}}</td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="17">GREEN</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="17">{{formData.color}}</td>
                     <td class="" style="" colspan="1" />                                                         
                 </tr>
                 <tr style="color:#FFF; height:0.15rem; line-height:0.25rem;"><td colspan="100">.</td></tr>
@@ -54,7 +54,7 @@
                 <tr class="spacer-low" style="color:#FFF; height:0.15rem; line-height:0.15rem;"><td colspan="100"></td></tr>
                 <tr style="height:1.9rem;  line-height:1rem; border-top:0px solid;">                    
                     <td class="" style="" colspan="4" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="22">1234567</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="22">{{formData.regNumber}}</td>
                     <td class="" style="" colspan="1" />
                     <td class="padding-left-0-25" style="border:1px solid #656565;" colspan="4">
                         <check-box 
@@ -62,12 +62,12 @@
                             shiftmark="-1px,-3px"                                   
                             checkColor="#2134AB"
                             boxSize="1.65em" 
-                            :check="true"
+                            :check="formData.nsc"
                             checkFontSize="15pt"
                             text="" />
                     </td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="39">5</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="39">{{formData.vin}}</td>
                     <td class="" style="" colspan="29" />                                                                          
                 </tr>
                 <tr style="color:#FFF; height:0.5rem; line-height:0.25rem;"><td colspan="100">.</td></tr>
@@ -77,8 +77,13 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/vi";
+const viState = namespace("VI");
+
+import { viFormJsonInfoType } from '@/types/Forms/VI';
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
 
@@ -89,40 +94,47 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class FormViTable4 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @viState.State
+    public viInfo: viFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const viForm = this.viInfo.data;
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {            
+            plateNumber:'',
+            plateProvince: '',
+            make: '',
+            model: '',
+            year: '',
+            color: '',
+            regNumber: '',
+            nsc: false,
+            vin: ''            
+        }
 
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        const colorList = viForm.vehicleColor?viForm.vehicleColor.map( o => o.display_name):[];
+        
+        this.formData.plateNumber = viForm.plateNumber?viForm.plateNumber.toUpperCase():'';
+        this.formData.plateProvince = viForm.plateProvince?.objectCd?viForm.plateProvince.objectCd.toUpperCase():'';
+        this.formData.make = viForm.vehicleMake?.mk?viForm.vehicleMake.mk.toUpperCase():'';
+        this.formData.model = viForm.vehicleMake?.md?viForm.vehicleMake.md.toUpperCase():'';
+        this.formData.year = viForm.vehicleYear?viForm.vehicleYear:'';
+        this.formData.color = colorList.length>0?colorList.toString().toUpperCase():'';
+        this.formData.regNumber = viForm.registrationNumber?viForm.registrationNumber:'';
+        this.formData.nsc = viForm.isNSC;
+        this.formData.vin = viForm.vin_number?viForm.vin_number:'';
+    }
     
 }
 

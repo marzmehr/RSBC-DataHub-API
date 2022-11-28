@@ -25,14 +25,14 @@
                     <td class="" style="" colspan="4" />
                     <td class="answer2" style="border:1px solid #656565;" colspan="73">
                         <div class="row m-0 p-0">
-                            <div style="width:68%" >800 HORNBY ST.</div>
-                            <div style="width:32%" >VANCOUVER</div>
+                            <div style="width:68%" >{{formData.address}}</div>
+                            <div style="width:32%" >{{formData.city}}</div>
                         </div>
                     </td> 
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="9">BC</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="9">{{formData.province}}</td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="11">V1R 1R1</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="11">{{formData.postalCode}}</td>
                     <td class="" style="" colspan="1" />                                                           
                 </tr>
                 <tr style="color:#FFF; height:0.15rem; line-height:0.25rem;"><td colspan="100">.</td></tr>
@@ -46,9 +46,9 @@
                 <tr class="spacer-low" style="color:#FFF; height:0.15rem; line-height:0.15rem;"><td colspan="100"></td></tr>
                 <tr style="height:1.9rem;  line-height:1rem; border-top:0px solid;">                    
                     <td class="" style="" colspan="4" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="30">800-700-6000</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="30">{{formData.phone}}</td>
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="64">A@B.COM</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="64">{{formData.email}}</td>
                     <td class="" style="" colspan="1" />                                                                         
                 </tr>
                 <tr style="color:#FFF; height:0.5rem; line-height:0.25rem;"><td colspan="100">.</td></tr>
@@ -58,8 +58,13 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/vi";
+const viState = namespace("VI");
+
+import { viFormJsonInfoType } from '@/types/Forms/VI';
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
 
@@ -70,40 +75,39 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class FormViTable3 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @viState.State
+    public viInfo: viFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const viForm = this.viInfo.data;
 
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        this.formData = {            
+            address:'',
+            city: '',
+            province: '',
+            postalCode: '',
+            phone: '',
+            email: ''            
+        }
+        
+        this.formData.address = viForm.ownerAddress?viForm.ownerAddress.toUpperCase():'';
+        this.formData.city = viForm.ownerCity?viForm.ownerCity.toUpperCase():'';
+        this.formData.province = viForm.ownerProvince?.objectCd?viForm.ownerProvince.objectCd.toUpperCase():'';
+        this.formData.postalCode = viForm.ownerPostalCode?viForm.ownerPostalCode.toUpperCase():'';
+        this.formData.phone = viForm.ownerPhoneNumber?viForm.ownerPhoneNumber.toUpperCase():'';
+        this.formData.email = viForm.ownerEmail?viForm.ownerEmail.toUpperCase():'';
+    }
     
 }
 

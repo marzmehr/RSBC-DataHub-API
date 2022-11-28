@@ -22,7 +22,7 @@
                             shiftmark="-1px,-4px"                                   
                             checkColor="#2134AB"
                             boxSize="1.5em" 
-                            :check="true"
+                            :check="formData.driverIsOwner"
                             checkFontSize="15pt"
                             text="" />
                     </td>
@@ -41,9 +41,9 @@
                 <tr class="spacer-low" style="color:#FFF; height:0.15rem; line-height:0.15rem;"><td colspan="100"></td></tr>
                 <tr style="height:1.9rem;  line-height:1rem; border-top:0px solid;">                    
                     <td class="" style="" colspan="4" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="73">GUY, GOOD</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="73">{{formData.fullName}}</td>
                     <td class="" style="" colspan="1" />                    
-                    <td class="answer2" style="border:1px solid #656565;" colspan="21">1950/10/10</td>
+                    <td class="answer2" style="border:1px solid #656565;" colspan="21">{{formData.dob}}</td>
                     <td class="" style="" colspan="1" />                                                       
                 </tr>
                 <tr style="color:#FFF; height:0.5rem; line-height:0.25rem;"><td colspan="100">.</td></tr>
@@ -53,8 +53,13 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/vi";
+const viState = namespace("VI");
+
+import { viFormJsonInfoType } from '@/types/Forms/VI';
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
 
@@ -65,40 +70,41 @@ import CheckBox from "../../pdfUtil/CheckBox.vue";
 })
 export default class FormViTable2 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @viState.State
+    public viInfo: viFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+    public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const viForm = this.viInfo.data;
 
-    //     const index = this.result.objectingParties.indexOf('Other')
+        this.formData = {            
+            fullName:'',
+            dob: '',
+            driverIsOwner: false            
+        }
 
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
-
+        if (viForm.ownerOrganization){
+            this.formData.fullName = viForm.ownerOrganizationName?viForm.ownerOrganizationName.toUpperCase():'';
+            this.formData.dob = '';
+            this.formData.driverIsOwner = false;
+        } else {
+            const surName = viForm.ownerLastName?viForm.ownerLastName.toUpperCase():'';
+            const givenName = viForm.ownerFirstName?viForm.ownerFirstName.toUpperCase():'';
+            this.formData.fullName = surName + ', ' + givenName;
+            this.formData.dob = viForm.ownerDob?Vue.filter('format-date-slash')(viForm.ownerDob):'';
+            this.formData.driverIsOwner = viForm.driverIsOwner;
+        }        
+    }
     
 }
 

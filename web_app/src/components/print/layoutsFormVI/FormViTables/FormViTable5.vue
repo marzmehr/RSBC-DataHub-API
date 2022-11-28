@@ -19,7 +19,7 @@
                 <tr style="height:1.9rem;  line-height:1rem; border-top:0px solid;">                  
                     <td class="" style="" colspan="4" />
                     <td class="font-size-8" style="font-size:7pt;" colspan="45">The undersigned peace officer has reasonable grounds to believe that on</td>                     
-                    <td class="answer2" style="border:1px solid #656565;" colspan="20">2020/02/02</td> 
+                    <td class="answer2" style="border:1px solid #656565;" colspan="20">{{formData.offenceDate}}</td> 
                     <td class="" style="" colspan="1" />
                     <td class="font-size-8" style="font-size:7pt;" colspan="1">,</td>
                     <td class="" style="" colspan="29" />                                                                           
@@ -28,14 +28,14 @@
                     <td class="" style="" colspan="4" />
                     <td class="font-size-8" style="font-size:7pt;" colspan="1">at</td> 
                     <td class="" style="" colspan="1" />
-                    <td class="answer2" style="border:1px solid #656565;" colspan="9">1000</td> 
+                    <td class="answer2" style="border:1px solid #656565;" colspan="9">{{formData.offenceTime}}</td> 
                     <td class="" style="" colspan="1" />
                     <td class="font-size-8" style="font-size:7pt;" colspan="7">hours, on</td>
                     <td class="" style="" colspan="29">
                         <underline-form 
                             class="pdf-none"
                             hint="STREET/HIGHWAY" 
-                            text="Horby" 
+                            :text="formData.offenceAddress" 
                             textSize="10pt" 
                             textWeight="600" 
                             textwidth="15rem" 
@@ -43,7 +43,7 @@
                         <underline-form 
                             class="print-none"
                             hint="STREET/HIGHWAY" 
-                            text="Horby" 
+                            :text="formData.offenceAddress" 
                             textSize="10pt" 
                             textWeight="600" 
                             textwidth="12.5rem" 
@@ -54,7 +54,7 @@
                         <underline-form
                             class="pdf-none" 
                             hint="CITY/TOWN" 
-                            text="PRINCE GEORGE" 
+                            :text="formData.offenceCity" 
                             textSize="10pt" 
                             textWeight="600" 
                             textwidth="13rem" 
@@ -62,7 +62,7 @@
                         <underline-form 
                             class="print-none"
                             hint="CITY/TOWN" 
-                            text="PRINCE GEORGE" 
+                            :text="formData.offenceCity" 
                             textSize="10pt" 
                             textWeight="600" 
                             textwidth="11.5rem" 
@@ -80,8 +80,13 @@
     </div>           
 </template>     
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from "vuex-class";
 
+import "@/store/modules/forms/vi";
+const viState = namespace("VI");
+
+import { viFormJsonInfoType } from '@/types/Forms/VI';
 
 import CheckBox from "../../pdfUtil/CheckBox.vue";
 import UnderlineForm from "../../pdfUtil/UnderlineForm.vue"
@@ -94,39 +99,38 @@ import UnderlineForm from "../../pdfUtil/UnderlineForm.vue"
 })
 export default class FormViTable5 extends Vue {
 
-    // @Prop({required:true})
-    // result!: form20DataInfoType;
+    @viState.State
+    public viInfo: viFormJsonInfoType;   
 
     dataReady = false;
 
+    formData;
 
     mounted(){
         this.dataReady = false;
-        // this.extractInfo();
+        this.extractInfo();
         this.dataReady = true;
     }
 
-    // public extractInfo(){
+     public extractInfo(){
 
-    //     if (this.result.withdrawingLawyerName == 'Other'){
-    //         this.lawyerName = this.result.withdrawingLawyerNameOther;
-    //     } else {
-    //         this.lawyerName = this.result.withdrawingLawyerName;
-    //     }
+        const viForm = this.viInfo.data;
 
-    //     const index = this.result.objectingParties.indexOf('Other')
-
-    //     if (index != -1){
-
-    //         const partiesList = this.result.objectingParties.splice(index, 1);
-    //         partiesList.push(this.result.objectingPartiesOther);
-    //         this.parties = partiesList.join(', ');
-
-    //     } else {
-    //         this.parties = this.result.objectingParties.join(', ');
-    //     }     
-           
-    // }
+        this.formData = {            
+            offenceDate:'',
+            offenceTime: '',
+            offenceAddress: '',
+            offenceCity: ''
+        }
+        
+        this.formData.offenceDate = viForm.prohibitionStartDate?Vue.filter('format-date-slash')(viForm.prohibitionStartDate):'';
+        if (viForm.prohibitionStartTime){
+            this.formData.offenceTime = 
+                viForm.prohibitionStartTime.substr(0,2)+ ':' + viForm.prohibitionStartTime.substr(2,2);
+        }
+        this.formData.offenceAddress = viForm.offenceAddress?viForm.offenceAddress.toUpperCase():'';
+        this.formData.offenceCity = viForm.offenceCity?.objectDsc?viForm.offenceCity.objectDsc:'';
+    }
 
     
 }
