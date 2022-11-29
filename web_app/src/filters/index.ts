@@ -56,7 +56,7 @@ Vue.filter('printPdf', function(html, form_type){
         <html lang="en">
         <head>		
         <meta charset="UTF-8">
-        <title>Court Of Appeal</title>`+
+        <title>Digital Forms-`+form_type+`</title>`+
         `<style>`+
             `@page {
                 size: `+ pageSize + ` !important;                         

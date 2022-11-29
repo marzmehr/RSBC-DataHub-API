@@ -91,7 +91,7 @@ const rsiStore = new Vuex.Store({
 				"variants": ['driver', 'police', 'ilo', 'report']
 				}
 			},
-			"disabled": false,
+			"disabled": true,
 			"check_digit": true
 			},
 			"IRP": {
@@ -101,7 +101,7 @@ const rsiStore = new Vuex.Store({
 			"description": "Immediate Roadside Prohibition",
 			"full_name": "MV2723",
 			"documents": {},
-			"disabled": false,
+			"disabled": true,
 			"check_digit": true
 			}
 		}

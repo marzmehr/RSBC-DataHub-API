@@ -20,16 +20,16 @@ def render(*html):
 
 
 def generate_pdf(**kwargs) -> tuple:
-    print("____________")
+    # print("____________")
     try:
         html = kwargs['message']['icbc_submission']['pdf']                
         pdf_content = render(html)
         base64_encode_pdf_string = base64.b64encode(pdf_content).decode('utf-8')
-        # TODO remove for oc
-        file_content = base64.b64decode(base64_encode_pdf_string)
-        with open("test.pdf","wb") as f:
-            f.write(file_content)
-        print("____PDF file is ready!") 
+        # # TODO remove for oc
+        # file_content = base64.b64decode(base64_encode_pdf_string)
+        # with open("test.pdf","wb") as f:
+        #     f.write(file_content)
+        # print("____PDF file is ready!") 
                
         kwargs['message']['icbc_submission']['pdf']=base64_encode_pdf_string
         

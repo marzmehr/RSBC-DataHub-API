@@ -115,7 +115,7 @@ export default class TwelveHourProhibition extends Vue {
     public prepopulateDefaultValues(){
         const twelveHourData = {} as twelveHourFormDataInfoType
 
-        twelveHourData.driversNumber=null;
+        twelveHourData.driversNumber="";
         twelveHourData.givenName='';
         twelveHourData.lastName='';
         twelveHourData.dob='';
@@ -123,12 +123,12 @@ export default class TwelveHourProhibition extends Vue {
         twelveHourData.address='';
         twelveHourData.driverPhoneNumber='';
         twelveHourData.driverCity='';
-        twelveHourData.driverProvince= {"objectCd":null,"objectDsc":null};
+        twelveHourData.driverProvince= {"objectCd":"","objectDsc":""};
         twelveHourData.driverPostalCode='';
         twelveHourData.plateProvince= {"objectCd":"BC","objectDsc":"BRITISH COLUMBIA"};
         twelveHourData.plateNumber='';
         
-        twelveHourData.puj_code= {"objectCd":null,"objectDsc":null};
+        twelveHourData.puj_code= {"objectCd":"","objectDsc":""};
         twelveHourData.nscNumber='';
                 
         twelveHourData.vehicleYear='';

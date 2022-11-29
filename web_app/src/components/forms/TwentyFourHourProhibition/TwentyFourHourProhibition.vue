@@ -123,7 +123,7 @@ export default class TwentyFourHourProhibition extends Vue {
     public prepopulateDefaultValues(){
         const twentyFourHourData = {} as twentyFourHourFormDataInfoType
 
-        twentyFourHourData.driversNumber=null;
+        twentyFourHourData.driversNumber="";
         twentyFourHourData.givenName='';
         twentyFourHourData.lastName='';
         twentyFourHourData.dob='';
@@ -136,7 +136,7 @@ export default class TwentyFourHourProhibition extends Vue {
         twentyFourHourData.plateNumber='';
         twentyFourHourData.plateValTag='';
 		twentyFourHourData.plateYear='';
-		twentyFourHourData.puj_code= {"objectCd":null,"objectDsc":null};
+		twentyFourHourData.puj_code= {"objectCd":"","objectDsc":""};
         twentyFourHourData.nscNumber='';
 		twentyFourHourData.ownerFirstName='';
 		twentyFourHourData.ownerLastName='';

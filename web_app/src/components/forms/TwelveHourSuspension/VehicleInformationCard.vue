@@ -106,7 +106,7 @@
                     <input-search-form
                         :data="vehicleInfo"
                         dataField="puj_code" 
-                        :optionList="provinces"
+                        :optionList="jurisdictions"
                         optionLabelField="objectDsc"
                         :error="vehicleState.puj_code==false?'Please select one!':''"
                         :disabled="formPrinted"

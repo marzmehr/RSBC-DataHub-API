@@ -77,9 +77,9 @@ def get_icbc_payload(**kwargs) -> tuple:
 
 
 def create_icbc_payload(data, form_id, html) -> dict:
-    print("_______________")
-    print(data)
-    print("_______________")
+    # print("_______________")
+    # print(data)
+    # print("_______________")
 
     payload = {
         "dlNumber":"",
@@ -117,9 +117,10 @@ def create_icbc_payload(data, form_id, html) -> dict:
     if "plateNumber" in data: payload["plateNumber"]=data["plateNumber"].upper()
 
     if "puj_code" in data and "objectCd" in data["puj_code"]: 
-        payload["pujCode"]=data["puj_code"]["objectCd"]    
+        payload["pujCode"]=data["puj_code"]["objectCd"]  
 
-    if "nscNumber" in data: payload["nscNumber"]=data["nscNumber"]
+    #Some validation required for NSC-Number. ICBC does not accept all values.
+    # if "nscNumber" in data: payload["nscNumber"]=data["nscNumber"]
 
     if "offenceCity" in data and "objectCd" in data["offenceCity"]:
         payload["violationLocation"]=data["offenceCity"]["objectCd"].upper()
